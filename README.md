@@ -1,6 +1,19 @@
+<div align="center">
+
+<img src="assets/vector-logo.png" alt="Vector Marketing" width="200"/>
+
 # Vector Marketing
 
-<img src="assets/vector-logo-sm.png" alt="Vector" width="384">
+**AI-маркетинговое агентство на базе Hermes Agent — 19 профильных агентов под управлением Osmosy**
+
+[![Hermes Agent](https://img.shields.io/badge/Hermes-Agent-blue.svg)](https://github.com/NousResearch/hermes-agent)
+[![Agents: 19](https://img.shields.io/badge/Agents-19-green.svg)](#агенты)
+[![Cowork: 141 skills](https://img.shields.io/badge/Cowork-141%20skills-orange.svg)](https://github.com/anthropics/knowledge-work-plugins)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+</div>
+
+---
 
 Маркетинговое агентство на базе Hermes Agent. 19 профильных AI-специалистов под управлением Osmosy (Hermes-оркестратор).
 
@@ -49,31 +62,14 @@
 ## Быстрый старт
 
 ```bash
-# Клонировать репо
 git clone https://github.com/Osmosy/vector-marketing.git
-
-# Создать профили Hermes
 hermes profile create market-research --clone
-hermes profile create analytics --clone
-# ... (все 16 агентов)
-
-# Настроить skills для каждого профиля
-hermes -p market-research skills install yandex-wordstat
-hermes -p yandex-direct skills install yandex-direct
-# ...
-
-# Запустить оркестратор
-hermes --profile osmosy "Клиент: интернет-магазин зоотоваров. Задача: увеличить заявки из Яндекса на 30% за квартал."
+hermes --skills vector-work "Клиент: интернет-магазин. Задача: увеличить заявки на 30%."
 ```
-
-## Подключённые skills и инструменты
-
-**Skills:** marketing-director-ru, evidence-based-seo, yandex-direct, yandex-wordstat, yandex-marketing-apis-ru, social-media-research, ru-text, google-workspace, document-deliverables, powerpoint, maps, airtable, youtube-content, creative/visual
-
-**MCP/API:** DaData MCP, Ozon Seller API, Wildberries API, MPSTATS, YooKassa, Avito API
 
 ## Источники
 
 - Архитектура: `marketing-agency-hermes-structure.docx` (май 2026)
-- Кейсы экосистемы: `Hermes Agent — сборник кейсов.md` (99 кейсов)
+- Кейсы: `Hermes Agent — сборник кейсов.md` (99 кейсов)
 - Платформа: [Hermes Agent](https://github.com/NousResearch/hermes-agent)
+- Навыки: [Cowork Roles](https://github.com/anthropics/knowledge-work-plugins) (141 навык)
