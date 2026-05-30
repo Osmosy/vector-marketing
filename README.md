@@ -1,5 +1,7 @@
 # Vector Marketing
 
+<img src="assets/vector-logo-sm.png" alt="Vector" width="384">
+
 Маркетинговое агентство на базе Hermes Agent. 19 профильных AI-специалистов под управлением Osmosy (Hermes-оркестратор).
 
 ## Архитектура
