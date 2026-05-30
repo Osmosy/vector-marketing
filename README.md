@@ -1,6 +1,6 @@
 # Vector Marketing
 
-Маркетинговое агентство на базе Hermes Agent. 16 профильных AI-специалистов под управлением Osmosy (Hermes-оркестратор).
+Маркетинговое агентство на базе Hermes Agent. 19 профильных AI-специалистов под управлением Osmosy (Hermes-оркестратор).
 
 ## Архитектура
 
@@ -9,7 +9,8 @@
               ├── СТРАТЕГИЯ: market-research, analytics
               ├── ПРИВЛЕЧЕНИЕ: performance, yandex-direct, seo, vk-ads, avito, marketplaces
               ├── УПАКОВКА: landing-cro, content, smm-telegram, creative, presentation
-              └── УДЕРЖАНИЕ: crm-retention, reputation
+              ├── УДЕРЖАНИЕ: crm-retention, reputation
+              └── ОПЕРАЦИИ: sales, support, ops
 ```
 
 ## Как это работает
@@ -39,6 +40,9 @@
 | presentation | Результат | Презентации, КП, отчёты, PDF/PPTX |
 | crm-retention | Удержание | CRM, сегментация, LTV, реактивация |
 | reputation | Доверие | Отзывы, рейтинги, SERM |
+| sales | Операции | Привлечение клиентов агентства, пайплайн, outreach |
+| support | Операции | Поддержка клиентов, KB, эскалация |
+| ops | Операции | Задачи, календарь, вендоры, закупки |
 
 ## Быстрый старт
 
