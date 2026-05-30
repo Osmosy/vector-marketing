@@ -73,3 +73,4 @@ hermes --skills vector-work "Клиент: интернет-магазин. За
 - Кейсы: `Hermes Agent — сборник кейсов.md` (99 кейсов)
 - Платформа: [Hermes Agent](https://github.com/NousResearch/hermes-agent)
 - Навыки: [Cowork Roles](https://github.com/anthropics/knowledge-work-plugins) (141 навык)
+- Исследования: [claude-skills/research-ops](https://github.com/alirezarezvani/claude-skills) — enterprise R&D методология (TAM/SAM/SOM, Porter, опросы)
