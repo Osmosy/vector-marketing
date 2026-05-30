@@ -45,9 +45,17 @@ hermes -p <agent-name> skills install <skill-name>
 | presentation | Результат | powerpoint, document-deliverables, google-workspace |
 | crm-retention | Удержание | google-workspace, DaData |
 | reputation | Доверие | maps, DaData |
+| sales | Операции | cowork-roles/sales/*, DaData |
+| support | Операции | cowork-roles/customer-support/*, ru-text |
+| ops | Операции | cowork-roles/productivity/*, cowork-roles/operations/*, google-workspace |
 
 ## Модели
 
 - **Основные агенты (research, analytics, content, presentation):** deepseek-v4-pro
 - **Тяжёлые агенты (performance, seo — анализ объёмов):** glm-5.1:cloud или minimax-m2.7
-- **Лёгкие агенты (avito, reputation — поиск данных):** deepseek-v4-flash:cloud
+- **Лёгкие агенты (sales, support, ops — коммуникация):** deepseek-v4-flash:cloud
+- **Специфические (avito, reputation — поиск данных):** deepseek-v4-flash:cloud
+
+## Источник навыков
+
+Агенты sales, support, ops используют навыки из [Cowork Roles](https://github.com/anthropics/knowledge-work-plugins) (17 ролей, 141 навык), уже установленные в Hermes: `~/.hermes/skills/cowork-roles/`.
