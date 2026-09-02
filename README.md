@@ -4,6 +4,8 @@
 
 # Vector Marketing
 
+[![Architecture: live](https://img.shields.io/badge/Architecture-live_diagram-4f8ff7.svg)](https://osmosy.github.io/vector-marketing/docs/vector-marketing.architecture.html)
+
 **AI-маркетинговое агентство на базе Hermes Agent — 19 профильных агентов под управлением Osmosy (CMO-оркестратор)**
 
 [![Hermes Agent](https://img.shields.io/badge/Hermes-Agent-blue.svg)](https://github.com/NousResearch/hermes-agent)
