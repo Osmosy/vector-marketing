@@ -7,6 +7,7 @@
 **AI-маркетинговое агентство на базе Hermes Agent — 19 профильных агентов под управлением Osmosy (CMO-оркестратор)**
 
 [![Hermes Agent](https://img.shields.io/badge/Hermes-Agent-blue.svg)](https://github.com/NousResearch/hermes-agent)
+[![Ecosystem: Vector](https://img.shields.io/badge/Ecosystem-Vector-blue.svg)](https://osmosy.github.io/)
 [![Agents: 19](https://img.shields.io/badge/Agents-19-green.svg)](#агенты)
 [![Company Brain](https://img.shields.io/badge/Company-Brain-7%20files-purple.svg)](#company-brain)
 [![Framework](https://img.shields.io/badge/Framework-Context%E2%86%92Harness%E2%86%92Loop-orange.svg)](FUNDAMENTALS.md)
