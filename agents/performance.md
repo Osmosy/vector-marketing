@@ -7,6 +7,7 @@
 - marketing-director-ru — стратегическое планирование
 - google-workspace — медиапланы в Sheets
 - cowork-roles/marketing/campaign-plan — планирование кампаний
+- **skills/pm-skills/growth-loops** — дизайн growth-петель (Viral/Usage/Collaboration/UGC/Referral): снижает зависимость от платного трафика, расчёт loop coefficient
 
 ## Формат выдачи
 1. **Медиаплан:** каналы, бюджеты, ожидаемые результаты (CPL, CR, ROMI)

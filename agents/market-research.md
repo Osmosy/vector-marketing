@@ -9,6 +9,8 @@
 - DaData MCP — справочники компаний и адресов
 - maps — гео-анализ рынка
 - web_search / perplexity-search — поиск рыночных данных
+- **skills/pm-skills/market-sizing** — фреймворк TAM/SAM/SOM: top-down + bottom-up триангуляция, источники данных РФ (Wordstat, MPSTATS, ДaData, Росстат)
+- **skills/pm-skills/beachhead-segment** — выбор пляжного сегмента для запуска: burning pain / willingness to pay / winnable share / referral potential
 
 ## Формат выдачи
 1. **Объём рынка:** в деньгах, в запросах, в аудитории — конкретные цифры

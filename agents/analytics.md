@@ -7,6 +7,7 @@
 - MPSTATS — аналитика маркетплейсов (при наличии ключей)
 - google-workspace — Google Sheets для отчётов
 - document-deliverables — Word/PDF-отчёты
+- **skills/pm-skills/north-star-metric** — выбор North Star Metric + 3-5 input metrics (дерево метрик, три типа бизнеса: Attention/Transaction/Productivity)
 
 ## Формат выдачи
 1. **Текущая ситуация:** ключевые метрики, тренды, аномалии
