@@ -28,7 +28,7 @@
         "id": "pm-skills",
         "label": "PM-методики",
         "focus": ["brain", "skills-lib", "strategy", "pack", "retain"],
-        "note": "14 PM-скиллов (phuryn/pm-skills + адаптация РФ): sizing, ICP, CJM, интервью, конкуренты, A/B, когорты, loops, 152-ФЗ, аудит AI-сборки."
+        "note": "29 PM-скиллов (phuryn/pm-skills + адаптация РФ): sizing, ICP, CJM, гипотезы, GTM, pricing, pre-mortem, red-team, 152-ФЗ, NDA."
       }
     ]
   },
@@ -36,7 +36,7 @@
     { "id": "client", "type": "external", "label": "Клиент", "sublabel": "бизнес-задача", "pos": [60, 320], "size": [130, 64] },
     { "id": "orchestrator", "type": "backend", "label": "Osmosy (CMO)", "sublabel": "Hermes-оркестратор", "pos": [290, 320], "size": [150, 64] },
     { "id": "brain", "type": "database", "label": "Company Brain", "sublabel": "7 файлов контекста", "pos": [290, 90], "size": [160, 64] },
-    { "id": "skills-lib", "type": "database", "label": "Библиотека skills", "sublabel": "Cowork 141 + PM 14", "pos": [290, 550], "size": [170, 64] },
+    { "id": "skills-lib", "type": "database", "label": "Библиотека skills", "sublabel": "Cowork 141 + PM 29", "pos": [290, 550], "size": [170, 64] },
     { "id": "strategy", "type": "backend", "label": "Стратегия", "sublabel": "market-research, analytics", "pos": [560, 90], "size": [170, 64] },
     { "id": "attract", "type": "backend", "label": "Привлечение", "sublabel": "performance, direct, seo…", "pos": [560, 220], "size": [160, 64] },
     { "id": "pack", "type": "backend", "label": "Упаковка", "sublabel": "landing, content, smm…", "pos": [560, 350], "size": [150, 64] },

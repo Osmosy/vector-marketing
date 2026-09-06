@@ -157,13 +157,15 @@ vector-marketing/
 │   ├── handoff-protocol.md
 │   └── example-campaign.md
 ├── profiles/                     ← Настройка профилей Hermes
-├── skills/                       ← Навыки (141 из Cowork Roles + 14 PM-скиллов)
+├── skills/                       ← Навыки (141 из Cowork Roles + 29 PM-скиллов)
 └── assets/                       ← Логотипы
 ```
 
 ## PM-скиллы (skills/pm-skills/)
 
-14 методических скиллов из [PM Skills Marketplace](https://github.com/phuryn/pm-skills) (MIT, куратор Павел Хурын, The Product Compass) с адаптацией под рынок РФ:
+29 методических скиллов из [PM Skills Marketplace](https://github.com/phuryn/pm-skills) (MIT, куратор Павел Хурын, The Product Compass) с адаптацией под рынок РФ:
+
+### Исследования и стратегия
 
 | Скилл | Что даёт | Агент |
 |-------|----------|-------|
@@ -173,16 +175,45 @@ vector-marketing/
 | customer-journey-map | CJM: стадии, точки контакта, эмоции, барьеры (деливерабл) | market-research |
 | competitor-analysis | Разбор конкурентов; разведка РФ: библиотека Директа, MPSTATS, Авито, отзывы, ДaData | market-research |
 | interview-script | Глубинные интервью по Mom Test; РФ: телефон/Telegram, вербатим-цитаты только из транскрипта | market-research |
+| brainstorm-experiments-new + existing | Дымовые тесты гипотез: XYZ, лендинг+Директ, TG-интеграции, карточки WB/Ozon без рекламы | market-research |
+| identify-assumptions-new + existing | Карта рисковых допущений: 8 категорий (новый продукт) / VUVF (существующий) | market-research |
+| prioritize-assumptions | Матрица Impact × Risk: что тестировать первым | market-research |
+| gtm-strategy | GTM-план: канальная матрица РФ, метрики запуска (ДРР, CPL) | market-research, performance |
+| monetization-strategy | 3-5 моделей монетизации + валидационные эксперименты | market-research |
+| lean-canvas, business-model | Канвасы для стратегических консультаций клиенту | market-research |
+| pricing-strategy | Ценообразование + РФ: MPSTATS-цены, юнит-экономика МП, ДРР, налоги | market-research |
+| competitive-battlecard | Батлкарта «мы vs X»; разведка: Директ, MPSTATS, отзывы, ДaData | market-research |
+
+### Метрики и удержание
+
+| Скилл | Что даёт | Агент |
+|-------|----------|-------|
 | north-star-metric | NSM + 3-5 input metrics, дерево метрик | analytics |
 | ab-test-analysis | Статразбор A/B: мощность, SRM, guardrails, ship/extend/stop/revert | analytics, landing-cro |
 | cohort-analysis | Retention-кривые, теплокарты когорт из CSV (дополнение к RFM) | crm-retention |
 | growth-loops | 5 типов петель (Viral/Usage/Collab/UGC/Referral), loop coefficient | performance |
-| product-name | Нейминг + проверка: Роспатент/МКТУ, домены .ru/.рф, паттерны рынка РФ | content |
+
+### Контур качества и рисков
+
+| Скилл | Что даёт | Агент |
+|-------|----------|-------|
+| pre-mortem | Разбор кампании до запуска: Tigers / Paper Tigers / Elephants | performance |
+| strategy-red-team | Атака несущих допущений стратегии: стилман → failure modes | orchestrator |
 | privacy-policy | Политика ПДн + 152-ФЗ: согласие, локализация, реестр РКН, утечки 24/72ч | landing-cro |
-| shipping-artifacts | Документация AI-сборки перед сдачей: architecture, flows, secrets, test map | landing-cro |
+| shipping-artifacts | Документация AI-сборки перед сдачей: architecture, flows, secrets | landing-cro |
 | intended-vs-implemented | Аудит «задокументировано vs реализовано» в коде форм/интеграций | landing-cro |
 
-Не портированы: slash-команды (42) — тонкие обёртки над скиллами, функциональность доставлена через привязку скиллов к агентам; дубли уже имеющихся навыков и продуктовые PM-домены (PRD, OKR, канвасы) — вне профиля агентства.
+### Упаковка и операции
+
+| Скилл | Что даёт | Агент |
+|-------|----------|-------|
+| gtm-motions | Выбор GTM-мотива из 7; РФ: Paid, Inbound, Partners, Outbound, ABM(B2B) | performance |
+| product-name | Нейминг + проверка: Роспатент/МКТУ, домены .ru/.рф | content |
+| summarize-meeting | Транскрипты звонков → решения, action items, владельцы | sales |
+| stakeholder-map | Power/interest сетка + план коммуникаций (крупные проекты) | ops |
+| draft-nda | NDA по праву РФ: режим КТ (ФЗ-98), гл. 75 ГК РФ, доступы к кабинетам | ops |
+
+Не портированы: slash-команды (42) — тонкие обёртки над скиллами, функциональность доставлена через привязку скиллов к агентам; дубль-скиллы уже имеющихся навыков (ideas, positioning, sentiment, grammar) и SDLC-домены (PRD, stories, спринты, retro) — вне профиля агентства.
 
 ## Источники
 
@@ -190,7 +221,7 @@ vector-marketing/
 - Framework: [@shannholmberg](https://x.com/shannholmberg) / Nous Research — Context → Harness → Loop
 - Платформа: [Hermes Agent](https://github.com/NousResearch/hermes-agent)
 - Навыки: [Cowork Roles](https://github.com/anthropics/knowledge-work-plugins) (141 навык)
-- PM-методики: [phuryn/pm-skills](https://github.com/phuryn/pm-skills) (14 скиллов, адаптация РФ)
+- PM-методики: [phuryn/pm-skills](https://github.com/phuryn/pm-skills) (29 скиллов, адаптация РФ)
 - GEO/AEO концепции: [dataaispark-spec/hermes-x-marketing-agency-bots](https://github.com/dataaispark-spec/hermes-x-marketing-agency-bots)
 - Исследования: [claude-skills/research-ops](https://github.com/alirezarezvani/claude-skills)
 - Соцсети: [social-media-skills](https://github.com/charlie947/social-media-skills)

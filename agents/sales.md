@@ -11,6 +11,7 @@
 - cowork-roles/sales/forecast — прогноз продаж
 - cowork-roles/sales/create-an-asset — лендинги, decks, one-pagers для продаж
 - DaData MCP — проверка компаний и контактов
+- **skills/pm-skills/summarize-meeting** — транскрипты звонков/встреч с клиентами → структурированные заметки: решения, action items, владельцы
 
 ## Формат выдачи
 1. **Досье на клиента:** компания, контакты, боли, бюджет, конкуренты

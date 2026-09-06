@@ -15,6 +15,12 @@
 - **skills/pm-skills/customer-journey-map** — CJM: стадии, точки контакта, эмоции, барьеры, возможности (продаваемый деливерабл)
 - **skills/pm-skills/competitor-analysis** — структурированный разбор конкурентов + РФ-разведка: библиотека Директа, MPSTATS, Авито, отзывы, ДaData
 - **skills/pm-skills/interview-script** — скрипты глубинных интервью по Mom Test + РФ-адаптация (телефон/Telegram, рекрутинг, компенсация)
+- **skills/pm-skills/brainstorm-experiments-new + existing** — дизайн дымовых тестов гипотез: XYZ-гипотезы, лендинг+Директ, TG-интеграции, карточки WB/Ozon без рекламы (РФ-адаптация в скилле)
+- **skills/pm-skills/identify-assumptions-new + existing** — карта рисковых допущений (8 категорий для нового / VUVF для существующего)
+- **skills/pm-skills/prioritize-assumptions** — матрица Impact × Risk: что тестировать первым
+- **skills/pm-skills/gtm-strategy** — GTM-план вывода: канальная матрица РФ (Директ, VK, TG, маркетплейсы), метрики запуска (ДРР, CPL)
+- **skills/pm-skills/monetization-strategy / lean-canvas / business-model** — канвасы для стратегических консультаций клиенту
+- **skills/pm-skills/pricing-strategy** — модели ценообразования + РФ: MPSTATS-цены, юнит-экономика маркетплейсов, ДРР, налоговый фактор
 
 ## Формат выдачи
 1. **Объём рынка:** в деньгах, в запросах, в аудитории — конкретные цифры
