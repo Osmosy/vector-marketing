@@ -157,9 +157,32 @@ vector-marketing/
 │   ├── handoff-protocol.md
 │   └── example-campaign.md
 ├── profiles/                     ← Настройка профилей Hermes
-├── skills/                       ← Навыки (141+ из Cowork Roles)
+├── skills/                       ← Навыки (141 из Cowork Roles + 14 PM-скиллов)
 └── assets/                       ← Логотипы
 ```
+
+## PM-скиллы (skills/pm-skills/)
+
+14 методических скиллов из [PM Skills Marketplace](https://github.com/phuryn/pm-skills) (MIT, куратор Павел Хурын, The Product Compass) с адаптацией под рынок РФ:
+
+| Скилл | Что даёт | Агент |
+|-------|----------|-------|
+| market-sizing | TAM/SAM/SOM, top-down + bottom-up; источники РФ: Wordstat, MPSTATS, ДaData, Росстат | market-research |
+| beachhead-segment | Выбор пляжного сегмента: pain / WTP / winnable share / referral | market-research |
+| ideal-customer-profile | ICP из данных: демография, поведение, JTBD, PMF-опросы | market-research |
+| customer-journey-map | CJM: стадии, точки контакта, эмоции, барьеры (деливерабл) | market-research |
+| competitor-analysis | Разбор конкурентов; разведка РФ: библиотека Директа, MPSTATS, Авито, отзывы, ДaData | market-research |
+| interview-script | Глубинные интервью по Mom Test; РФ: телефон/Telegram, вербатим-цитаты только из транскрипта | market-research |
+| north-star-metric | NSM + 3-5 input metrics, дерево метрик | analytics |
+| ab-test-analysis | Статразбор A/B: мощность, SRM, guardrails, ship/extend/stop/revert | analytics, landing-cro |
+| cohort-analysis | Retention-кривые, теплокарты когорт из CSV (дополнение к RFM) | crm-retention |
+| growth-loops | 5 типов петель (Viral/Usage/Collab/UGC/Referral), loop coefficient | performance |
+| product-name | Нейминг + проверка: Роспатент/МКТУ, домены .ru/.рф, паттерны рынка РФ | content |
+| privacy-policy | Политика ПДн + 152-ФЗ: согласие, локализация, реестр РКН, утечки 24/72ч | landing-cro |
+| shipping-artifacts | Документация AI-сборки перед сдачей: architecture, flows, secrets, test map | landing-cro |
+| intended-vs-implemented | Аудит «задокументировано vs реализовано» в коде форм/интеграций | landing-cro |
+
+Не портированы: slash-команды (42) — тонкие обёртки над скиллами, функциональность доставлена через привязку скиллов к агентам; дубли уже имеющихся навыков и продуктовые PM-домены (PRD, OKR, канвасы) — вне профиля агентства.
 
 ## Источники
 
@@ -167,6 +190,7 @@ vector-marketing/
 - Framework: [@shannholmberg](https://x.com/shannholmberg) / Nous Research — Context → Harness → Loop
 - Платформа: [Hermes Agent](https://github.com/NousResearch/hermes-agent)
 - Навыки: [Cowork Roles](https://github.com/anthropics/knowledge-work-plugins) (141 навык)
+- PM-методики: [phuryn/pm-skills](https://github.com/phuryn/pm-skills) (14 скиллов, адаптация РФ)
 - GEO/AEO концепции: [dataaispark-spec/hermes-x-marketing-agency-bots](https://github.com/dataaispark-spec/hermes-x-marketing-agency-bots)
 - Исследования: [claude-skills/research-ops](https://github.com/alirezarezvani/claude-skills)
 - Соцсети: [social-media-skills](https://github.com/charlie947/social-media-skills)
