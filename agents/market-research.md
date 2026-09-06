@@ -11,6 +11,10 @@
 - web_search / perplexity-search — поиск рыночных данных
 - **skills/pm-skills/market-sizing** — фреймворк TAM/SAM/SOM: top-down + bottom-up триангуляция, источники данных РФ (Wordstat, MPSTATS, ДaData, Росстат)
 - **skills/pm-skills/beachhead-segment** — выбор пляжного сегмента для запуска: burning pain / willingness to pay / winnable share / referral potential
+- **skills/pm-skills/ideal-customer-profile** — ICP из данных исследований: демография, поведение, JTBD, анализ PMF-опросов
+- **skills/pm-skills/customer-journey-map** — CJM: стадии, точки контакта, эмоции, барьеры, возможности (продаваемый деливерабл)
+- **skills/pm-skills/competitor-analysis** — структурированный разбор конкурентов + РФ-разведка: библиотека Директа, MPSTATS, Авито, отзывы, ДaData
+- **skills/pm-skills/interview-script** — скрипты глубинных интервью по Mom Test + РФ-адаптация (телефон/Telegram, рекрутинг, компенсация)
 
 ## Формат выдачи
 1. **Объём рынка:** в деньгах, в запросах, в аудитории — конкретные цифры

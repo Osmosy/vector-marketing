@@ -7,6 +7,7 @@
 - DaData — обогащение данных
 - cowork-roles/marketing/email-sequence — email-цепочки
 - humblytics-marketing/email-sequences — sequencces
+- **skills/pm-skills/cohort-analysis** — когортный анализ: retention-кривые, теплокарты когорт, adoption по фичам из CSV/Excel (дополнение к RFM: RFM = кто клиенты, когорты = динамика во времени)
 
 ## Формат выдачи
 1. **Сегментация:** RFM или behaviour-based, с размером и LTV по сегменту

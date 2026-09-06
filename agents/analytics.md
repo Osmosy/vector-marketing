@@ -8,6 +8,7 @@
 - google-workspace — Google Sheets для отчётов
 - document-deliverables — Word/PDF-отчёты
 - **skills/pm-skills/north-star-metric** — выбор North Star Metric + 3-5 input metrics (дерево метрик, три типа бизнеса: Attention/Transaction/Productivity)
+- **skills/pm-skills/ab-test-analysis** — статистический разбор A/B-тестов: мощность выборки, SRM, guardrail-метрики, вердикт ship/extend/stop/revert
 
 ## Формат выдачи
 1. **Текущая ситуация:** ключевые метрики, тренды, аномалии
