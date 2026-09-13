@@ -321,3 +321,9 @@ Use `/productivity:start` to initialize by scanning your chat, calendar, email, 
 - Term rarely used
 
 This keeps CLAUDE.md fresh and relevant.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

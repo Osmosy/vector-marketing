@@ -65,3 +65,9 @@ If DocuSign is not connected and no file path was given, ask the owner to upload
 ## Output
 
 Present the plain-English summary, red-flag list, and redline suggestions. Ask the owner whether to export a marked-up copy and where to save it.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

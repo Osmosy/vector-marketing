@@ -219,3 +219,9 @@ When creating a content strategy, deliver:
 - **marketing-strategist** — Align content with broader marketing and funnel strategy
 - **ad-expert** — Amplify top content with paid promotion
 - **page-cro** — Optimize content pages for conversion
+
+### Attribution
+
+Скилл заимствован из [Humblytics/humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) (MIT (© 2026 Humblytics, Inc.)).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

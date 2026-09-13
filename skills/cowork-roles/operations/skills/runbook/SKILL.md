@@ -85,3 +85,9 @@ If **~~ITSM** is connected:
 1. **Be painfully specific** — "Run the script" is not a step. "Run `python sync.py --prod --dry-run` from the ops server" is.
 2. **Include failure modes** — What can go wrong at each step and what to do about it.
 3. **Test the runbook** — Have someone unfamiliar with the process follow it. Fix where they get stuck.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

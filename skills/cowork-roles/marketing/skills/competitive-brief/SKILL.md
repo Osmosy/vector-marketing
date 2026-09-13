@@ -329,3 +329,9 @@ After the brief, ask:
 - Draft messaging that exploits the positioning gaps identified?
 - Dive deeper into any specific competitor?
 - Set up a competitive monitoring plan?"
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

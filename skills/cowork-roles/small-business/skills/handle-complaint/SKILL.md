@@ -54,3 +54,9 @@ If Gmail and HubSpot are both unreachable, ask the owner to paste the complaint 
 ## Output
 
 Present the customer context summary, the drafted response, and any pattern-based operational suggestion. Ask: "Want to send this response, edit it, or handle it differently?"
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

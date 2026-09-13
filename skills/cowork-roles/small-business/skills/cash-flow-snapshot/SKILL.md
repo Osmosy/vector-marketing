@@ -167,3 +167,9 @@ Remind the user after delivery:
 |---|---|
 | `reference/gotchas.md` | When a connector returns unexpected data or variance is extreme |
 | `reference/examples/worked-example.md` | When modeling the output format for a new data shape |
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

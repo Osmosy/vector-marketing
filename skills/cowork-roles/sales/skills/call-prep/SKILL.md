@@ -256,3 +256,9 @@ Run **call-follow-up** to:
 - **account-research** — Deep dive on a company before first contact
 - **call-follow-up** — Process call notes and execute post-call workflow
 - **draft-outreach** — Write personalized outreach after research
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

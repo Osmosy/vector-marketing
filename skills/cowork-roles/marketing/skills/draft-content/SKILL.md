@@ -115,3 +115,9 @@ Present the draft with clear formatting. After the draft, include:
 - Suggestions for next steps (e.g., "Review with your team", "Add customer quotes", "Pair with a visual")
 
 Ask: "Would you like me to revise any section, adjust the tone, or create a variation for a different channel?"
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

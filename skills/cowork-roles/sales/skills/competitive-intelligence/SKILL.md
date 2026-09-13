@@ -399,3 +399,9 @@ Competitive intel gets stale. Recommended refresh:
 - **account-research** — Research a specific prospect before reaching out
 - **call-prep** — Prep for a call where you know competitor is involved
 - **create-an-asset** — Build a custom comparison page for a specific deal
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

@@ -119,3 +119,9 @@ If **~~chat** is connected:
 1. **Be specific about impact** — "Everyone" is not an impact assessment. "200 users in the billing team" is.
 2. **Always have a rollback plan** — Even if you're confident, plan for failure.
 3. **Communicate early** — Surprises create resistance. Previews create buy-in.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

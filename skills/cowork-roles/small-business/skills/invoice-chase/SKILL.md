@@ -81,3 +81,9 @@ Do not ask again on subsequent runs.
 - [reference/gotchas.md](reference/gotchas.md) — known failure modes
 - [reference/examples/gentle-reminder.md](reference/examples/gentle-reminder.md) — good-payer email example
 - [reference/examples/firm-reminder.md](reference/examples/firm-reminder.md) — repeat-late-payer email example
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

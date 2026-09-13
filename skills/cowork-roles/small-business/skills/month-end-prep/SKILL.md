@@ -177,3 +177,9 @@ specs and PDF layout details.
   transactions, partial-month edge cases
 - [reference/examples/pl-narrative.md](reference/examples/pl-narrative.md) — worked
   P&L narrative example
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

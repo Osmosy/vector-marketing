@@ -410,3 +410,9 @@ Anything to change before we're done?
   every failure mode this skill has hit in production
 - [reference/examples/boutique-brief-campaign.md](reference/examples/boutique-brief-campaign.md)
   — full worked examples (single-slot social, multi-slot template)
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

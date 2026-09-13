@@ -121,3 +121,9 @@ User: "Review this MSA and flag anything I should push back on."
 - `reference/docusign-fetch.md` — pulling envelopes from DocuSign
 - `reference/gmail-fetch.md` — finding contract attachments in Gmail
 - `reference/examples/flagged-summary-saas.md` — worked example: SaaS agreement review output
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

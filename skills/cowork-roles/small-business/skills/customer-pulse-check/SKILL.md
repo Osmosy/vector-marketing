@@ -77,3 +77,9 @@ Run with whatever sources are connected — this command degrades gracefully. If
 ## Output
 
 Present the summary table, then each response template. Ask the owner which templates they'd like to send, then wait for explicit approval before drafting the send.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

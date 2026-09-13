@@ -66,3 +66,9 @@ User: "log this call to the Acme deal"
 - [reference/examples/log-email-happy-path.md](reference/examples/log-email-happy-path.md) — worked example: email to existing deal
 - [reference/examples/log-call-happy-path.md](reference/examples/log-call-happy-path.md) — worked example: meeting to existing deal, missing contact
 - [reference/examples/cleanup-deal.md](reference/examples/cleanup-deal.md) — worked example: stale deal audit
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

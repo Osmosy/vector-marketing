@@ -188,3 +188,9 @@ After presenting the audit, ask:
 - Build a content calendar based on the gap analysis?
 - Dive deeper into any specific section of the audit?
 - Run this same analysis for a different competitor or domain?"
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

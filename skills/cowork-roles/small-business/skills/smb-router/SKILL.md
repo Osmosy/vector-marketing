@@ -155,3 +155,9 @@ If the owner's request doesn't match any command:
 - **Never skip confirmation.** Always ask before triggering a command. The owner might want something slightly different than what you matched.
 - **Never silently route to a broken command.** If a required connector is missing, tell the owner before routing — not after.
 - **Adapt to context.** If the owner has run onboarding and their top headache is "cash flow," lead with money commands. If it's "getting more customers," lead with sales commands. The business context makes your routing smarter.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

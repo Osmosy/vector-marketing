@@ -390,3 +390,9 @@ Ask: "Would you like me to:
 - Draft a stakeholder email with the key takeaways?
 - Dive deeper into any specific metric or channel?
 - Set up a reporting template you can reuse next period?"
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

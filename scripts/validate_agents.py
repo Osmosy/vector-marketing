@@ -39,6 +39,13 @@ MENTION_RE = re.compile(r"@([a-z0-9][a-z0-9-]*)")
 PATHLIKE_PREFIXES = ("skills/", "cowork-roles/", "humblytics-marketing/", "pm-skills/", "open-seo/")
 BULLET_RE = re.compile(r"^\s*[-*]\s+\S")
 
+# Наборы, скопированные из чужих репозиториев: каждый их скилл обязан нести
+# блок лицензионной атрибуции (см. NOTICE.md и THIRD_PARTY_LICENSES/).
+VENDORED_SETS = {
+    "pm-skills", "cowork-roles", "humblytics-marketing",
+    "searchfit-seo", "social-media-skills", "claude-skills",
+}
+
 
 class AgentDoc:
     def __init__(self, name: str, text: str):
@@ -238,6 +245,27 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
                 f"skills/{rel}: name «{declared}» не совпадает с именем каталога "
                 f"«{skill_md.parent.name}»"
             )
+
+    # Вендоренные наборы: ровно один блок лицензионной атрибуции на файл.
+    # Дубль (склейка двух импортов) и пропуск (копия без уведомления) — обе ошибки:
+    # у пользователя, который возьмёт один скилл, не будет ни NOTICE.md, ни текста лицензии.
+    for set_dir in sorted(p for p in (repo_root / "skills").iterdir() if p.is_dir()):
+        for skill_md in sorted(set_dir.rglob("SKILL.md")):
+            body = skill_md.read_text(encoding="utf-8")
+            rel = skill_md.relative_to(repo_root / "skills")
+            notices = sum(
+                1 for i, line in enumerate(body.splitlines())
+                if line.strip() == "### Attribution"
+                and "заимствован из" in "\n".join(body.splitlines()[i:i + 6])
+            )
+            if notices > 1:
+                errors.append(
+                    f"skills/{rel}: блоков лицензионной атрибуции {notices} — должен быть один"
+                )
+            elif notices == 0 and set_dir.name in VENDORED_SETS:
+                errors.append(
+                    f"skills/{rel}: нет блока «### Attribution» — вендоренный скилл без уведомления"
+                )
 
     return errors, warnings
 

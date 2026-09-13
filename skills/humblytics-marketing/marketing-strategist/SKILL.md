@@ -206,3 +206,9 @@ When asked for a marketing strategy, deliver:
 - **content-strategist** — Build the content engine
 - **copywriting** — Write the copy for landing pages, emails, and ads
 - **funnel-reporter** — Track funnel performance and revenue metrics
+
+### Attribution
+
+Скилл заимствован из [Humblytics/humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) (MIT (© 2026 Humblytics, Inc.)).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

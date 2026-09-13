@@ -41,3 +41,9 @@ After Step 1 approval, trigger the `invoice-chase` skill workflow:
 ## Output
 
 End the run with a one-paragraph recap: forecast verdict (covered / gap / risk), reminders sent and to whom, projected new cash position if reminders convert.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

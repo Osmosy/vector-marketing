@@ -56,3 +56,9 @@ If HubSpot is unreachable, stop — this command requires HubSpot as the data so
 ## Output
 
 End with a summary: X deals updated, Y contacts merged, Z fields filled. Include links to the affected records.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

@@ -117,3 +117,9 @@ See [`reference/gotchas.md`](reference/gotchas.md) for common pitfalls.
 ## Examples
 
 See [`reference/examples/`](reference/examples/) for worked examples (SaaS, retail, services).
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

@@ -50,3 +50,9 @@ After Step 2 approval, trigger the `lead-triage` skill workflow:
 ## Output
 
 End the run with a one-paragraph recap: revenue dip identified, posts generated, segment size, calls booked. Link to the HubSpot campaign URL once sent.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

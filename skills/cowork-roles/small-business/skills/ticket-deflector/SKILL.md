@@ -67,3 +67,9 @@ User: "answer this customer" [forwards email]
 
 - [reference/gotchas.md](reference/gotchas.md) — Good / Bad patterns for tone, PayPal lookup, and ambiguous refund scenarios
 - [reference/examples/respond-refund-request.md](reference/examples/respond-refund-request.md) — worked example: refund request with PayPal transaction found
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

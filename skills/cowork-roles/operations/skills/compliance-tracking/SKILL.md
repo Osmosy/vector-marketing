@@ -42,3 +42,9 @@ Help track compliance requirements, prepare for audits, and maintain regulatory 
 ## Output
 
 Produce compliance status dashboards, gap analyses, audit prep checklists, and evidence collection plans.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

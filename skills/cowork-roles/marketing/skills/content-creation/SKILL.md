@@ -155,3 +155,9 @@ Guidelines and frameworks for creating effective marketing content across channe
 - At the end of blog posts (after you have earned the reader's trust)
 - In-line within content when contextually relevant (e.g., a related guide mention)
 - Repeat the primary CTA at the bottom of long-form pages
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

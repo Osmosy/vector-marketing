@@ -45,3 +45,9 @@ If `--mode` was not provided:
 ## Output
 
 End with a next-steps checklist for the accountant: missing W-9s to collect, assumptions to verify, deadlines to hit.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

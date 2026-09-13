@@ -171,3 +171,9 @@ Month 3: [content continues + link building kickoff]
 - `content-strategist` — For content calendar and format planning once SEO priorities are set
 - `copywriting` — For on-page copy that ranks and converts
 - `marketing-strategist` — For tying SEO goals to broader growth strategy
+
+### Attribution
+
+Скилл заимствован из [Humblytics/humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) (MIT (© 2026 Humblytics, Inc.)).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

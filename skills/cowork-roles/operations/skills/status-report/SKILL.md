@@ -75,3 +75,9 @@ If **~~calendar** is connected:
 1. **Lead with the headline** — Busy leaders read the first 3 lines. Make them count.
 2. **Be honest about risks** — Surfacing issues early builds trust. Surprises erode it.
 3. **Make decisions easy** — For each decision needed, provide context and a recommendation.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

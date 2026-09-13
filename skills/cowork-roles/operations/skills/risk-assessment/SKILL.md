@@ -38,3 +38,9 @@ For each risk, document:
 ## Output
 
 Produce a prioritized risk register with specific, actionable mitigations. Focus on risks that are controllable and material.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

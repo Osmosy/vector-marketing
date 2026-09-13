@@ -261,3 +261,9 @@ Say "wrap up my day" or "end of day summary" after your last meeting:
 - **call-prep** — Deep prep for any specific meeting
 - **call-follow-up** — Process notes after calls
 - **account-research** — Research a company before first meeting
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

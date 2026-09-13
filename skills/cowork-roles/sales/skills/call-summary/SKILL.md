@@ -166,3 +166,9 @@ Here's what we discussed:
 2. **Name the attendees** — Helps me structure the summary and assign action items.
 3. **Flag what matters** — If something was important, tell me: "The big thing was..."
 4. **Tell me the deal stage** — Helps me tailor the follow-up tone and next steps.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

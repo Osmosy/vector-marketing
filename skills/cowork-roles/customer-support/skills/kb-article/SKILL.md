@@ -349,3 +349,9 @@ Billing & Account
 5. Maintain aggressively — a wrong article is worse than no article
 6. Track what's missing — every ticket that could have been a KB article is a content gap
 7. Measure impact — articles that don't get traffic or don't reduce tickets need to be improved or retired
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

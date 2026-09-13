@@ -63,3 +63,9 @@ This skill is **read-only** — it does not post, send, reply, or modify any rec
 
 - [reference/gotchas.md](reference/gotchas.md) — PayPal rate limits, HubSpot empty state, verbatim quote requirement, Gmail keyword drift
 - [reference/examples/example-report.md](reference/examples/example-report.md) — full worked example output
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

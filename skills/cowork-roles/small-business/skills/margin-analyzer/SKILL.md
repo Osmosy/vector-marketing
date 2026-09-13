@@ -163,3 +163,9 @@ This is intentional. Pricing decisions have real business consequences and depen
 - `reference/industry-benchmarks.md` — gross margin ranges by SMB category
 - `reference/csv-schema.md` — expected columns when the owner uploads a CSV
 - `reference/examples/` — worked scenarios (retail, services, product-based)
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

@@ -234,3 +234,9 @@ Before recommending changes to a page, anchor against the shared primitives in `
   - **"Free" in CTA copy**: Unbounce platform-wide null/negative — context-dependent
 - **`_shared/frameworks/ice-confidence-rubric.md`** — anchor each finding's Confidence score on `_shared/benchmarks/patterns.json` evidence quality, not familiarity.
 - **`_shared/benchmarks/patterns.json`** — when flagging a friction or proposing a fix, match it to a `pattern_id` and cite the lift range. Categories most relevant to page-cro: `social_proof`, `trust_signal`, `cta`, `headline`, `above_fold`, `form`.
+
+### Attribution
+
+Скилл заимствован из [Humblytics/humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) (MIT (© 2026 Humblytics, Inc.)).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

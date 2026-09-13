@@ -37,3 +37,9 @@ Analyze existing processes and recommend improvements.
 ## Output
 
 Produce a before/after process comparison with specific improvement recommendations, estimated impact, and an implementation plan.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

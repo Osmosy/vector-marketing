@@ -68,3 +68,9 @@ If QuickBooks is unreachable, stop — the QBR requires QB financial data as the
 ## Output
 
 Present the narrative in-line, then confirm export. End with a one-paragraph "what to focus on next quarter" summary.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

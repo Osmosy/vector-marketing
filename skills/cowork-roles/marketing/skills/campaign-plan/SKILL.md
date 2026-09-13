@@ -306,3 +306,9 @@ Present the full campaign brief with clear headings and formatting. After the br
 - Draft specific content pieces from the calendar?
 - Create a competitive analysis to inform the messaging?
 - Adjust the plan for a different budget or timeline?"
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

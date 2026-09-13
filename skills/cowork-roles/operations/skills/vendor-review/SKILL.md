@@ -102,3 +102,9 @@ If **~~procurement** is connected:
 1. **Upload the proposal** — I can extract pricing, terms, and SLAs from vendor documents.
 2. **Compare vendors** — "Compare Vendor A vs Vendor B" gets you a side-by-side analysis.
 3. **Include current spend** — For renewals, knowing what you pay now helps evaluate price changes.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

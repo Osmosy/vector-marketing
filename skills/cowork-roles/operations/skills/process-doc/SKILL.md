@@ -80,3 +80,9 @@ If **~~project tracker** is connected:
 1. **Start messy** — You don't need a perfect description. Tell me how it works today and I'll structure it.
 2. **Include the exceptions** — "Usually we do X, but sometimes Y" is the most valuable part to document.
 3. **Name the people** — Even if roles change, knowing who does what today helps get the process right.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

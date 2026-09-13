@@ -416,3 +416,9 @@ What I've tried: [Actions taken so far]
 What I need: [Specific help or decision needed]
 Deadline: [When this needs to be resolved by]
 ```
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

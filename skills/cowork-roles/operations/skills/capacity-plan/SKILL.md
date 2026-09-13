@@ -111,3 +111,9 @@ If **~~calendar** is connected:
 1. **Include all work** — BAU, projects, support, meetings. People aren't 100% available for project work.
 2. **Plan for buffer** — Target 80% utilization. 100% means no room for surprises.
 3. **Update regularly** — Capacity plans go stale fast. Review monthly.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

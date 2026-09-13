@@ -865,3 +865,9 @@ If brand colors cannot be extracted:
 ---
 
 *Skill created for generalized sales asset generation. Works for any seller, any product, any prospect.*
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

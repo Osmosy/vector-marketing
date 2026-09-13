@@ -250,3 +250,9 @@ After completing research, capture the knowledge for future use.
 - Review and update entries quarterly
 - Archive entries that are no longer relevant
 - Tag entries for searchability (by topic, product area, customer segment)
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

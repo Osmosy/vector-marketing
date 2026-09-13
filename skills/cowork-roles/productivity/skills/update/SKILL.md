@@ -166,3 +166,9 @@ Present grouped by confidence. High-confidence items offered to add directly; lo
 - Fuzzy matching on task titles handles minor wording differences
 - Safe to run frequently — only updates when there's new info
 - `--comprehensive` always runs interactively
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

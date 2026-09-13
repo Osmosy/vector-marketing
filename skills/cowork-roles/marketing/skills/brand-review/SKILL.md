@@ -274,3 +274,9 @@ Ask: "Would you like me to:
 - Focus on fixing just the high-severity issues?
 - Review additional content against the same guidelines?
 - Help you document your brand voice for future reviews?"
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

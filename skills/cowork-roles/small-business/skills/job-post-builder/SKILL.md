@@ -342,3 +342,9 @@ See `tests/triggers.md` for must-trigger, must-NOT-trigger, and ambiguous routin
 
 See `tests/scenarios.md` for end-to-end scenario walkthroughs covering the happy
 path, missing connector, and approval gate flows.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

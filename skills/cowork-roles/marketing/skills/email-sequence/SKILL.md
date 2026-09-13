@@ -218,3 +218,9 @@ Ask: "Would you like me to:
 - Create a variation of this sequence for a different audience segment?
 - Draft the A/B test variants for the subject lines?
 - Build a companion sequence (e.g., a post-purchase follow-up after this lead nurture converts)?"
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

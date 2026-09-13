@@ -98,3 +98,9 @@ The owner may ask for a narrower cut:
 - `reference/thresholds.md` — 🟢/🟡/🔴 cutoffs, tunable per owner
 - `reference/output_template.md` — exact markdown structure; do not deviate
 - `reference/gotchas.md` — known failure modes (QB states, Gmail auth, Slack write)
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

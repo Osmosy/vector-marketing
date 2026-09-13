@@ -55,3 +55,9 @@ Run with whatever is connected — this command degrades gracefully. If PayPal i
 ## Output
 
 End with the formatted brief and ask the owner: "Want me to post this to Slack, email it to yourself, or save it?"
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

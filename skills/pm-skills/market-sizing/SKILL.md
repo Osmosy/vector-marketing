@@ -92,13 +92,7 @@ If the user provides market research, industry reports, financial data, or compe
 
 ### Attribution
 
-Скилл заимствован из [PM Skills Marketplace](https://github.com/phuryn/pm-skills) (MIT, куратор Павел Хурын, The Product Compass). Адаптация для рынка РФ — Vector Marketing.
-
----
-
-### Attribution
-
-Скилл заимствован из [PM Skills Marketplace](https://github.com/phuryn/pm-skills) (MIT, куратор Павел Хурын, The Product Compass). Используется агентом market-research экосистемы Vector Marketing.
+Скилл заимствован из [PM Skills Marketplace](https://github.com/phuryn/pm-skills) (MIT, куратор Павел Хурын, The Product Compass). Адаптация для рынка РФ и использование агентом market-research — Vector Marketing.
 
 ### Further Reading
 

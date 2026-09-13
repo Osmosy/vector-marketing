@@ -243,3 +243,9 @@ You can tell me to weight differently: "Focus on big deals over soon deals" or "
 2. **Kill dead deals** — Stale opportunities inflate your pipeline and distort forecasts. Be ruthless.
 3. **Multi-thread everything** — If one person goes dark, you need a backup contact.
 4. **Close dates should mean something** — A close date is when you expect signature, not when you hope for one.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

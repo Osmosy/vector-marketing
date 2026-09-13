@@ -71,3 +71,9 @@ If both QuickBooks and PayPal are unreachable, stop — sales analysis requires 
 ## Output
 
 Present the sales analysis, then the content brief. Ask the owner if they'd like to generate Canva assets for any of the planned posts.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

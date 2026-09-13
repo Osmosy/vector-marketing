@@ -212,3 +212,9 @@ Tell me if your stages or probabilities are different.
 2. **Update close dates** — Stale close dates kill forecast accuracy. Push out deals that won't close in time.
 3. **Coverage matters** — 3x pipeline coverage is healthy. Below 2x is risky.
 4. **Activity = signal** — Deals with no recent activity are at higher risk than stage suggests.
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

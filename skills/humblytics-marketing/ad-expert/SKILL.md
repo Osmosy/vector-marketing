@@ -253,3 +253,9 @@ Ad copy and landing-page coordination is where canon advice ("add urgency!", "us
 - **`_shared/frameworks/base-rate-priors.md`** — ad copy A/B tests have similar 25–35% win rates. When pitching creative variants, frame expected outcomes as "1-in-3 chance of beating control" not "this will lift ROAS 40%."
 - **`_shared/frameworks/preflight-checklist.md`** — confirm vertical, deal size, and audience awareness level before recommending copy formulas. Schwartz's 5 stages of awareness apply: cold traffic needs different ad copy than retargeted bottom-funnel prospects.
 - **`_shared/benchmarks/patterns.json`** — when proposing a creative angle, match to a `pattern_id` and quote evidence-backed lift ranges. Most relevant categories: `cta`, `headline`, `social_proof`, `urgency`.
+
+### Attribution
+
+Скилл заимствован из [Humblytics/humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) (MIT (© 2026 Humblytics, Inc.)).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

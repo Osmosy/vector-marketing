@@ -173,3 +173,9 @@ PERFORMANCE BENCHMARKS:
 - `copywriting` — For individual email copy when a full sequence isn't needed
 - `marketing-strategist` — For broader lifecycle strategy that informs sequences
 - `funnel-reporter` — To measure sequence performance against funnel targets
+
+### Attribution
+
+Скилл заимствован из [Humblytics/humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) (MIT (© 2026 Humblytics, Inc.)).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.

@@ -246,3 +246,9 @@ When de-escalating:
 5. Maintain ownership of the customer relationship even after escalating the technical issue
 6. Follow up proactively — don't wait for the receiving team to come to you
 7. Document everything — the escalation trail is valuable for pattern detection and process improvement
+
+### Attribution
+
+Скилл заимствован из [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0).
+Текст апстрима сохранён как есть; этот блок — добавление сверху.
+Взято 2026-09.
