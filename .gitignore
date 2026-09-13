@@ -6,3 +6,6 @@
 # Локальный слой Company Brain (реальные данные бизнеса)
 company-brain/local/
 company-brain/*.private.md
+
+# Собранные дистрибутивы профилей (артефакт build_profiles.py)
+dist/

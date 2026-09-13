@@ -19,15 +19,15 @@
 Когда один агент закончил работу и следующему нужны конкретные данные. Используется реже, через @mention в Bot Mode или через Osmosy как релей.
 
 ```
-@research → конкурентная разведка + тренды + GEO сигналы
+@market-research → конкурентная разведка + тренды + GEO сигналы
      ↓
 @seo → SEO + AEO + GEO бриф
      ↓
 @content → мультиканальные драфты
      ↓
-@pr → питчи + план усиления
-@outbound → персонализированный outreach
-@paid → рекламные креативы + test backlog
+@reputation → питчи + план усиления
+@sales → персонализированный outreach
+@performance → рекламные креативы + test backlog
      ↓
 @landing-cro → варианты лендинга под трафик
 ```
@@ -55,10 +55,10 @@
 Рекомендую: 3 статьи под SEO + 1 под GEO citation
 ```
 
-### Content → PR + Outbound + Sales
+### Content → Reputation + Sales
 
 ```
-@pr @outbound Контент-пакет готов (anti-slop пройден).
+@reputation @sales Контент-пакет готов (anti-slop пройден).
 
 VC статья: ...
 Telegram пост: ...

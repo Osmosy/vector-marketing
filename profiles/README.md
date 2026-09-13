@@ -1,63 +1,73 @@
-# Базовый профиль для агента Vector Marketing
+# Настройка профилей Hermes
 
-Каждый агент разворачивается как отдельный профиль Hermes:
-
-```bash
-hermes profile create <agent-name> --clone
-```
-
-## Настройка SOUL.md для агента
-
-```
-Ты — <role> агентства Vector Marketing. Твоя специализация: <specialization>.
-
-Базовые правила:
-1. Отвечай на русском языке
-2. Работай только по своей специализации. Если задача вне твоей зоны — сообщи Osmosy (оркестратору)
-3. Используй только фактические данные. Если данных нет — запроси, не додумывай
-4. Формат выдачи: конкретные выводы, а не общие рассуждения
-5. Указывай источники данных
-```
-
-## Подключение skills
+Профиль агента не собирается вручную — он генерируется из репозитория:
 
 ```bash
-# Для каждого агента — свой набор
-hermes -p <agent-name> skills install <skill-name>
+python3 scripts/build_profiles.py --clean          # → dist/<agent>/ (19 профилей)
+hermes profile install ./dist/<agent> --alias      # поставить
+hermes profile update <agent>                      # обновить после правок в репо
 ```
 
-Полный состав профилей, SOUL.md и привязка скиллов — в репозитории (`agents/*.md`, `profiles/README.md`).
+Что попадает в `dist/<agent>/`:
+
+| Файл | Источник |
+|------|----------|
+| `SOUL.md` | `agents/<agent>.md` + блок про общий контекст |
+| `brain/*.md` | `company-brain/` (7 файлов) |
+| `skills/…` | профильные навыки, на которые ссылается агент |
+| `distribution.yaml` | манифест дистрибутива Hermes (name, version, env_requires) |
+| `.gitignore` | защита рабочего слоя и `.env` |
+
+Установщик `hermes profile install` сам вырезает `auth.json`, `.env`, `memories/`, `sessions/`,
+`logs/` и прочий user-owned слой, даже если он случайно попал в дистрибутив.
+
+## Модель и ключи
+
+Профиль не несёт `config.yaml`: модель и провайдер каждый ставит под себя, чтобы обновление
+дистрибутива не сбрасывало локальные настройки. Ключи задаются в `.env` профиля
+(установщик создаёт `.env.EXAMPLE` со списком требуемых переменных).
+
+```bash
+cp ~/.hermes/profiles/<agent>/.env.EXAMPLE ~/.hermes/profiles/<agent>/.env
+# вписать ключи модели
+```
+
+## Связка агентов
+
+`orchestrator` (Osmosy) — точка входа: он декомпозирует задачу и делегирует профильным
+агентам через `delegate_task`. Остальные профили запускаются и напрямую:
+
+```bash
+hermes -p orchestrator --skills vector-work "Клиент: интернет-магазин. Задача: +30% заявок."
+hermes -p seo "Семантика для клиента X: кластеры + интент"
+```
+
+Между профилями не наследуется конфиг — это осознанная изоляция Hermes. Общий контекст
+передаётся данными: `brain/` внутри каждого профиля и `company-brain/` в репозитории.
 
 ## Сводная таблица агентов
 
 | Профиль | Блок | Ключевые skills |
 |---------|------|----------------|
-| market-research | Стратегия | yandex-wordstat, social-media-research, DaData, maps |
-| analytics | Стратегия | yandex-marketing-apis-ru, google-workspace, MPSTATS |
-| performance | Привлечение | marketing-director-ru, yandex-marketing-apis-ru |
-| yandex-direct | Привлечение | yandex-direct, yandex-wordstat |
-| seo | Привлечение | evidence-based-seo, yandex-wordstat |
+| orchestrator | Оркестрация | strategy-red-team, vector-work, delegate_task |
+| market-research | Стратегия | market-sizing, beachhead-segment, ideal-customer-profile, competitor-analysis |
+| analytics | Стратегия | north-star-metric, ab-test-analysis, yandex-marketing-apis-ru, MPSTATS |
+| performance | Привлечение | growth-loops, pre-mortem, gtm-motions, campaign-plan |
+| yandex-direct | Привлечение | yandex-marketing-apis-ru, yandex-wordstat |
+| seo | Привлечение | seo-audit, open-seo, evidence-based-seo, yandex-wordstat |
 | vk-ads | Привлечение | social-media-research |
-| avito | Привлечение | avito-api |
-| marketplaces | Привлечение | ozon-seller-api, wildberries-api, MPSTATS, YooKassa |
-| landing-cro | Упаковка | creative/visual skills, ru-text |
-| content | Упаковка | ru-text, evidence-based-seo, humanizer |
-| smm-telegram | Упаковка | social-media-research, ru-text |
-| creative | Упаковка | creative/visual skills |
-| presentation | Результат | powerpoint, document-deliverables, google-workspace |
-| crm-retention | Удержание | google-workspace, DaData |
-| reputation | Доверие | maps, DaData |
-| sales | Операции | cowork-roles/sales/*, DaData |
-| support | Операции | cowork-roles/customer-support/*, ru-text |
-| ops | Операции | cowork-roles/productivity/*, cowork-roles/operations/*, google-workspace |
+| avito | Привлечение | avito-api, yandex-wordstat |
+| marketplaces | Привлечение | ozon-seller-api, wildberries-api, MPSTATS |
+| landing-cro | Упаковка | page-cro, ab-test-analysis, privacy-policy (152-ФЗ) |
+| content | Упаковка | product-name, evidence-based-seo, humanizer |
+| smm-telegram | Упаковка | content-creation, email-sequence |
+| creative | Упаковка | html, vector-github-design |
+| presentation | Упаковка | powerpoint, document-deliverables |
+| crm-retention | Удержание | cohort-analysis, email-sequence |
+| reputation | Удержание | maps, DaData, ru-text |
+| sales | Операции | account-research, call-prep, pipeline-review, forecast |
+| support | Операции | ticket-triage, draft-response, kb-article |
+| ops | Операции | task-management, capacity-plan, vendor-review, stakeholder-map |
 
-## Модели
-
-- **Основные агенты (research, analytics, content, presentation):** deepseek-v4-pro
-- **Тяжёлые агенты (performance, seo — анализ объёмов):** glm-5.1:cloud или minimax-m2.7
-- **Лёгкие агенты (sales, support, ops — коммуникация):** deepseek-v4-flash:cloud
-- **Специфические (avito, reputation — поиск данных):** deepseek-v4-flash:cloud
-
-## Источник навыков
-
-Агенты sales, support, ops используют навыки из [Cowork Roles](https://github.com/anthropics/knowledge-work-plugins) (17 ролей, 141 навык), уже установленные в Hermes: `~/.hermes/skills/cowork-roles/`.
+Актуальный состав — `agents/*.md`; таблица проверяется CI-скриптом
+`scripts/validate_agents.py` (расхождение с `agents/` валит сборку).

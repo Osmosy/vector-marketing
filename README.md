@@ -106,19 +106,33 @@
 
 ```bash
 git clone https://github.com/Osmosy/vector-marketing.git
+cd vector-marketing
 
-# 1. Заполнить company-brain/ под свой бизнес
-# 2. Создать профили Hermes
-hermes profile create market-research --clone
-hermes profile create seo --clone
-# ... (19 профилей)
+# 1. Собрать дистрибутивы профилей из agents/ + company-brain/ + skills/
+python3 scripts/build_profiles.py --clean     # → dist/<agent>/ (19 профилей)
 
-# 3. Вставить agents/<name>.md в профиль Hermes
-# 4. Подключить skills (см. profiles/README.md)
-# 5. Настроить sign-off gates
+# 2. Поставить нужные профили одной командой (Hermes-дистрибутивы)
+hermes profile install ./dist/orchestrator --alias
+hermes profile install ./dist/seo --alias           # локально, без git push
+hermes profile install ./dist/support --alias       # ставится и прямо с GitHub:
+#   hermes profile install github.com/Osmosy/vector-marketing#dist/support --alias
 
-# 6. Запустить через профиль Osmosy (оркестратор)
-hermes -p osmosy --skills vector-work "Клиент: интернет-магазин. Задача: увеличить заявки на 30%."
+# 3. Заполнить .env профиля (ключи модели) — установщик создаёт .env.EXAMPLE
+cp ~/.hermes/profiles/seo/.env.EXAMPLE ~/.hermes/profiles/seo/.env
+
+# 4. Запустить через профиль Osmosy (оркестратор)
+hermes -p orchestrator --skills vector-work "Клиент: интернет-магазин. Задача: увеличить заявки на 30%."
+```
+
+Обновление профиля после правок в репозитории: `hermes profile update seo` — SOUL, навыки
+и `brain/` перезаписываются, а памяти, сессии и `.env` не трогаются.
+
+Проверки перед коммитом (то же гоняет CI):
+
+```bash
+python3 scripts/validate_agents.py   # SOUL-манифесты, @handoff, ссылки на навыки, README
+python3 scripts/build_profiles.py --clean
+python3 scripts/check_dist.py        # форма собранных дистрибутивов
 ```
 
 ## Структура репозитория
@@ -162,10 +176,14 @@ vector-marketing/
 │   ├── handoff-protocol.md
 │   └── example-campaign.md
 ├── profiles/                     ← Настройка профилей Hermes
+├── scripts/                      ← validate_agents.py, build_profiles.py, check_dist.py
+├── .github/workflows/validate.yml ← CI: валидация SOUL + сборка + проверка dist
 ├── skills/                       ← Навыки (66 из Cowork Roles + 31 PM-скилл)
 ├── THIRD_PARTY_LICENSES/         ← Тексты лицензий апстримов
 └── assets/                       ← Логотипы
 ```
+
+`dist/` не хранится в репозитории — это артефакт `scripts/build_profiles.py` (каталог в `.gitignore`).
 
 ## PM-скиллы (skills/pm-skills/)
 

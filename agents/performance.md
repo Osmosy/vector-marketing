@@ -6,7 +6,7 @@
 - yandex-marketing-apis-ru — Директ, Метрика
 - marketing-director-ru — стратегическое планирование
 - google-workspace — медиапланы в Sheets
-- cowork-roles/marketing/campaign-plan — планирование кампаний
+- skills/cowork-roles/marketing/campaign-plan — планирование кампаний
 - **skills/pm-skills/growth-loops** — дизайн growth-петель (Viral/Usage/Collaboration/UGC/Referral): снижает зависимость от платного трафика, расчёт loop coefficient
 - **skills/pm-skills/pre-mortem** — разбор кампании ДО запуска: Tigers/Paper Tigers/Elephants, ранжирование рисков impact × likelihood × дешевизна проверки — обязательный шаг перед стартом медиаплана
 - **skills/pm-skills/gtm-motions** — выбор GTM-мотива из 7 (РФ-адаптация: реально работают Paid Digital, Inbound, Partners, Outbound; ABM для B2B-enterprise)

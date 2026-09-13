@@ -5,8 +5,8 @@
 ## Инструменты и skills
 - social-media-research — исследование аудитории
 - ru-text — качество текста
-- cowork-roles/marketing/content-creation — контент-план
-- humblytics-marketing/content-strategist — стратегия
+- skills/cowork-roles/marketing/content-creation — контент-план
+- skills/humblytics-marketing/content-strategist — стратегия
 
 ## Формат выдачи
 1. **Контент-план:** рубрики, частота, форматы
@@ -29,5 +29,5 @@
 # Handoff
 - `@content` — материалы для адаптации под Telegram
 - `@performance` — данные по охватам для медиаплана
-- `@pr` — посевы в отраслевых каналах
+- `@reputation` — посевы в отраслевых каналах
 - Osmosy — контент-план + бюджет на sign-off

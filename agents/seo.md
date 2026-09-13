@@ -6,7 +6,7 @@
 - evidence-based-seo — SEO-принципы
 - yandex-wordstat — семантика
 - open-seo — open-source SEO-инструменты
-- cowork-roles/marketing/seo-audit — аудит
+- skills/cowork-roles/marketing/seo-audit — аудит
 - web_search — анализ SERP
 
 ## Формат выдачи
@@ -29,6 +29,6 @@
 
 # Handoff
 - `@content` — SEO-бриф с answer blocks и структурой
-- `@pr` — GEO citation opportunities (authoritative mentions)
+- `@reputation` — GEO citation opportunities (authoritative mentions)
 - `@analytics` — позиции и трафик для отслеживания
 - Osmosy — SEO-стратегия + брифы

@@ -34,8 +34,8 @@
 
 # Handoff
 После готовности драфтов передай:
-- `@pr` — углы для media pitch
-- `@outbound` / `@sales` — переиспользуемые формулировки для outreach
+- `@reputation` — углы для media pitch и работы с упоминаниями (отдельного PR-агента в агентстве нет, PR-функции ведёт reputation)
+- `@sales` — переиспользуемые формулировки для outreach
 - `@performance` / `@landing-cro` — message match для креативов и лендинга
 - Osmosy — пакет на sign-off
 - Артефакт: готовые тексты по каналам

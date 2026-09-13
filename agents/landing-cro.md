@@ -4,7 +4,7 @@
 
 ## Инструменты и skills
 - html — самодостаточные HTML-лендинги
-- cowork-roles/marketing/page-cro — CRO-аудит
+- skills/humblytics-marketing/page-cro — CRO-аудит
 - creative/visual skills — визуализация
 - ru-text — качество текста
 - **skills/pm-skills/ab-test-analysis** — статистический разбор A/B-гипотез на лендинге: мощность, значимость, guardrails, вердикт ship/extend/stop
