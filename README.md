@@ -113,9 +113,7 @@ python3 scripts/build_profiles.py --clean     # → dist/<agent>/ (19 профи
 
 # 2. Поставить нужные профили одной командой (Hermes-дистрибутивы)
 hermes profile install ./dist/orchestrator --alias
-hermes profile install ./dist/seo --alias           # локально, без git push
-hermes profile install ./dist/support --alias       # ставится и прямо с GitHub:
-#   hermes profile install github.com/Osmosy/vector-marketing#dist/support --alias
+hermes profile install ./dist/seo --alias
 
 # 3. Заполнить .env профиля (ключи модели) — установщик создаёт .env.EXAMPLE
 cp ~/.hermes/profiles/seo/.env.EXAMPLE ~/.hermes/profiles/seo/.env
@@ -123,6 +121,11 @@ cp ~/.hermes/profiles/seo/.env.EXAMPLE ~/.hermes/profiles/seo/.env
 # 4. Запустить через профиль Osmosy (оркестратор)
 hermes -p orchestrator --skills vector-work "Клиент: интернет-магазин. Задача: увеличить заявки на 30%."
 ```
+
+Установка прямо по git-URL (`hermes profile install github.com/…)` поддерживается, но требует,
+чтобы дистрибутив лежал в корне своего репозитория. `dist/` в этом репозитории не хранится
+(артефакт сборки), поэтому отсюда профили ставятся локально; чтобы раздавать агента отдельным
+репозиторием — скопируйте `dist/<agent>/` в него и публикуйте (формат манифеста тот же).
 
 Обновление профиля после правок в репозитории: `hermes profile update seo` — SOUL, навыки
 и `brain/` перезаписываются, а памяти, сессии и `.env` не трогаются.
