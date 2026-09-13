@@ -188,6 +188,37 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
                 f"а в agents/ их {len(agent_names)}"
             )
 
+    # INSTALL.md — документация для внешнего пользователя: она должна оставаться верной.
+    install = repo_root / "INSTALL.md"
+    if not install.is_file():
+        errors.append("нет INSTALL.md — пояснения для внешнего пользователя")
+    else:
+        doc = install.read_text(encoding="utf-8")
+        # 1. Все профили, упомянутые как `hermes profile install ./dist/<x>`, существуют.
+        for ref in sorted(set(re.findall(r"\./dist/([a-z0-9-]+)", doc))):
+            if ref not in agent_names:
+                errors.append(f"INSTALL.md: установка ./dist/{ref}, но агента agents/{ref}.md нет")
+        # 2. Таблица «какого агента ставить» перечисляет всех агентов.
+        table_rows = set(re.findall(r"^\|\s*`([a-z0-9-]+)`\s*\|", doc, re.M))
+        if table_rows:
+            missing = sorted(agent_names - table_rows)
+            stale = sorted(table_rows - agent_names)
+            if missing:
+                errors.append(f"INSTALL.md: в таблице агентов нет {', '.join(missing)}")
+            if stale:
+                errors.append(f"INSTALL.md: в таблице агентов лишние {', '.join(stale)}")
+        # 3. Каждый скрипт, на который ссылается документация, существует.
+        for script in sorted(set(re.findall(r"scripts/([A-Za-z0-9_]+\.py)", doc))):
+            if not (repo_root / "scripts" / script).is_file():
+                errors.append(f"INSTALL.md: ссылка на несуществующий scripts/{script}")
+        # 4. Ровно одно утверждение о числе профилей должно сходиться.
+        n_declared = re.search(r"Собрать дистрибутивы \((\d+) каталогов", doc)
+        if n_declared and int(n_declared.group(1)) != len(agent_names):
+            errors.append(
+                f"INSTALL.md: заявлено {n_declared.group(1)} каталогов сборки, "
+                f"а агентов {len(agent_names)}"
+            )
+
     return errors, warnings
 
 
