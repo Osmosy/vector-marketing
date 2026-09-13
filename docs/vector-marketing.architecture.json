@@ -9,61 +9,338 @@
       {
         "id": "client-path",
         "label": "Путь задачи клиента",
-        "focus": ["client", "orchestrator", "strategy", "attract", "pack", "approval", "result"],
+        "focus": [
+          "client",
+          "orchestrator",
+          "strategy",
+          "attract",
+          "pack",
+          "approval",
+          "result"
+        ],
         "note": "От бизнес-задачи до результата: декомпозиция CMO, блоки агентов, human approval на внешние действия."
       },
       {
         "id": "context-harness",
         "label": "Context → Harness → Loop",
-        "focus": ["brain", "orchestrator", "agents", "loop"],
+        "focus": [
+          "brain",
+          "orchestrator",
+          "agents",
+          "loop"
+        ],
         "note": "Три слоя: Company Brain как контекст, agents/*.md как harness, draft-check-retry как loop."
       },
       {
         "id": "channels",
         "label": "Каналы привлечения",
-        "focus": ["orchestrator", "attract", "strategy"],
+        "focus": [
+          "orchestrator",
+          "attract",
+          "strategy"
+        ],
         "note": "Performance, Директ, SEO/AEO/GEO, VK, Авито, маркетплейсы."
       },
       {
         "id": "pm-skills",
         "label": "PM-методики",
-        "focus": ["brain", "skills-lib", "strategy", "pack", "retain"],
-        "note": "29 PM-скиллов (phuryn/pm-skills + адаптация РФ): sizing, ICP, CJM, гипотезы, GTM, pricing, pre-mortem, red-team, 152-ФЗ, NDA."
+        "focus": [
+          "brain",
+          "skills-lib",
+          "strategy",
+          "pack",
+          "retain"
+        ],
+        "note": "40 PM-скиллов под РФ: sizing, ICP, CJM, SWOT/PESTLE/Портер, персоны и сегменты, ценность, гипотезы, GTM, pricing, A/B, red-team, 152-ФЗ."
       }
     ]
   },
   "components": [
-    { "id": "client", "type": "external", "label": "Клиент", "sublabel": "бизнес-задача", "pos": [60, 320], "size": [130, 64] },
-    { "id": "orchestrator", "type": "backend", "label": "Osmosy (CMO)", "sublabel": "Hermes-оркестратор", "pos": [290, 320], "size": [150, 64] },
-    { "id": "brain", "type": "database", "label": "Company Brain", "sublabel": "7 файлов контекста", "pos": [290, 90], "size": [160, 64] },
-    { "id": "skills-lib", "type": "database", "label": "Библиотека skills", "sublabel": "Cowork 141 + PM 29", "pos": [290, 550], "size": [170, 64] },
-    { "id": "strategy", "type": "backend", "label": "Стратегия", "sublabel": "market-research, analytics", "pos": [560, 90], "size": [170, 64] },
-    { "id": "attract", "type": "backend", "label": "Привлечение", "sublabel": "performance, direct, seo…", "pos": [560, 220], "size": [160, 64] },
-    { "id": "pack", "type": "backend", "label": "Упаковка", "sublabel": "landing, content, smm…", "pos": [560, 350], "size": [150, 64] },
-    { "id": "retain", "type": "backend", "label": "Удержание", "sublabel": "crm-retention, reputation", "pos": [560, 480], "size": [150, 64] },
-    { "id": "ops", "type": "backend", "label": "Операции", "sublabel": "sales, support, ops", "pos": [560, 610], "size": [140, 64] },
-    { "id": "agents", "type": "database", "label": "19 агентов", "sublabel": "agents/*.md (SOUL)", "pos": [830, 320], "size": [150, 64] },
-    { "id": "loop", "type": "backend", "label": "Loop", "sublabel": "draft → check → retry", "pos": [830, 90], "size": [140, 64] },
-    { "id": "approval", "type": "security", "label": "Human approval", "sublabel": "публикация · бюджет", "pos": [1060, 320], "size": [160, 64] },
-    { "id": "result", "type": "external", "label": "Результат", "sublabel": "стратегия · кампания · отчёт", "pos": [1060, 480], "size": [170, 64] }
+    {
+      "id": "client",
+      "type": "external",
+      "label": "Клиент",
+      "sublabel": "бизнес-задача",
+      "pos": [
+        60,
+        320
+      ],
+      "size": [
+        130,
+        64
+      ]
+    },
+    {
+      "id": "orchestrator",
+      "type": "backend",
+      "label": "Osmosy (CMO)",
+      "sublabel": "Hermes-оркестратор",
+      "pos": [
+        290,
+        320
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "brain",
+      "type": "database",
+      "label": "Company Brain",
+      "sublabel": "7 файлов контекста",
+      "pos": [
+        290,
+        90
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "skills-lib",
+      "type": "database",
+      "label": "Библиотека skills",
+      "sublabel": "158 скиллов · 6 наборов",
+      "pos": [
+        290,
+        550
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "strategy",
+      "type": "backend",
+      "label": "Стратегия",
+      "sublabel": "market-research, analytics",
+      "pos": [
+        560,
+        90
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "attract",
+      "type": "backend",
+      "label": "Привлечение",
+      "sublabel": "performance, direct, seo…",
+      "pos": [
+        560,
+        220
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "pack",
+      "type": "backend",
+      "label": "Упаковка",
+      "sublabel": "landing, content, smm…",
+      "pos": [
+        560,
+        350
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "retain",
+      "type": "backend",
+      "label": "Удержание",
+      "sublabel": "crm-retention, reputation",
+      "pos": [
+        560,
+        480
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "ops",
+      "type": "backend",
+      "label": "Операции",
+      "sublabel": "sales, support, ops",
+      "pos": [
+        560,
+        610
+      ],
+      "size": [
+        140,
+        64
+      ]
+    },
+    {
+      "id": "agents",
+      "type": "database",
+      "label": "19 агентов",
+      "sublabel": "18 профильных + orchestrator",
+      "pos": [
+        830,
+        320
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "loop",
+      "type": "backend",
+      "label": "Loop",
+      "sublabel": "draft → check → retry",
+      "pos": [
+        830,
+        90
+      ],
+      "size": [
+        140,
+        64
+      ]
+    },
+    {
+      "id": "approval",
+      "type": "security",
+      "label": "Human approval",
+      "sublabel": "публикация · бюджет",
+      "pos": [
+        1060,
+        320
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "result",
+      "type": "external",
+      "label": "Результат",
+      "sublabel": "стратегия · кампания · отчёт",
+      "pos": [
+        1060,
+        480
+      ],
+      "size": [
+        170,
+        64
+      ]
+    }
   ],
   "connections": [
-    { "id": "client-task", "from": "client", "to": "orchestrator", "label": "бизнес-задача" },
-    { "id": "ctx-load", "from": "orchestrator", "to": "brain", "label": "контекст запуска", "fromSide": "top", "toSide": "bottom" },
-    { "id": "skills-load", "from": "orchestrator", "to": "skills-lib", "label": "профильные навыки", "fromSide": "bottom", "toSide": "top" },
-    { "id": "del-strategy", "from": "orchestrator", "to": "strategy", "label": "делегирование" },
-    { "id": "del-attract", "from": "orchestrator", "to": "attract" },
-    { "id": "del-pack", "from": "orchestrator", "to": "pack" },
-    { "id": "del-retain", "from": "orchestrator", "to": "retain" },
-    { "id": "del-ops", "from": "orchestrator", "to": "ops", "label": "делегирование", "labelAt": [500, 560] },
-    { "id": "ag-strategy", "from": "strategy", "to": "agents" },
-    { "id": "ag-attract", "from": "attract", "to": "agents" },
-    { "id": "ag-pack", "from": "pack", "to": "agents" },
-    { "id": "ag-retain", "from": "retain", "to": "agents" },
-    { "id": "ag-ops", "from": "ops", "to": "agents" },
-    { "id": "loop-cycle", "from": "agents", "to": "loop", "label": "draft/check/retry", "fromSide": "top", "toSide": "bottom" },
-    { "id": "ext-action", "from": "agents", "to": "approval", "label": "на внешнее действие", "labelDy": 56 },
-    { "id": "to-client", "from": "approval", "to": "result", "label": "результат клиенту", "fromSide": "bottom", "toSide": "top" }
+    {
+      "id": "client-task",
+      "from": "client",
+      "to": "orchestrator",
+      "label": "бизнес-задача"
+    },
+    {
+      "id": "ctx-load",
+      "from": "orchestrator",
+      "to": "brain",
+      "label": "контекст запуска",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "skills-load",
+      "from": "orchestrator",
+      "to": "skills-lib",
+      "label": "профильные навыки",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "del-strategy",
+      "from": "orchestrator",
+      "to": "strategy",
+      "label": "делегирование"
+    },
+    {
+      "id": "del-attract",
+      "from": "orchestrator",
+      "to": "attract"
+    },
+    {
+      "id": "del-pack",
+      "from": "orchestrator",
+      "to": "pack"
+    },
+    {
+      "id": "del-retain",
+      "from": "orchestrator",
+      "to": "retain"
+    },
+    {
+      "id": "del-ops",
+      "from": "orchestrator",
+      "to": "ops",
+      "label": "делегирование",
+      "labelAt": [
+        500,
+        560
+      ]
+    },
+    {
+      "id": "ag-strategy",
+      "from": "strategy",
+      "to": "agents"
+    },
+    {
+      "id": "ag-attract",
+      "from": "attract",
+      "to": "agents"
+    },
+    {
+      "id": "ag-pack",
+      "from": "pack",
+      "to": "agents"
+    },
+    {
+      "id": "ag-retain",
+      "from": "retain",
+      "to": "agents"
+    },
+    {
+      "id": "ag-ops",
+      "from": "ops",
+      "to": "agents"
+    },
+    {
+      "id": "loop-cycle",
+      "from": "agents",
+      "to": "loop",
+      "label": "draft/check/retry",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "ext-action",
+      "from": "agents",
+      "to": "approval",
+      "label": "на внешнее действие",
+      "labelDy": 56
+    },
+    {
+      "id": "to-client",
+      "from": "approval",
+      "to": "result",
+      "label": "результат клиенту",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
   ],
   "cards": [
     {

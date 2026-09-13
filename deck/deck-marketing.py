@@ -1,5 +1,5 @@
 # Дека «Vector Marketing» — тема 01-obsidian-neon (неон-синий на тёмно-синем)
-# 14 слайдов: титул, что это, проблема, решение, три слоя, агенты, PM-скиллы,
+# 13 слайдов: титул, что это, проблема, решение, три слоя, агенты, PM-скиллы,
 # гипотезный цикл, контур качества, инструменты РФ, деливераблы, roadmap, финал.
 import os
 OUT_FMT = os.path.expanduser('~/projects/vector-legal-decks15/vector-marketing-{theme}.pptx')
@@ -9,7 +9,7 @@ DATA = dict(
     title='Vector Marketing',
     subtitle='19 профильных агентов под управлением Osmosy (CMO-оркестратор) — '
              'стратегия, привлечение, упаковка, удержание, операции',
-    chips=[('19', 'агентов'), ('170+', 'навыков'), ('29', 'PM-методик')],
+    chips=[('19', 'агентов'), ('158', 'навыков'), ('40', 'PM-методик')],
     github='github.com/Osmosy/vector-marketing',
     footer_tag='Osmosy · Hermes Agent · 2026',
     intro_lead='Маркетинговое агентство на базе Hermes Agent: клиент ставит бизнес-задачу, '
@@ -49,7 +49,7 @@ DATA = dict(
     # 04 · Три слоя
     layers_items=[
         ('Context — что модель видит', 'company-brain/: brand-voice, anti-slop-rules, ICP, офферы, данные о бизнесе. Без контекста — генерик-выпуск; с контекстом — агент говорит голосом бренда клиента'),
-        ('Harness — что позволяет действовать', 'agents/*.md (19 ролей) + Hermes profile + 170+ skills + MCP-инструменты: Яндекс Метрика/Директ API, MPSTATS, ДaData, Wordstat, карты'),
+        ('Harness — что позволяет действовать', 'agents/*.md (19 ролей) + Hermes profile + 158 навыков в 6 наборах + MCP-инструменты: Яндекс Метрика/Директ API, MPSTATS, ДaData, Wordstat, карты'),
         ('Loop — как обеспечивается качество', 'draft → check → retry: anti-slop чеклист, взаимная проверка агентов, handoff-протокол, cron-ритм. Red-team стратегии обязателен перед выдачей клиенту'),
     ],
 
@@ -63,13 +63,13 @@ DATA = dict(
 
     # 06 · PM-скиллы
     skills_cards=[
-        ('Исследования', ['TAM/SAM/SOM: Wordstat,', 'MPSTATS, ДaData, Росстат', 'ICP и CJM как деливераблы', 'Конкуренты: библиотека', 'Директа, отзывы, МП']),
+        ('Исследования', ['TAM/SAM/SOM: Wordstat,', 'MPSTATS, ДaData, Росстат', 'SWOT/PESTLE/5 сил Портера', 'Персоны и сегменты из', 'интервью, CJM']),
         ('Гипотезы', ['Карта допущений: 8 категорий', 'Матрица Impact × Risk', 'Smoke-тесты: TG-пост,', 'лендинг+Директ, карточка', 'WB/Ozon без рекламы']),
         ('Метрики', ['North Star + дерево метрик', 'A/B: мощность, SRM,', 'guardrails, ship/extend/stop', 'Когорты и RFM: retention', 'кривые из CSV']),
     ],
-    skills_panel='29 методик PM Skills Marketplace + адаптация РФ',
+    skills_panel='40 методик PM Skills Marketplace + адаптация РФ',
     skills_lines=[
-        'Источник: github.com/phuryn/pm-skills (MIT, The Product Compass). Взято 29 из 68 — остальные дубли или SDLC-домен.',
+        'Источник: github.com/phuryn/pm-skills (MIT, The Product Compass). Взято 40 из 68 — остальные SDLC-домены и найм, вне профиля агентства.',
         '!Каждый скилл адаптирован под РФ: источники данных (Wordstat вместо Google Trends), юнит-экономика маркетплейсов, 152-ФЗ в политиках, Роспатент в нейминге, право РФ в NDA.',
     ],
 
@@ -117,11 +117,11 @@ DATA = dict(
 
     # 10 · Roadmap
     roadmap_items=[
-        ('Сейчас', ['29 PM-скиллов в 4 группах, 19 агентов, 170+ навыков', 'Живая архитектурная диаграмма (Archify) + визуальная верификация']),
+        ('Сейчас', ['40 PM-скиллов в 4 группах, 19 агентов, 158 навыков', 'Живая архитектурная диаграмма (Archify) + визуальная верификация']),
         ('Следующий шаг', ['Прогон агентства на реальном клиенте: полный цикл от брифа до отчёта ROMI', 'Company Brain под конкретный бизнес — контекст решает качество']),
         ('Экосистема Vector', ['Связка с vector-prediction (прогноз спроса) и vector-work (роли)', 'Единый слой Company Brain для всех продуктов Osmosy']),
     ],
-    fact_big='19 агентов · 29 методик', fact_small='полный цикл маркетинга: от исследования рынка до отчёта по ROMI — с human approval на каждом внешнем действии',
+    fact_big='19 агентов · 40 методик', fact_small='полный цикл маркетинга: от исследования рынка до отчёта по ROMI — с human approval на каждом внешнем действии',
     final_msg='Контекст — валюта. Агенты — исполнители. Человек — решение.',
     final_sub='github.com/Osmosy/vector-marketing',
 )
@@ -270,7 +270,7 @@ def sl_agents(slide, th, D):
 def sl_skills(slide, th, D):
     bg_fill(slide, th)
     kicker(slide, th, '06 · Методики')
-    title_block(slide, th, '29 PM-скиллов: метод, а не промпт')
+    title_block(slide, th, '40 PM-скиллов: метод, а не промпт')
     cw, gap, m = 3.95, 0.25, 0.62
     for i, (head, lines) in enumerate(D['skills_cards']):
         card(slide, th, m + i*(cw+gap), 2.15, cw, 3.1, head, lines)

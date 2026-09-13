@@ -11,8 +11,11 @@
 [![Hermes Agent](https://img.shields.io/badge/Hermes-Agent-blue.svg)](https://github.com/NousResearch/hermes-agent)
 [![Ecosystem: Vector](https://img.shields.io/badge/Ecosystem-Vector-blue.svg)](https://osmosy.github.io/)
 [![Agents: 19](https://img.shields.io/badge/Agents-19-green.svg)](#агенты)
+[![Skills: 158](https://img.shields.io/badge/Skills-158-blueviolet.svg)](#навыки)
 [![Company Brain](https://img.shields.io/badge/Company-Brain-7%20files-purple.svg)](#company-brain)
 [![Framework](https://img.shields.io/badge/Framework-Context%E2%86%92Harness%E2%86%92Loop-orange.svg)](FUNDAMENTALS.md)
+
+**Документация:** [Установка](INSTALL.md) · [Архитектура (live)](https://osmosy.github.io/vector-marketing/docs/vector-marketing.architecture.html) · [Презентация](deck/)
 
 </div>
 
@@ -190,6 +193,29 @@ vector-marketing/
 ```
 
 `dist/` не хранится в репозитории — это артефакт `scripts/build_profiles.py` (каталог в `.gitignore`).
+
+## Навыки
+
+158 скиллов: 153 из сторонних наборов (каждый — с блоком `### Attribution` и лицензией в `THIRD_PARTY_LICENSES/`) и 5 собственных.
+
+| Набор | Скиллов | Лицензия | Что даёт агентству |
+|-------|---------|----------|--------------------|
+| `cowork-roles/` | 66 | Apache-2.0 | маркетинг, продажи, поддержка, операции, малый бизнес (Anthropic Cowork Roles) |
+| `pm-skills/` | 40 | MIT | методики PM: sizing, ICP, CJM, SWOT/PESTLE/Портер, персоны, GTM, pricing, A/B, pre-mortem |
+| `social-media-skills/` | 17 | MIT | посты, хуки, карусели, инфографика, Reels, дашборды соцсетей |
+| `humblytics-marketing/` | 12 | MIT | CRO, воронки, тепловые карты, атрибуция выручки, копирайтинг |
+| `searchfit-seo/` | 11 | MIT | AI-visibility, технический и on-page SEO, кластеризация, схемы, перелинковка |
+| `claude-skills/` | 7 | MIT | LinkedIn-набор (6) + локальное SEO |
+| собственные | 5 | MIT | open-seo, github-repo-research, timesfm-marketing, vector-work, vector-github-design |
+
+В профиль агента попадают только его профильные навыки — всего 109 вложений на 19 профилей
+(например, `smm-telegram` получает 25, `seo` — 11).
+
+Добавить навык из апстрима:
+
+```bash
+python3 scripts/vendor_skill.py --set <набор> --skills имя1,имя2
+```
 
 ## PM-скиллы (skills/pm-skills/)
 

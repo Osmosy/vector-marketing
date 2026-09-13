@@ -267,6 +267,56 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
                     f"skills/{rel}: нет блока «### Attribution» — вендоренный скилл без уведомления"
                 )
 
+    # Документация и артефакты не должны разойтись с фактическим составом:
+    # числа живут в README, деке и диаграмме, и все они обязаны совпадать с деревом.
+    n_agents = len(agent_names)
+    n_skills = len(list((repo_root / "skills").rglob("SKILL.md")))
+    n_pm = len(list((repo_root / "skills" / "pm-skills").glob("*/SKILL.md"))) if (repo_root / "skills" / "pm-skills").is_dir() else 0
+    n_brain = len(list((repo_root / "company-brain").glob("*.md"))) if (repo_root / "company-brain").is_dir() else 0
+
+    artifacts = {
+        "README.md": repo_root / "README.md",
+        "deck/deck-marketing.py": repo_root / "deck" / "deck-marketing.py",
+        "agent-description.md": repo_root / "agent-description.md",
+    }
+    # Для каждого артефакта — обязательные числа (регуляркой, чтобы не ловить лишнее).
+    required_numbers = {
+        "README.md": {
+            "agents": [f"Agents-{n_agents}", f"#агенты"],
+            "skills": [f"Skills-{n_skills}"],
+            "pm": [f"{n_pm} методических"],
+            "brain": [f"Brain-{n_brain}%20files"],
+        },
+        "deck/deck-marketing.py": {
+            "agents": [f"('{n_agents}', 'агентов')"],
+            "skills": [f"('{n_skills}', 'навыков')"],
+            "pm": [f"('{n_pm}', 'PM-методик')", f"{n_pm} PM-скиллов"],
+        },
+        "agent-description.md": {
+            "agents": [f"{n_agents} агентов"],
+            "skills": [f"{n_skills} навыков"],
+        },
+    }
+    for label, path in artifacts.items():
+        if not path.is_file():
+            continue
+        body = path.read_text(encoding="utf-8")
+        for kind, needles in required_numbers.get(label, {}).items():
+            if not any(n in body for n in needles):
+                errors.append(
+                    f"{label}: нет актуального числа для «{kind}» "
+                    f"(ждали одно из {needles})"
+                )
+
+    # Диаграмма: подпись библиотеки навыков и число PM-методик во вью.
+    diag = repo_root / "docs" / "vector-marketing.architecture.json"
+    if diag.is_file():
+        body = diag.read_text(encoding="utf-8")
+        if f"{n_skills} скиллов" not in body:
+            errors.append(f"диаграмма: нет подписи «{n_skills} скиллов»")
+        if f"{n_pm} PM-скиллов" not in body:
+            errors.append(f"диаграмма: нет «{n_pm} PM-скиллов» во вью")
+
     return errors, warnings
 
 

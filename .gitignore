@@ -9,3 +9,7 @@ company-brain/*.private.md
 
 # Собранные дистрибутивы профилей (артефакт build_profiles.py)
 dist/
+
+# Python-кеш сборки деки
+__pycache__/
+*.pyc
