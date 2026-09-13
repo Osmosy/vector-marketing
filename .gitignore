@@ -1,0 +1,8 @@
+# Секреты и данные клиента — не коммитить
+.env
+.env.*
+*.key
+
+# Локальный слой Company Brain (реальные данные бизнеса)
+company-brain/local/
+company-brain/*.private.md

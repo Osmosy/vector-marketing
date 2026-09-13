@@ -26,6 +26,8 @@ hermes profile create <agent-name> --clone
 hermes -p <agent-name> skills install <skill-name>
 ```
 
+Полный состав профилей, SOUL.md и привязка скиллов — в репозитории (`agents/*.md`, `profiles/README.md`).
+
 ## Сводная таблица агентов
 
 | Профиль | Блок | Ключевые skills |

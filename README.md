@@ -31,6 +31,8 @@
               └── ОПЕРАЦИИ: sales, support, ops
 ```
 
+19 = 18 профильных агентов + `orchestrator` (Osmosy, CMO-оркестратор).
+
 ## Как это работает
 
 1. Клиент ставит бизнес-задачу
@@ -52,7 +54,8 @@
 
 ## Company Brain
 
-Общий контекст для всех агентов. **Это реальный рва — ценность в контексте, а не в ботах.** Заполните под свой бизнес.
+Общий контекст для всех агентов. **Это реальный ров — ценность в контексте, а не в ботах.** Заполните под свой бизнес.
+Свой рабочий слой держите в `company-brain/local/` — он исключён из git (см. `.gitignore`).
 
 | Файл | Что содержит |
 |------|-------------|
@@ -114,8 +117,8 @@ hermes profile create seo --clone
 # 4. Подключить skills (см. profiles/README.md)
 # 5. Настроить sign-off gates
 
-# 6. Запустить через Osmosy
-hermes --skills vector-work "Клиент: интернет-магазин. Задача: увеличить заявки на 30%."
+# 6. Запустить через профиль Osmosy (оркестратор)
+hermes -p osmosy --skills vector-work "Клиент: интернет-магазин. Задача: увеличить заявки на 30%."
 ```
 
 ## Структура репозитория
@@ -125,7 +128,9 @@ vector-marketing/
 ├── README.md
 ├── FUNDAMENTALS.md              ← Context → Harness → Loop
 ├── agent-description.md
-├── company-brain/               ← Общий контекст (реальный рва)
+├── LICENSE · NOTICE.md          ← MIT + атрибуция сторонних наборов
+├── .gitignore                   ← company-brain/local/ — вне git
+├── company-brain/               ← Общий контекст (реальный ров)
 │   ├── brand-voice.md
 │   ├── anti-slop-rules.md
 │   ├── strategy.md
@@ -157,13 +162,14 @@ vector-marketing/
 │   ├── handoff-protocol.md
 │   └── example-campaign.md
 ├── profiles/                     ← Настройка профилей Hermes
-├── skills/                       ← Навыки (141 из Cowork Roles + 29 PM-скиллов)
+├── skills/                       ← Навыки (66 из Cowork Roles + 31 PM-скилл)
+├── THIRD_PARTY_LICENSES/         ← Тексты лицензий апстримов
 └── assets/                       ← Логотипы
 ```
 
 ## PM-скиллы (skills/pm-skills/)
 
-29 методических скиллов из [PM Skills Marketplace](https://github.com/phuryn/pm-skills) (MIT, куратор Павел Хурын, The Product Compass) с адаптацией под рынок РФ:
+31 методический скилл из [PM Skills Marketplace](https://github.com/phuryn/pm-skills) (MIT, куратор Павел Хурын, The Product Compass) с адаптацией под рынок РФ: тексты апстрима сохранены, сверху добавлен блок РФ-адаптации и `### Attribution`. Апстрим содержит 68 скиллов — взяты методики, релевантные профилю маркетингового агентства (отбор зафиксирован в сообщениях коммитов).
 
 ### Исследования и стратегия
 
@@ -220,13 +226,16 @@ vector-marketing/
 - Архитектура: `marketing-agency-hermes-structure.docx` (май 2026)
 - Framework: [@shannholmberg](https://x.com/shannholmberg) / Nous Research — Context → Harness → Loop
 - Платформа: [Hermes Agent](https://github.com/NousResearch/hermes-agent)
-- Навыки: [Cowork Roles](https://github.com/anthropics/knowledge-work-plugins) (141 навык)
-- PM-методики: [phuryn/pm-skills](https://github.com/phuryn/pm-skills) (29 скиллов, адаптация РФ)
+- Навыки: [Cowork Roles](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0; в репозитории 66 навыков из 6 плагинов)
+- PM-методики: [phuryn/pm-skills](https://github.com/phuryn/pm-skills) (MIT, 31 скилл, адаптация РФ)
+- Humblytics: [humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) (MIT, 6 скиллов)
 - GEO/AEO концепции: [dataaispark-spec/hermes-x-marketing-agency-bots](https://github.com/dataaispark-spec/hermes-x-marketing-agency-bots)
-- Исследования: [claude-skills/research-ops](https://github.com/alirezarezvani/claude-skills)
-- Соцсети: [social-media-skills](https://github.com/charlie947/social-media-skills)
+- Исследования: [claude-skills/research-ops](https://github.com/alirezarezvani/claude-skills) — как источник методологии; код не вендорился
+- Соцсети: [social-media-skills](https://github.com/charlie947/social-media-skills) — источник идей, файлы не включены
 
-### Навыки соцсетей → агенты
+### Планируемые навыки соцсетей → агенты
+
+> Статус: **не портированы** — этих скиллов в репозитории нет, таблица фиксирует план привязки.
 
 | Навык | Агент |
 |-------|-------|
