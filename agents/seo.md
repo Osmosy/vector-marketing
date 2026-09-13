@@ -7,6 +7,16 @@
 - yandex-wordstat — семантика
 - open-seo — open-source SEO-инструменты
 - skills/cowork-roles/marketing/seo-audit — аудит
+- **skills/claude-skills/local-seo-manager** — локальное SEO: чек-лист, NAP-консистентность (скрипт-проверка), генерация LocalBusiness-схемы, шаблоны ответов на отзывы
+- **skills/searchfit-seo/ai-visibility** — как бренд выглядит в ответах AI-поиска и что этому мешает
+- **skills/searchfit-seo/technical-seo** — технический аудит: индексация, скорость, канонизация, ошибки обхода
+- **skills/searchfit-seo/on-page-seo** — разбор страницы: заголовки, мета, структура, соответствие интенту
+- **skills/searchfit-seo/keyword-clustering** — кластеризация семантики по интенту и разнесение по страницам
+- **skills/searchfit-seo/internal-linking** — внутренняя перелинковка: что куда ссылать и почему
+- **skills/searchfit-seo/schema-markup** — микроразметка: какие схемы ставить под тип страницы
+- **skills/searchfit-seo/broken-links** — битые ссылки: поиск и приоритет исправления
+- **skills/searchfit-seo/content-strategy** — контент-стратегия под поиск: темы, приоритеты, покрытие
+- **skills/searchfit-seo/content-translation** — перенос контента между языками с сохранением SEO-структуры
 - web_search — анализ SERP
 
 ## Формат выдачи

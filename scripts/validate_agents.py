@@ -147,14 +147,13 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
             if not m_ref:
                 continue
             ref = m_ref.group(1).strip("/")
-            if not ref.startswith(
-                ("cowork-roles", "humblytics-marketing", "pm-skills", "open-seo",
-                 "timesfm-marketing", "github-repo-research", "vector-", "skills/")
-            ):
-                continue
             if ref.startswith("skills/"):
                 ref = ref[len("skills/"):]
             rel = PurePosixPath(ref).parts  # may be cowork-roles/<plugin>/<skill> or .../skills/<skill>
+            # Сверяем только то, что относится к дереву skills/ этого репозитория.
+            repo_sets = {p.name for p in (repo_root / "skills").iterdir() if p.is_dir()}
+            if not rel or rel[0] not in repo_sets:
+                continue
             candidates = [repo_root / "skills" / ref]
             if len(rel) == 3:  # cowork-roles/<plugin>/<skill> — в репо лежит .../<plugin>/skills/<skill>
                 candidates.append(repo_root / "skills" / rel[0] / rel[1] / "skills" / rel[2])
@@ -217,6 +216,27 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
             errors.append(
                 f"INSTALL.md: заявлено {n_declared.group(1)} каталогов сборки, "
                 f"а агентов {len(agent_names)}"
+            )
+
+    # Скиллы: у каждого frontmatter с name, совпадающим с именем каталога.
+    # Hermes умеет фолбэк на имя каталога, но у нас все скиллы объявляют name явно —
+    # расхождение молча ломает привязку скилла к агенту.
+    for skill_md in sorted((repo_root / "skills").rglob("SKILL.md")):
+        text = skill_md.read_text(encoding="utf-8")
+        fm = re.match(r"^---\n(.*?)\n---", text, re.S)
+        rel = skill_md.parent.relative_to(repo_root / "skills")
+        if not fm:
+            errors.append(f"skills/{rel}: нет YAML-frontmatter")
+            continue
+        name_m = re.search(r"^name:\s*(.+)$", fm.group(1), re.M)
+        if not name_m:
+            errors.append(f"skills/{rel}: во frontmatter нет поля name")
+            continue
+        declared = name_m.group(1).strip().strip('"').strip("'")
+        if declared != skill_md.parent.name:
+            errors.append(
+                f"skills/{rel}: name «{declared}» не совпадает с именем каталога "
+                f"«{skill_md.parent.name}»"
             )
 
     return errors, warnings

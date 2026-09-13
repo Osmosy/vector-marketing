@@ -15,6 +15,7 @@ hermes profile update <agent>                      # обновить после
 | `SOUL.md` | `agents/<agent>.md` + блок про общий контекст |
 | `brain/*.md` | `company-brain/` (7 файлов) |
 | `skills/…` | профильные навыки, на которые ссылается агент |
+| `scripts/…` | вспомогательные скрипты навыка, если они есть у апстрима (например, `nap_checker.py` у local-seo-manager) |
 | `distribution.yaml` | манифест дистрибутива Hermes (name, version, env_requires) |
 | `.gitignore` | защита рабочего слоя и `.env` |
 
@@ -50,17 +51,17 @@ hermes -p seo "Семантика для клиента X: кластеры + и
 | Профиль | Блок | Ключевые skills |
 |---------|------|----------------|
 | orchestrator | Оркестрация | strategy-red-team, vector-work, delegate_task |
-| market-research | Стратегия | market-sizing, beachhead-segment, ideal-customer-profile, competitor-analysis |
-| analytics | Стратегия | north-star-metric, ab-test-analysis, yandex-marketing-apis-ru, MPSTATS |
+| market-research | Стратегия | market-sizing, swot-analysis, pestle-analysis, porters-five-forces, user-personas |
+| analytics | Стратегия | north-star-metric, ab-test-analysis, revenue-attributor, yandex-marketing-apis-ru |
 | performance | Привлечение | growth-loops, pre-mortem, gtm-motions, campaign-plan |
 | yandex-direct | Привлечение | yandex-marketing-apis-ru, yandex-wordstat |
-| seo | Привлечение | seo-audit, open-seo, evidence-based-seo, yandex-wordstat |
+| seo | Привлечение | searchfit-seo (ai-visibility, technical-seo, on-page-seo), local-seo-manager, open-seo |
 | vk-ads | Привлечение | social-media-research |
 | avito | Привлечение | avito-api, yandex-wordstat |
 | marketplaces | Привлечение | ozon-seller-api, wildberries-api, MPSTATS |
-| landing-cro | Упаковка | page-cro, ab-test-analysis, privacy-policy (152-ФЗ) |
-| content | Упаковка | product-name, evidence-based-seo, humanizer |
-| smm-telegram | Упаковка | content-creation, email-sequence |
+| landing-cro | Упаковка | page-cro, cro-optimizer, heatmap-analyst, funnel-reporter, ab-test-analysis |
+| content | Упаковка | product-name, copywriting, content-brief, evidence-based-seo |
+| smm-telegram | Упаковка | linkedin-* (6 скиллов), content-creation |
 | creative | Упаковка | html, vector-github-design |
 | presentation | Упаковка | powerpoint, document-deliverables |
 | crm-retention | Удержание | cohort-analysis, email-sequence |

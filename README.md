@@ -184,7 +184,7 @@ vector-marketing/
 ├── profiles/                     ← Настройка профилей Hermes
 ├── scripts/                      ← validate_agents.py, build_profiles.py, check_dist.py
 ├── .github/workflows/validate.yml ← CI: валидация SOUL + сборка + проверка dist
-├── skills/                       ← Навыки (66 из Cowork Roles + 31 PM-скилл)
+├── skills/                       ← Навыки (66 Cowork + 40 PM + 17 соцсети + 12 Humblytics + 11 searchfit + 7 LinkedIn)
 ├── THIRD_PARTY_LICENSES/         ← Тексты лицензий апстримов
 └── assets/                       ← Логотипы
 ```
@@ -193,13 +193,22 @@ vector-marketing/
 
 ## PM-скиллы (skills/pm-skills/)
 
-31 методический скилл из [PM Skills Marketplace](https://github.com/phuryn/pm-skills) (MIT, куратор Павел Хурын, The Product Compass) с адаптацией под рынок РФ: тексты апстрима сохранены, сверху добавлен блок РФ-адаптации и `### Attribution`. Апстрим содержит 68 скиллов — взяты методики, релевантные профилю маркетингового агентства (отбор зафиксирован в сообщениях коммитов).
+40 методических скиллов из [PM Skills Marketplace](https://github.com/phuryn/pm-skills) (MIT, куратор Павел Хурын, The Product Compass) с адаптацией под рынок РФ: тексты апстрима сохранены, сверху добавлен блок РФ-адаптации и `### Attribution`. Апстрим содержит 68 скиллов — взяты методики, релевантные профилю маркетингового агентства (отбор зафиксирован в сообщениях коммитов).
 
 ### Исследования и стратегия
 
 | Скилл | Что даёт | Агент |
 |-------|----------|-------|
 | market-sizing | TAM/SAM/SOM, top-down + bottom-up; источники РФ: Wordstat, MPSTATS, ДaData, Росстат | market-research |
+| swot-analysis | SWOT: внутренние/внешние факторы, что усиливать и что закрывать | market-research |
+| pestle-analysis | PESTLE: макро-факторы (политика, экономика, социум, технологии, право, экология) | market-research |
+| porters-five-forces | 5 сил Портера: конкуренция в отрасли, барьеры входа, власть поставщиков/покупателей | market-research |
+| value-proposition | Ценностное предложение: боли/выгоды/альтернативы → проверяемая формулировка | market-research |
+| positioning-ideas | Варианты позиционирования и отличия от конкурентов | market-research |
+| value-prop-statements | Формулировки ценностного предложения для лендинга и рекламы | market-research, content |
+| user-personas | Персоны на данных интервью: роли, цели, барьеры, триггеры | market-research |
+| user-segmentation | Сегментация: критерии, размер сегментов, приоритет охвата | market-research |
+| market-segments | Выбор сегментов: какие обслуживать, какие игнорировать | market-research |
 | beachhead-segment | Выбор пляжного сегмента: pain / WTP / winnable share / referral | market-research |
 | ideal-customer-profile | ICP из данных: демография, поведение, JTBD, PMF-опросы | market-research |
 | customer-journey-map | CJM: стадии, точки контакта, эмоции, барьеры (деливерабл) | market-research |
@@ -243,7 +252,7 @@ vector-marketing/
 | stakeholder-map | Power/interest сетка + план коммуникаций (крупные проекты) | ops |
 | draft-nda | NDA по праву РФ: режим КТ (ФЗ-98), гл. 75 ГК РФ, доступы к кабинетам | ops |
 
-Не портированы: slash-команды (42) — тонкие обёртки над скиллами, функциональность доставлена через привязку скиллов к агентам; дубль-скиллы уже имеющихся навыков (ideas, positioning, sentiment, grammar) и SDLC-домены (PRD, stories, спринты, retro) — вне профиля агентства.
+Не портированы: slash-команды (42) — тонкие обёртки над скиллами, функциональность доставлена через привязку скиллов к агентам; часть методик (metrics-dashboard, product-vision, product-strategy) и SDLC-домены (PRD, stories, спринты, retro, тест-сценарии) — вне профиля агентства. Пропущены сознательно, а не «как дубли»: сверка с глобальным набором Hermes показала, что этих навыков у нас нет вообще.
 
 ## Источники
 
@@ -251,18 +260,21 @@ vector-marketing/
 - Framework: [@shannholmberg](https://x.com/shannholmberg) / Nous Research — Context → Harness → Loop
 - Платформа: [Hermes Agent](https://github.com/NousResearch/hermes-agent)
 - Навыки: [Cowork Roles](https://github.com/anthropics/knowledge-work-plugins) (Apache-2.0; в репозитории 66 навыков из 6 плагинов)
-- PM-методики: [phuryn/pm-skills](https://github.com/phuryn/pm-skills) (MIT, 31 скилл, адаптация РФ)
-- Humblytics: [humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) (MIT, 6 скиллов)
+- PM-методики: [phuryn/pm-skills](https://github.com/phuryn/pm-skills) (MIT, 40 скиллов, адаптация РФ)
+- Humblytics: [humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) (MIT, 12 скиллов: CRO, воронки, атрибуция)
+- SEO-методики: [searchfit/searchfit-seo](https://github.com/searchfit/searchfit-seo) (MIT, 11 скиллов)
+- LinkedIn-набор: [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) (MIT, 7 скиллов)
 - GEO/AEO концепции: [dataaispark-spec/hermes-x-marketing-agency-bots](https://github.com/dataaispark-spec/hermes-x-marketing-agency-bots)
 - Исследования: [claude-skills/research-ops](https://github.com/alirezarezvani/claude-skills) — как источник методологии; код не вендорился
-- Соцсети: [social-media-skills](https://github.com/charlie947/social-media-skills) — источник идей, файлы не включены
+- Соцсети: [social-media-skills](https://github.com/charlie947/social-media-skills) (MIT, 17 скиллов: посты, карусели, Reels, дашборды)
 
-### Планируемые навыки соцсетей → агенты
+### Навыки соцсетей → агенты
 
-> Статус: **не портированы** — этих скиллов в репозитории нет, таблица фиксирует план привязки.
+Все 17 скиллов набора `skills/social-media-skills/` (MIT, charlie947) вендорены и привязаны к агентам:
 
 | Навык | Агент |
 |-------|-------|
-| voice-builder, newsletter-voice, post-writer, hook-generator, post-formatter, quote-post | content |
+| voice-builder, newsletter-voice, post-writer, hook-generator, post-formatter, quote-post | smm-telegram |
+| content-matrix, niche-research, profile-optimizer, pinned-comment | smm-telegram |
+| analytics-dashboard, post-scorer | analytics |
 | gemini-carousel, gemini-infographic, graphic-designer, youtube-thumbnail, reels-scripting | creative |
-| analytics-dashboard, post-scorer, content-matrix, niche-research, profile-optimizer, pinned-comment | smm-telegram |

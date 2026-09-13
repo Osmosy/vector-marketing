@@ -45,11 +45,13 @@ def agent_identity(name: str, text: str) -> str:
     return title.split("—")[0].strip() or name
 
 
-def skill_roots(text: str) -> list[str]:
+def skill_roots(text: str, repo_root: Path) -> list[str]:
     """Профильные ссылки на навыки из секции «Инструменты и skills»."""
     m = re.search(r"^## Инструменты и skills\n(.*?)(?=^#{1,2} )", text, re.S | re.M)
     if not m:
         return []
+    # наборы навыков, которые действительно есть в этом репозитории
+    repo_sets = {p.name for p in (repo_root / "skills").iterdir() if p.is_dir()}
     roots: list[str] = []
     for raw in m.group(1).splitlines():
         line = raw.lstrip("-•* ").strip()
@@ -59,7 +61,8 @@ def skill_roots(text: str) -> list[str]:
         r = ref.group(1).strip("/")
         if r.startswith("skills/"):
             r = r[len("skills/"):]
-        if not r.startswith(("cowork-roles", "humblytics-marketing", "pm-skills", "open-seo")):
+        # берём только то, что относится к дереву skills/ этого репозитория
+        if not r or r.split("/")[0] not in repo_sets:
             continue
         if r not in roots:
             roots.append(r)
@@ -127,7 +130,7 @@ def build_one(repo_root: Path, out_root: Path, agent_file: Path, brain_dir: Path
         else:
             problems.append(f"нет company-brain/{fname}")
 
-    refs = skill_roots(text)
+    refs = skill_roots(text, repo_root)
     copied = 0
     for ref in refs:
         src = resolve_skill(repo_root, ref)

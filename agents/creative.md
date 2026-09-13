@@ -7,6 +7,11 @@
 - creative/visual skills — визуализация
 - vector-github-design — GitHub-ориентированный дизайн
 - AI image generation tools
+- **skills/social-media-skills/gemini-carousel** — карусели для соцсетей и лендингов
+- **skills/social-media-skills/gemini-infographic** — инфографика: сложное в наглядное
+- **skills/social-media-skills/graphic-designer** — графика и баннеры под канал
+- **skills/social-media-skills/youtube-thumbnail** — обложки для видео
+- **skills/social-media-skills/reels-scripting** — сценарии вертикальных видео
 
 ## Формат выдачи
 1. **Концепция:** визуальный язык, цвет, композиция

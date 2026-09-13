@@ -62,11 +62,25 @@ def check(dist_root: Path, expected_agents: int) -> list[str]:
 
         skills_root = agent / "skills"
         if skills_root.is_dir():
+            # Внутри навыка допустимы references/, scripts/, assets/ — важно лишь, чтобы
+            # у каждого каталога с файлами был предок-навык (SKILL.md), а не мусор в корне.
+            def has_skill_ancestor(path: Path) -> bool:
+                cur = path
+                while True:
+                    if (cur / "SKILL.md").is_file():
+                        return True
+                    if cur == skills_root or cur.parent == cur:
+                        return False
+                    cur = cur.parent
+
             for skill_dir in sorted(p for p in skills_root.rglob("*") if p.is_dir()):
-                has_md = (skill_dir / "SKILL.md").is_file()
-                has_nested = any(skill_dir.glob("*/SKILL.md")) or any(skill_dir.glob("*/*/SKILL.md"))
-                if not has_md and not has_nested:
-                    errors.append(f"{name}: каталог навыка без SKILL.md — {skill_dir.relative_to(agent)}")
+                if not any(c.is_file() for c in skill_dir.iterdir()):
+                    continue  # пустые каталоги не считаем
+                if not has_skill_ancestor(skill_dir):
+                    errors.append(
+                        f"{name}: каталог без навыка-предка (SKILL.md) — "
+                        f"{skill_dir.relative_to(agent)}"
+                    )
 
     if expected_agents and len(agents) != expected_agents:
         errors.append(f"профилей {len(agents)}, ожидалось {expected_agents}")

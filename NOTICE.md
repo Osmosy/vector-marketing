@@ -9,10 +9,22 @@
 
 | Набор | Лицензия | Взято в `skills/` | Статус |
 |-------|----------|-------------------|--------|
-| [phuryn/pm-skills](https://github.com/phuryn/pm-skills) | MIT (© 2026 Pawel Huryn) | `pm-skills/` — 31 скилл | тексты без изменений, сверху добавлен блок РФ-адаптации и `### Attribution` |
-| [Humblytics/humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) | MIT (© 2026 Humblytics, Inc.) | `humblytics-marketing/` — 6 скиллов | 5 без изменений, 1 (ad-expert) адаптирован под MCP-маршрут |
+| [phuryn/pm-skills](https://github.com/phuryn/pm-skills) | MIT (© 2026 Pawel Huryn) | `pm-skills/` — 40 скиллов | тексты без изменений, сверху добавлен блок РФ-адаптации и `### Attribution` |
+| [Humblytics/humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) | MIT (© 2026 Humblytics, Inc.) | `humblytics-marketing/` — 12 скиллов | 11 без изменений, 1 (ad-expert) адаптирован под MCP-маршрут |
 | [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Cowork Roles) | Apache-2.0 | `cowork-roles/` — 66 скиллов из 6 плагинов | файлы без изменений, байт-в-байт |
 | [every-app/open-seo](https://github.com/every-app/open-seo) | MIT (© 2026 Ben Senescu) | `open-seo/` | обзор + рабочая установка |
+| [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) | MIT (© 2025 Alireza Rezvani) | `claude-skills/` — 7 скиллов (LinkedIn-набор + local-seo-manager) | тексты без изменений, сверху `### Attribution`; скиллы с `references/` и `scripts/` |
+| [searchfit/searchfit-seo](https://github.com/searchfit/searchfit-seo) | MIT | `searchfit-seo/` — 11 скиллов | тексты без изменений, сверху `### Attribution`; во frontmatter добавлено только поле `name` |
+| [charlie947/social-media-skills](https://github.com/charlie947/social-media-skills) | MIT (© 2026 Charlie Hills) | `social-media-skills/` — 17 скиллов | тексты без изменений, сверху `### Attribution`; два скилла с `references/` |
+
+Новые скиллы добавляются скриптом, а не вручную:
+
+```bash
+python3 scripts/vendor_skill.py --set <набор> --skills имя1,имя2
+```
+
+Скрипт копирует файлы апстрима байт-в-байт, дописывает `### Attribution` в конец SKILL.md
+и кладёт текст лицензии апстрима в `THIRD_PARTY_LICENSES/`, если его там ещё нет.
 
 ## Использовано как источник идей (файлы не включены)
 

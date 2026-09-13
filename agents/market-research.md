@@ -10,6 +10,15 @@
 - maps — гео-анализ рынка
 - web_search / perplexity-search — поиск рыночных данных
 - **skills/pm-skills/market-sizing** — фреймворк TAM/SAM/SOM: top-down + bottom-up триангуляция, источники данных РФ (Wordstat, MPSTATS, ДaData, Росстат)
+- **skills/pm-skills/swot-analysis** — SWOT для позиционирования клиента: внутренние/внешние факторы, что усиливать и что закрывать
+- **skills/pm-skills/pestle-analysis** — PESTLE: политика/экономика/социум/технологии/право/экология — макро-факторы, влияющие на стратегию канала
+- **skills/pm-skills/porters-five-forces** — 5 сил Портера: интенсивность конкуренции в отрасли, барьеры входа, власть поставщиков и покупателей
+- **skills/pm-skills/value-proposition** — ценностное предложение: боли/выгоды/альтернативы → формулировка, которую проверяем на ЦА
+- **skills/pm-skills/positioning-ideas** — варианты позиционирования: за что зацепиться, чтобы отличаться от конкурентов
+- **skills/pm-skills/value-prop-statements** — превращение ценностного предложения в готовые формулировки для лендинга и рекламы
+- **skills/pm-skills/user-personas** — персоны на данных интервью: роли, цели, барьеры, триггеры покупки
+- **skills/pm-skills/user-segmentation** — сегментация пользователей: критерии, размер сегментов, приоритет охвата
+- **skills/pm-skills/market-segments** — выбор сегментов рынка: какие обслуживать, какие игнорировать и почему
 - **skills/pm-skills/beachhead-segment** — выбор пляжного сегмента для запуска: burning pain / willingness to pay / winnable share / referral potential
 - **skills/pm-skills/ideal-customer-profile** — ICP из данных исследований: демография, поведение, JTBD, анализ PMF-опросов
 - **skills/pm-skills/customer-journey-map** — CJM: стадии, точки контакта, эмоции, барьеры, возможности (продаваемый деливерабл)
