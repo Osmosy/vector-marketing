@@ -11,6 +11,8 @@
 - skills/cowork-roles/sales/forecast — прогноз продаж
 - skills/cowork-roles/sales/create-an-asset — лендинги, decks, one-pagers для продаж
 - DaData MCP — проверка компаний и контактов
+- **skills/cowork-roles/sales/competitive-intelligence** — конкурентная разведка для продаж: батлкарта, возражения, чем отличаемся
+- **skills/cowork-roles/sales/daily-briefing** — ежедневный брифинг по пайплайну и приоритетам дня
 - **skills/pm-skills/summarize-meeting** — транскрипты звонков/встреч с клиентами → структурированные заметки: решения, action items, владельцы
 
 ## Формат выдачи

@@ -4,12 +4,15 @@
 
 ## Инструменты и skills
 - yandex-marketing-apis-ru — Директ, Метрика
+- **skills/humblytics-marketing/ad-expert** — платный трафик: креативы, аудитории, структура кампаний, оптимизация ROAS (осторожно: набор описывает Meta/Google Ads/TikTok — для РФ брать только структуру и логику тестов, платформы — Директ и VK)
 - marketing-director-ru — стратегическое планирование
 - google-workspace — медиапланы в Sheets
 - skills/cowork-roles/marketing/campaign-plan — планирование кампаний
 - **skills/pm-skills/growth-loops** — дизайн growth-петель (Viral/Usage/Collaboration/UGC/Referral): снижает зависимость от платного трафика, расчёт loop coefficient
 - **skills/pm-skills/pre-mortem** — разбор кампании ДО запуска: Tigers/Paper Tigers/Elephants, ранжирование рисков impact × likelihood × дешевизна проверки — обязательный шаг перед стартом медиаплана
 - **skills/pm-skills/gtm-motions** — выбор GTM-мотива из 7 (РФ-адаптация: реально работают Paid Digital, Inbound, Partners, Outbound; ABM для B2B-enterprise)
+- **skills/pm-skills/gtm-strategy** — GTM-план вывода на рынок: канальная матрица РФ, метрики запуска (ДРР, CPL)
+- **skills/humblytics-marketing/marketing-strategist** — сквозная стратегия: воронка, GTM, конверсионные тексты, email-цепочки, лендинги, A/B (полный стек одного маркетолога)
 
 ## Формат выдачи
 1. **Медиаплан:** каналы, бюджеты, ожидаемые результаты (CPL, CR, ROMI)

@@ -6,6 +6,7 @@
 - ozon-seller-api — управление Ozon
 - wildberries-api — управление WB
 - MPSTATS — аналитика маркетплейсов
+- **skills/pm-skills/pricing-strategy** — юнит-экономика и ценообразование на маркетплейсах (MPSTATS-цены, комиссии, ДРР, налоги)
 - YooKassa — платежи
 
 ## Формат выдачи

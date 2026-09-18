@@ -73,3 +73,9 @@ Use OpenSEO for:
 - Competitor keyword analysis
 - AI visibility tracking (how Vector appears in AI search)
 - Backlink monitoring
+
+### Attribution
+
+Скилл заимствован из [every-app/open-seo](https://github.com/every-app/open-seo) (MIT (© 2026 Ben Senescu)).
+Текст апстрима сохранён как есть; РФ-адаптация (если есть) и этот блок — добавления
+сверху, исходные строки не переписывались. Взято 2026-09.

@@ -15,13 +15,18 @@
 [![Company Brain](https://img.shields.io/badge/Company-Brain-7%20files-purple.svg)](#company-brain)
 [![Framework](https://img.shields.io/badge/Framework-Context%E2%86%92Harness%E2%86%92Loop-orange.svg)](FUNDAMENTALS.md)
 
-**Документация:** [Установка](INSTALL.md) · [Архитектура (live)](https://osmosy.github.io/vector-marketing/docs/vector-marketing.architecture.html) · [Презентация](deck/)
+**Документация:** [Установка](INSTALL.md) · [Архитектура (live)](https://osmosy.github.io/vector-marketing/docs/vector-marketing.architecture.html) · [Презентация](deck/) · [Участие](CONTRIBUTING.md) · [Безопасность](SECURITY.md)
 
 </div>
 
 ---
 
 Маркетинговое агентство на базе Hermes Agent. 19 профильных AI-специалистов под управлением Osmosy (Hermes-оркестратор).
+
+Скоуп — **рынок РФ**: Яндекс Директ, VK Реклама, Авито, Ozon/WB/Яндекс Маркет, 152-ФЗ и
+Роспатент в методиках. Англоязычные методики (PM-скиллы, Cowork Roles) переиспользуются как
+каркас, но канальный слой и правовые блоки заточены под РФ; для другого рынка потребуется
+замена агентов привлечения и адаптация контекста в `company-brain/`.
 
 ## Архитектура
 
@@ -72,27 +77,32 @@
 
 ## Агенты
 
-| Агент | Блок | Роль |
-|-------|------|------|
-| `orchestrator` | Оркестрация | CMO: декомпозиция, делегирование, сборка, приоритеты |
-| `market-research` | Стратегия | Рынок, ЦА, конкуренты, позиционирование, JTBD |
-| `analytics` | Стратегия | Метрики, воронки, ROMI, аномалии, дашборды |
-| `performance` | Привлечение | Канальная стратегия, медиаплан, бюджетирование, тесты |
-| `yandex-direct` | Привлечение | Директ: семантика, минус-слова, ставки, аудит |
-| `seo` | Привлечение | SEO + AEO + GEO (ChatGPT/Perplexity) + Local SEO |
-| `vk-ads` | Привлечение | VK Реклама: аудитории, пиксель, лид-формы, ретаргетинг |
-| `avito` | Привлечение | Авито: объявления, SEO, продвижение, лиды |
-| `marketplaces` | Привлечение | Ozon, WB, Яндекс Маркет: карточки, SEO, юнит-экономика |
-| `landing-cro` | Упаковка | Лендинги, первые экраны, формы, CTA, A/B-гипотезы |
-| `content` | Упаковка | Статьи, SEO-тексты, контент-планы, tone of voice |
-| `smm-telegram` | Упаковка | Telegram/SMM, рубрики, посевы, контент-воронки |
-| `creative` | Упаковка | Креативы, баннеры, AI-промпты, сториборды |
-| `presentation` | Упаковка | Презентации, КП, отчёты, PDF/PPTX, data storytelling |
-| `crm-retention` | Удержание | CRM, сегментация, LTV, реактивация, цепочки |
-| `reputation` | Удержание | Отзывы, карты, рейтинги, SERM |
-| `sales` | Операции | Привлечение клиентов агентства, пайплайн, outreach |
-| `support` | Операции | Поддержка клиентов, KB, эскалация |
-| `ops` | Операции | Задачи, календарь, вендоры, закупки |
+| Агент | Блок | Роль | Статус |
+|-------|------|------|--------|
+| `orchestrator` | Оркестрация | CMO: декомпозиция, делегирование, сборка, приоритеты | работает |
+| `market-research` | Стратегия | Рынок, ЦА, конкуренты, позиционирование, JTBD | работает |
+| `analytics` | Стратегия | Метрики, воронки, ROMI, аномалии, дашборды | работает |
+| `performance` | Привлечение | Канальная стратегия, медиаплан, бюджетирование, тесты | работает |
+| `yandex-direct` | Привлечение | Директ: семантика, минус-слова, ставки, аудит | **заготовка** |
+| `seo` | Привлечение | SEO + AEO + GEO (ChatGPT/Perplexity) + Local SEO | работает |
+| `vk-ads` | Привлечение | VK Реклама: аудитории, пиксель, лид-формы, ретаргетинг | **заготовка** |
+| `avito` | Привлечение | Авито: объявления, SEO, продвижение, лиды | **заготовка** |
+| `marketplaces` | Привлечение | Ozon, WB, Яндекс Маркет: карточки, SEO, юнит-экономика | работает (1 навык) |
+| `landing-cro` | Упаковка | Лендинги, первые экраны, формы, CTA, A/B-гипотезы | работает |
+| `content` | Упаковка | Статьи, SEO-тексты, контент-планы, tone of voice | работает |
+| `smm-telegram` | Упаковка | Telegram/SMM, рубрики, посевы, контент-воронки | работает |
+| `creative` | Упаковка | Креативы, баннеры, AI-промпты, сториборды | работает |
+| `presentation` | Упаковка | Презентации, КП, отчёты, PDF/PPTX, data storytelling | **заготовка** |
+| `crm-retention` | Удержание | CRM, сегментация, LTV, реактивация, цепочки | работает |
+| `reputation` | Удержание | Отзывы, карты, рейтинги, SERM | **заготовка** |
+| `sales` | Операции | Привлечение клиентов агентства, пайплайн, outreach | работает |
+| `support` | Операции | Поддержка клиентов, KB, эскалация | работает |
+| `ops` | Операции | Задачи, календарь, вендоры, закупки | работает |
+
+**Заготовка** — профиль без навыков репозитория: SOUL и роль описаны, но работать ему
+нечем (всё заявленное — внешние зависимости, их надо доставить себе). Разработаем позже.
+Готовых к работе профилей — 13 из 19; пятью заготовками не пользуйтесь, пока не появятся
+навыки под канал.
 
 Каждый агент в формате SOUL: Identity → Tools → Format → Rules → Guardrails → Handoff.
 
@@ -103,7 +113,8 @@
 1. **Через Osmosy** — основной режим: delegate_task → сборка → проверка → клиенту
 2. **Прямой handoff** — агент → агент через @mentions или Osmosy как релей
 
-Пример полного цикла: [workflows/example-campaign.md](workflows/example-campaign.md)
+Пример полного цикла: [workflows/example-campaign.md](workflows/example-campaign.md).
+Пример реальной выдачи агента (формат и уровень конкретики): [workflows/example-output.md](workflows/example-output.md).
 
 ## Быстрый старт
 
@@ -118,8 +129,10 @@ python3 scripts/build_profiles.py --clean     # → dist/<agent>/ (19 профи
 hermes profile install ./dist/orchestrator --alias
 hermes profile install ./dist/seo --alias
 
-# 3. Заполнить .env профиля (ключи модели) — установщик создаёт .env.EXAMPLE
+# 3. Выбрать модель и провайдера — в дистрибутиве config.yaml нет намеренно
+hermes -p seo setup model          # или: hermes -p seo config set model.default ...
 cp ~/.hermes/profiles/seo/.env.EXAMPLE ~/.hermes/profiles/seo/.env
+#   открыть .env и вписать ключ
 
 # 4. Запустить через профиль Osmosy (оркестратор)
 hermes -p orchestrator --skills vector-work "Клиент: интернет-магазин. Задача: увеличить заявки на 30%."
@@ -132,6 +145,9 @@ hermes -p orchestrator --skills vector-work "Клиент: интернет-ма
 
 Обновление профиля после правок в репозитории: `hermes profile update seo` — SOUL, навыки
 и `brain/` перезаписываются, а памяти, сессии, `.env` и `config.yaml` не трогаются.
+Профиль не наследует конфиг ни от другого профиля, ни от дефолтного `~/.hermes`: у него
+свой `config.yaml`, и пока он не создан, модель у профиля не выбрана — поэтому шаг 3 в
+быстром старте обязателен (`hermes -p <agent> setup`).
 Пошаговое пояснение для тех, кто ставит агентство себе (требования, что попадает в профиль,
 какого агента выбрать, ограничения) — [INSTALL.md](INSTALL.md).
 
@@ -141,6 +157,7 @@ hermes -p orchestrator --skills vector-work "Клиент: интернет-ма
 python3 scripts/validate_agents.py   # SOUL-манифесты, @handoff, ссылки на навыки, README
 python3 scripts/build_profiles.py --clean
 python3 scripts/check_dist.py        # форма собранных дистрибутивов
+python3 tests/test_scripts.py        # краевые случаи самих скриптов
 ```
 
 ## Структура репозитория
@@ -149,10 +166,13 @@ python3 scripts/check_dist.py        # форма собранных дистр�
 vector-marketing/
 ├── README.md
 ├── INSTALL.md                   ← как поставить и использовать (для внешнего пользователя)
+├── CONTRIBUTING.md              ← что нужно знать перед правкой и что проверяет CI
+├── SECURITY.md                  ← как сообщить об уязвимости, границы ответственности
 ├── FUNDAMENTALS.md              ← Context → Harness → Loop
 ├── agent-description.md
 ├── LICENSE · NOTICE.md          ← MIT + атрибуция сторонних наборов
 ├── .gitignore                   ← company-brain/local/ — вне git
+├── tests/                       ← тесты самих скриптов сборки и валидации
 ├── company-brain/               ← Общий контекст (реальный ров)
 │   ├── brand-voice.md
 │   ├── anti-slop-rules.md
@@ -181,13 +201,14 @@ vector-marketing/
 │   ├── sales.md
 │   ├── support.md
 │   └── ops.md
-├── workflows/                   ← Handoff protocol + пример кампании
+├── workflows/                   ← Handoff protocol + примеры кампании и выдачи
 │   ├── handoff-protocol.md
-│   └── example-campaign.md
+│   ├── example-campaign.md
+│   └── example-output.md
 ├── profiles/                     ← Настройка профилей Hermes
 ├── scripts/                      ← validate_agents.py, build_profiles.py, check_dist.py
 ├── .github/workflows/validate.yml ← CI: валидация SOUL + сборка + проверка dist
-├── skills/                       ← Навыки (66 Cowork + 40 PM + 17 соцсети + 12 Humblytics + 11 searchfit + 7 LinkedIn)
+├── skills/                       ← Навыки (66 Cowork + 40 PM + 17 соцсети + 12 Humblytics + 11 searchfit + 7 LinkedIn + 1 open-seo + 4 собственных)
 ├── THIRD_PARTY_LICENSES/         ← Тексты лицензий апстримов
 └── assets/                       ← Логотипы
 ```
@@ -196,7 +217,7 @@ vector-marketing/
 
 ## Навыки
 
-158 скиллов: 153 из сторонних наборов (каждый — с блоком `### Attribution` и лицензией в `THIRD_PARTY_LICENSES/`) и 5 собственных.
+158 скиллов: 154 из сторонних наборов (каждый — с блоком `### Attribution` и лицензией в `THIRD_PARTY_LICENSES/`) и 4 собственных.
 
 | Набор | Скиллов | Лицензия | Что даёт агентству |
 |-------|---------|----------|--------------------|
@@ -206,10 +227,23 @@ vector-marketing/
 | `humblytics-marketing/` | 12 | MIT | CRO, воронки, тепловые карты, атрибуция выручки, копирайтинг |
 | `searchfit-seo/` | 11 | MIT | AI-visibility, технический и on-page SEO, кластеризация, схемы, перелинковка |
 | `claude-skills/` | 7 | MIT | LinkedIn-набор (6) + локальное SEO |
-| собственные | 5 | MIT | open-seo, github-repo-research, timesfm-marketing, vector-work, vector-github-design |
+| `open-seo/` | 1 | MIT | обзор open-source SEO-стека (Semrush/Ahrefs-альтернатива) + установка |
+| собственные | 4 | MIT | github-repo-research, timesfm-marketing, vector-work, vector-github-design |
 
-В профиль агента попадают только его профильные навыки — всего 109 вложений на 19 профилей
-(например, `smm-telegram` получает 25, `seo` — 11).
+В профиль агента попадают только его профильные навыки — всего 132 вложения на 19 профилей
+(например, `market-research` получает 27, `smm-telegram` — 25, `ops` — 14). 121 навык из 158
+закреплён хотя бы за одним агентом; остальные 37 никуда не вкладываются и ставятся отдельно,
+если нужны. README при этом описывает весь набор: он остаётся частью поставки, даже когда
+профиль его не получает.
+
+Там, где два набора дают похожий навык (`seo-audit`, `content-strategy`), в профиль идёт
+один из них — иначе Hermes адресует навык по имени и второй остаётся недоступным.
+Какой выбран и почему — в [CONTRIBUTING.md](CONTRIBUTING.md#коллизии-имён-навыков-проверено-на-живом-профиле).
+
+Часть имён в секции «Инструменты и skills» у агентов — не навыки этого репозитория, а
+внешние зависимости (наборы Яндекс Директа/Wordstat, API Авито, Ozon, WB, `ru-text`,
+`document-deliverables` и т.п.). Полный список и способ поставить их себе — в
+[INSTALL.md](INSTALL.md#внешние-зависимости-профиля).
 
 Добавить навык из апстрима:
 
@@ -290,6 +324,7 @@ python3 scripts/vendor_skill.py --set <набор> --skills имя1,имя2
 - Humblytics: [humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) (MIT, 12 скиллов: CRO, воронки, атрибуция)
 - SEO-методики: [searchfit/searchfit-seo](https://github.com/searchfit/searchfit-seo) (MIT, 11 скиллов)
 - LinkedIn-набор: [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) (MIT, 7 скиллов)
+- OpenSEO: [every-app/open-seo](https://github.com/every-app/open-seo) (MIT, 1 скилл: обзор стека + установка)
 - GEO/AEO концепции: [dataaispark-spec/hermes-x-marketing-agency-bots](https://github.com/dataaispark-spec/hermes-x-marketing-agency-bots)
 - Исследования: [claude-skills/research-ops](https://github.com/alirezarezvani/claude-skills) — как источник методологии; код не вендорился
 - Соцсети: [social-media-skills](https://github.com/charlie947/social-media-skills) (MIT, 17 скиллов: посты, карусели, Reels, дашборды)

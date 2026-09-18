@@ -54,11 +54,14 @@ DATA = dict(
     ],
 
     # 05 · Агенты
+    # Пометка «заготовка» = у профиля нет навыков репозитория; держать её в синхроне
+    # с agents/ проверяет scripts/validate_agents.py (--check-stub-markers).
     ag_items=[
         ('СТРАТЕГИЯ', 'market-research (рынок, спрос, ICP, CJM, конкуренты, интервью) · analytics (метрики, воронки, A/B, NSM, дашборды)'),
-        ('ПРИВЛЕЧЕНИЕ', 'performance (медиапланы, pre-mortem, GTM) · yandex-direct · seo (GEO/AEO) · vk-ads · avito · marketplaces (Ozon/WB)'),
-        ('УПАКОВКА', 'landing-cro (лендинги, CRO, 152-ФЗ) · content (контент-планы, нейминг) · smm-telegram · creative · presentation'),
-        ('УДЕРЖАНИЕ + ОПЕРАЦИИ', 'crm-retention (RFM + когорты) · reputation (отзывы, карты) · sales · support · ops (NDA, стейкхолдеры)'),
+        ('ПРИВЛЕЧЕНИЕ', 'performance (медиапланы, pre-mortem, GTM) · seo (GEO/AEO) · marketplaces (Ozon/WB, юнит-экономика) · yandex-direct* · vk-ads* · avito*'),
+        ('УПАКОВКА', 'landing-cro (лендинги, CRO, 152-ФЗ) · content (контент-планы, нейминг) · smm-telegram · creative · presentation*'),
+        ('УДЕРЖАНИЕ + ОПЕРАЦИИ', 'crm-retention (RFM + когорты) · sales · support · ops (NDA, стейкхолдеры) · reputation*'),
+        ('* ЗАГОТОВКА', 'профиль без навыков репозитория: роль описана, работать нечем. Разработаем позже: yandex-direct, vk-ads, avito, presentation, reputation'),
     ],
 
     # 06 · PM-скиллы

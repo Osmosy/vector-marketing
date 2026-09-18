@@ -11,6 +11,12 @@
 - skills/cowork-roles/operations/status-report — статус-отчёты со KPI и рисками
 - google-workspace — календарь, задачи, таблицы
 - **skills/pm-skills/stakeholder-map** — карта стейкхолдеров крупных клиентских проектов (power/interest сетка + план коммуникаций)
+- **skills/cowork-roles/operations/process-doc** — документация процесса: схема, RACI, SOP
+- **skills/cowork-roles/operations/runbook** — runbook для повторяющейся операции
+- **skills/cowork-roles/operations/risk-assessment** — реестр операционных рисков: оценка, митигация, владельцы
+- **skills/cowork-roles/operations/change-request** — запрос на изменение с анализом влияния и планом отката
+- **skills/cowork-roles/operations/compliance-tracking** — трекинг требований и готовности к аудиту
+- **skills/cowork-roles/operations/process-optimization** — разбор и оптимизация процесса (узкие места, цикл, стоимость)
 - **skills/pm-skills/draft-nda** — NDA с клиентом перед получением доступов: РФ-адаптация (режим КТ по ФЗ-98, гл. 75 ГК РФ, перечни сведений, доступы к кабинетам)
 
 ## Формат выдачи

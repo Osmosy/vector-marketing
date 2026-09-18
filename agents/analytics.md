@@ -12,6 +12,7 @@
 - **skills/pm-skills/north-star-metric** — выбор North Star Metric + 3-5 input metrics (дерево метрик, три типа бизнеса: Attention/Transaction/Productivity)
 - **skills/pm-skills/ab-test-analysis** — статистический разбор A/B-тестов: мощность выборки, SRM, guardrail-метрики, вердикт ship/extend/stop/revert
 - **skills/humblytics-marketing/revenue-attributor** — атрибуция выручки по источникам: какой канал реально приносит деньги, а не клики
+- **skills/cowork-roles/marketing/performance-report** — отчёт по маркетингу: метрики, тренды, выводы для клиента
 
 ## Формат выдачи
 1. **Текущая ситуация:** ключевые метрики, тренды, аномалии

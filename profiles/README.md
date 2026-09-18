@@ -48,27 +48,33 @@ hermes -p seo "Семантика для клиента X: кластеры + и
 
 ## Сводная таблица агентов
 
-| Профиль | Блок | Ключевые skills |
-|---------|------|----------------|
-| orchestrator | Оркестрация | strategy-red-team, vector-work, delegate_task |
-| market-research | Стратегия | market-sizing, swot-analysis, pestle-analysis, porters-five-forces, user-personas |
-| analytics | Стратегия | north-star-metric, ab-test-analysis, revenue-attributor, yandex-marketing-apis-ru |
-| performance | Привлечение | growth-loops, pre-mortem, gtm-motions, campaign-plan |
-| yandex-direct | Привлечение | yandex-marketing-apis-ru, yandex-wordstat |
-| seo | Привлечение | searchfit-seo (ai-visibility, technical-seo, on-page-seo), local-seo-manager, open-seo |
-| vk-ads | Привлечение | social-media-research |
-| avito | Привлечение | avito-api, yandex-wordstat |
-| marketplaces | Привлечение | ozon-seller-api, wildberries-api, MPSTATS |
-| landing-cro | Упаковка | page-cro, cro-optimizer, heatmap-analyst, funnel-reporter, ab-test-analysis |
-| content | Упаковка | product-name, copywriting, content-brief, evidence-based-seo |
-| smm-telegram | Упаковка | linkedin-* (6 скиллов), content-creation |
-| creative | Упаковка | html, vector-github-design |
-| presentation | Упаковка | powerpoint, document-deliverables |
-| crm-retention | Удержание | cohort-analysis, email-sequence |
-| reputation | Удержание | maps, DaData, ru-text |
-| sales | Операции | account-research, call-prep, pipeline-review, forecast |
-| support | Операции | ticket-triage, draft-response, kb-article |
-| ops | Операции | task-management, capacity-plan, vendor-review, stakeholder-map |
+| Профиль | Блок | Ключевые skills (в дистрибутиве) |
+|---------|------|--------------------------------|
+| orchestrator | Оркестрация | strategy-red-team, vector-work |
+| market-research | Стратегия | market-sizing, swot-analysis, pestle-analysis, porters-five-forces, user-personas, ideal-customer-profile, customer-journey-map, competitor-analysis, gtm-strategy, lean-canvas, business-model, competitive-battlecard, competitive-brief (27 из набора pm-skills) |
+| analytics | Стратегия | north-star-metric, ab-test-analysis, revenue-attributor, analytics-dashboard, post-scorer, performance-report |
+| performance | Привлечение | growth-loops, pre-mortem, gtm-motions, gtm-strategy, marketing-strategist, ad-expert, campaign-plan |
+| yandex-direct | Привлечение | **заготовка** — внешние: yandex-direct, yandex-wordstat, yandex-marketing-apis-ru |
+| seo | Привлечение | ai-visibility, technical-seo, on-page-seo, keyword-clustering, internal-linking, schema-markup, broken-links, content-strategy, seo-audit, seo-strategist, content-translation, local-seo-manager |
+| vk-ads | Привлечение | **заготовка** — внешние: social-media-research, yandex-marketing-apis-ru |
+| avito | Привлечение | **заготовка** — внешние: avito-api, yandex-wordstat |
+| marketplaces | Привлечение | pricing-strategy (юнит-экономика МП); внешние: ozon-seller-api, wildberries-api, MPSTATS |
+| landing-cro | Упаковка | page-cro, cro-optimizer, heatmap-analyst, funnel-reporter, ab-test-analysis, ab-test-generator, privacy-policy, shipping-artifacts, intended-vs-implemented |
+| content | Упаковка | product-name, copywriting, content-brief, value-prop-statements, brand-review, draft-content |
+| smm-telegram | Упаковка | linkedin-profile, linkedin-content, linkedin-engagement, linkedin-strategy, linkedin-analytics, linkedin-skills, voice-builder, post-writer, hook-generator, content-matrix, newsletter-voice, post-formatter, quote-post, pinned-comment, niche-research, profile-optimizer, post-scorer, content-creation (25 всего) |
+| creative | Упаковка | gemini-carousel, gemini-infographic, graphic-designer, youtube-thumbnail, reels-scripting |
+| presentation | Упаковка | **заготовка** — внешние: powerpoint, document-deliverables |
+| crm-retention | Удержание | cohort-analysis, email-sequence, email-sequences |
+| reputation | Удержание | **заготовка** — внешние: maps, DaData, ru-text |
+| sales | Операции | account-research, call-prep, pipeline-review, forecast, draft-outreach, call-summary, create-an-asset, summarize-meeting, competitive-intelligence, daily-briefing |
+| support | Операции | ticket-triage, draft-response, kb-article, customer-research, customer-escalation |
+| ops | Операции | task-management, capacity-plan, vendor-review, stakeholder-map, draft-nda, status-report, start, update, process-doc, runbook, risk-assessment, change-request, compliance-tracking, process-optimization |
+
+**Заготовка** — профиль без навыков репозитория: `yandex-direct`, `vk-ads`, `avito`,
+`presentation`, `reputation`. Роль и SOUL описаны, но всё, на что они опираются, — внешние
+зависимости (см. [INSTALL.md](../INSTALL.md#внешние-зависимости-профиля)). Профиль поставится
+и запустится, но работать ему нечем: **разработаем позже**. Исключение — `marketplaces`: 1
+навык репозитория (`pricing-strategy`), поэтому он в статусе «работает», фактически тоже почти пустой.
 
 Актуальный состав — `agents/*.md`; таблица проверяется CI-скриптом
 `scripts/validate_agents.py` (расхождение с `agents/` валит сборку).

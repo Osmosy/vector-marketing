@@ -12,7 +12,7 @@
 | [phuryn/pm-skills](https://github.com/phuryn/pm-skills) | MIT (© 2026 Pawel Huryn) | `pm-skills/` — 40 скиллов | тексты без изменений, сверху добавлен блок РФ-адаптации и `### Attribution` |
 | [Humblytics/humblytics-marketing-skills](https://github.com/Humblytics/humblytics-marketing-skills) | MIT (© 2026 Humblytics, Inc.) | `humblytics-marketing/` — 12 скиллов | 11 без изменений, 1 (ad-expert) адаптирован под MCP-маршрут |
 | [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) (Cowork Roles) | Apache-2.0 | `cowork-roles/` — 66 скиллов из 6 плагинов | файлы без изменений, байт-в-байт |
-| [every-app/open-seo](https://github.com/every-app/open-seo) | MIT (© 2026 Ben Senescu) | `open-seo/` | обзор + рабочая установка |
+| [every-app/open-seo](https://github.com/every-app/open-seo) | MIT (© 2026 Ben Senescu) | `open-seo/` — 1 скилл | обзор апстрима + рабочая установка |
 | [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) | MIT (© 2025 Alireza Rezvani) | `claude-skills/` — 7 скиллов (LinkedIn-набор + local-seo-manager) | тексты без изменений, сверху `### Attribution`; скиллы с `references/` и `scripts/` |
 | [searchfit/searchfit-seo](https://github.com/searchfit/searchfit-seo) | MIT | `searchfit-seo/` — 11 скиллов | тексты без изменений, сверху `### Attribution`; во frontmatter добавлено только поле `name` |
 | [charlie947/social-media-skills](https://github.com/charlie947/social-media-skills) | MIT (© 2026 Charlie Hills) | `social-media-skills/` — 17 скиллов | тексты без изменений, сверху `### Attribution`; два скилла с `references/` |
@@ -29,7 +29,6 @@ python3 scripts/vendor_skill.py --set <набор> --skills имя1,имя2
 ## Использовано как источник идей (файлы не включены)
 
 - [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) — research-ops: методология исследования, код не вендорился.
-- [charlie947/social-media-skills](https://github.com/charlie947/social-media-skills) — 17 скиллов соцсетей: **в репозитории отсутствуют**, см. раздел «Не портировано» в README.
 - [dataaispark-spec/hermes-x-marketing-agency-bots](https://github.com/dataaispark-spec/hermes-x-marketing-agency-bots) — концепции GEO/AEO.
 
 ## Требования, которые мы соблюдаем

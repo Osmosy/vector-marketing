@@ -39,12 +39,80 @@ MENTION_RE = re.compile(r"@([a-z0-9][a-z0-9-]*)")
 PATHLIKE_PREFIXES = ("skills/", "cowork-roles/", "humblytics-marketing/", "pm-skills/", "open-seo/")
 BULLET_RE = re.compile(r"^\s*[-*]\s+\S")
 
-# Наборы, скопированные из чужих репозиториев: каждый их скилл обязан нести
-# блок лицензионной атрибуции (см. NOTICE.md и THIRD_PARTY_LICENSES/).
-VENDORED_SETS = {
-    "pm-skills", "cowork-roles", "humblytics-marketing",
-    "searchfit-seo", "social-media-skills", "claude-skills",
-}
+# Наборы, скопированные из чужих репозиториев, обязан нести блок лицензионной
+# атрибуции (см. NOTICE.md и THIRD_PARTY_LICENSES/). Список имён не хардкодим:
+# новый апстрим, добавленный скриптом, иначе молча выпадал бы из проверки.
+ATTRIBUTION_HEADER = "### Attribution"
+ATTRIBUTION_SOURCE_MARK = "заимствован из"
+
+# Одиночные вендоренные навыки: по дереву их не отличить от собственных, поэтому
+# называем явно. Ошибка в имени валит сборку — молча выпасть из проверки нельзя.
+VENDORED_SINGLE = {"open-seo"}
+
+# Слова, похожие на @упоминание агента, но им не являющиеся.
+MENTION_EXEMPT = {"mention"}
+
+
+def attribution_count(body: str) -> int:
+    """Сколько блоков лицензионной атрибуции в SKILL.md."""
+    lines = body.splitlines()
+    return sum(
+        1 for i, line in enumerate(lines)
+        if line.strip() == ATTRIBUTION_HEADER
+        and ATTRIBUTION_SOURCE_MARK in "\n".join(lines[i:i + 6])
+    )
+
+
+def vendored_sets(repo_root: Path) -> set[str]:
+    """Каталоги навыков, скопированные из чужих репозиториев.
+
+    Каталог с двумя и более навыками — вендоренный набор (своих наборов такого
+    размера в репозитории нет). Одиночный навык по дереву не отличить от
+    собственного, поэтому он попадает сюда только если несёт блок атрибуции или
+    прямо назван в VENDORED_SINGLE.
+    """
+    root = repo_root / "skills"
+    vendored: set[str] = set()
+    for set_dir in sorted(p for p in root.iterdir() if p.is_dir()):
+        skill_files = sorted(set_dir.rglob("SKILL.md"))
+        if not skill_files:
+            continue
+        if len(skill_files) >= 2:
+            vendored.add(set_dir.name)
+            continue
+        if set_dir.name in VENDORED_SINGLE or any(
+            attribution_count(f.read_text(encoding="utf-8")) > 0 for f in skill_files
+        ):
+            vendored.add(set_dir.name)
+    return vendored
+
+
+def bare_skill_names(repo_root: Path) -> dict[str, set[str]]:
+    """Имена без пути в секции «Инструменты и skills» — внешние зависимости агента.
+
+    Возвращает {имя: агенты}, исключая имена, которые в этом репозитории
+    разрешаются в навык (их копирует build_profiles.py). Такие имена в дистрибутив
+    не попадают, поэтому должны быть перечислены в INSTALL.md — иначе агент уедет
+    без заявленных инструментов.
+    """
+    own_slugs = {p.parent.name for p in (repo_root / "skills").rglob("SKILL.md")}
+    found: dict[str, set[str]] = {}
+    for agent_file in sorted((repo_root / "agents").glob("*.md")):
+        text = agent_file.read_text(encoding="utf-8")
+        m = re.search(r"^## Инструменты и skills\n(.*?)(?=^#{1,2} )", text, re.S | re.M)
+        if not m:
+            continue
+        for raw in m.group(1).splitlines():
+            line = raw.lstrip("-•* ").strip()
+            if not line:
+                continue
+            name = re.split(r"\s+—|\s+-\s|,", line)[0].strip("`* ")
+            if not name or "/" in name or name in own_slugs:
+                continue
+            if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", name):
+                continue
+            found.setdefault(name, set()).add(agent_file.stem)
+    return found
 
 
 class AgentDoc:
@@ -205,7 +273,13 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
             if ref not in agent_names:
                 errors.append(f"INSTALL.md: установка ./dist/{ref}, но агента agents/{ref}.md нет")
         # 2. Таблица «какого агента ставить» перечисляет всех агентов.
-        table_rows = set(re.findall(r"^\|\s*`([a-z0-9-]+)`\s*\|", doc, re.M))
+        #    Берём именно эту секцию: в разделе про внешние зависимости первый
+        #    столбец — тоже имя навыка, и его нельзя путать с агентом.
+        section = re.search(
+            r"^## Какого агента ставить\n(.*?)(?=^## )", doc, re.S | re.M
+        )
+        agents_table = section.group(1) if section else ""
+        table_rows = set(re.findall(r"^\|\s*`([a-z0-9-]+)`\s*\|", agents_table, re.M))
         if table_rows:
             missing = sorted(agent_names - table_rows)
             stale = sorted(table_rows - agent_names)
@@ -249,20 +323,17 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
     # Вендоренные наборы: ровно один блок лицензионной атрибуции на файл.
     # Дубль (склейка двух импортов) и пропуск (копия без уведомления) — обе ошибки:
     # у пользователя, который возьмёт один скилл, не будет ни NOTICE.md, ни текста лицензии.
+    vendored = vendored_sets(repo_root)
     for set_dir in sorted(p for p in (repo_root / "skills").iterdir() if p.is_dir()):
         for skill_md in sorted(set_dir.rglob("SKILL.md")):
             body = skill_md.read_text(encoding="utf-8")
             rel = skill_md.relative_to(repo_root / "skills")
-            notices = sum(
-                1 for i, line in enumerate(body.splitlines())
-                if line.strip() == "### Attribution"
-                and "заимствован из" in "\n".join(body.splitlines()[i:i + 6])
-            )
+            notices = attribution_count(body)
             if notices > 1:
                 errors.append(
                     f"skills/{rel}: блоков лицензионной атрибуции {notices} — должен быть один"
                 )
-            elif notices == 0 and set_dir.name in VENDORED_SETS:
+            elif notices == 0 and set_dir.name in vendored:
                 errors.append(
                     f"skills/{rel}: нет блока «### Attribution» — вендоренный скилл без уведомления"
                 )
@@ -317,7 +388,277 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
         if f"{n_pm} PM-скиллов" not in body:
             errors.append(f"диаграмма: нет «{n_pm} PM-скиллов» во вью")
 
+    # Числа по наборам навыков: суммарные счётчики проверялись выше, а построчные
+    # в таблице README — нет, из-за чего рассинхрон по одному набору проходил CI.
+    readme_path = repo_root / "README.md"
+    if readme_path.is_file():
+        md = readme_path.read_text(encoding="utf-8")
+        for set_dir in sorted(p for p in (repo_root / "skills").iterdir() if p.is_dir()):
+            actual = len(list(set_dir.rglob("SKILL.md")))
+            claim = re.search(rf"\|\s*`{re.escape(set_dir.name)}/`\s*\|\s*(\d+)\s*\|", md)
+            if claim and int(claim.group(1)) != actual:
+                errors.append(
+                    f"README: у набора «{set_dir.name}» заявлено {claim.group(1)} скиллов, "
+                    f"а в дереве их {actual}"
+                )
+        # Вендоренная часть библиотеки: производное от тех же чисел.
+        n_vendored = sum(
+            len(list((repo_root / "skills" / s).rglob("SKILL.md")))
+            for s in sorted(vendored_sets(repo_root))
+        )
+        n_own = n_skills - n_vendored
+        for pattern, kind in (
+            (rf"{n_vendored} из сторонних наборов", "вендоренных скиллов"),
+            (rf"и {n_own} собственных", "собственных скиллов"),
+        ):
+            if not re.search(pattern, md):
+                errors.append(f"README: нет актуального числа для «{kind}» (ждали «{pattern}»)")
+        # Имена, не закреплённые ни за одним агентом, названы прямо: иначе читатель
+        # считает, что все 158 навыков попадают в профили. Незакреплённое «по замыслу»
+        # перечислено в UNASSIGNED_BY_DESIGN — новый навык без привязки валит сборку.
+        unassigned = n_skills - len(attached_skills(repo_root))
+        if unassigned > 0 and "не вкладываются" not in md:
+            errors.append(
+                f"README: не сказано, что {unassigned} навыков не попадают ни в один профиль"
+            )
+        declared_unassigned = re.search(r"остальные (\d+)\s*\(", md)
+        if declared_unassigned and int(declared_unassigned.group(1)) != unassigned:
+            errors.append(
+                f"README: заявлено {declared_unassigned.group(1)} незакреплённых навыков, "
+                f"а фактически {unassigned}"
+            )
+
+    # Таблица «Ключевые skills» в profiles/README.md должна совпадать с реальной
+    # выдачей сборки — иначе обещание профиля расходится с дистрибутивом.
+    profiles_readme = repo_root / "profiles" / "README.md"
+    if profiles_readme.is_file():
+        pr = profiles_readme.read_text(encoding="utf-8")
+        by_agent = attached_by_agent(repo_root)
+        for line in pr.splitlines():
+            m_row = re.match(r"\|\s*`?([a-z0-9-]+)`?\s*\|[^|]*\|\s*(.+?)\s*\|\s*$", line)
+            if not m_row or m_row.group(1) not in agent_names:
+                continue
+            have = by_agent.get(m_row.group(1), set())
+            claimed_cell = m_row.group(2).strip()
+            # «внешние: …» — не навыки этого репозитория, они проверяются по INSTALL.md.
+            # Часть ячейки до этого маркера сверяем, часть после — нет.
+            claimed_cell = re.split(r"\bвнешние\s*:", claimed_cell)[0]
+            # «**заготовка** —» — статус профиля, а не имя навыка.
+            claimed_cell = re.sub(r"\*\*заготовка\*\*\s*—?", "", claimed_cell)
+            if not claimed_cell.strip():
+                continue
+            # Скобочные пояснения («(11: ai-visibility, …)») — для читателя, не для
+            # сверки: убираем их до разбора списка, иначе их содержимое летит в проверку.
+            claimed_cell = re.sub(r"\([^)]*\)", "", claimed_cell)
+            claimed = {c.strip(" `*;:,") for c in claimed_cell.split(",") if c.strip(" `*;:,")}
+            absent = []
+            for c in sorted(claimed):
+                if c.endswith("*"):
+                    # «linkedin-*» — группа навыков: проверяем префикс.
+                    if not any(n.startswith(c[:-1]) for n in have):
+                        absent.append(c)
+                elif c not in have:
+                    absent.append(c)
+            if absent:
+                errors.append(
+                    f"profiles/README.md: у «{m_row.group(1)}» указаны навыки, "
+                    f"которых сборка не вкладывает — {', '.join(absent)}"
+                )
+
+    # Примеры в workflows/ ссылаются на агентов так же, как SOUL-файлы: @mention и
+    # delegate_task → <агент>. Раньше пример звал pr и outbound, которых нет.
+    workflows_dir = repo_root / "workflows"
+    if workflows_dir.is_dir():
+        for wf in sorted(workflows_dir.glob("*.md")):
+            body = wf.read_text(encoding="utf-8")
+            for target in sorted(set(MENTION_RE.findall(body))):
+                if target not in agent_names and target not in MENTION_EXEMPT:
+                    errors.append(
+                        f"workflows/{wf.name}: @{target} — агента agents/{target}.md нет"
+                    )
+            for target in sorted(set(re.findall(r"delegate_task\s*→\s*([a-z0-9-]+)", body))):
+                if target not in agent_names:
+                    errors.append(
+                        f"workflows/{wf.name}: delegate_task → {target} — "
+                        f"агента agents/{target}.md нет"
+                    )
+
+    # NOTICE.md — лицензионный документ: он не должен противоречить дереву.
+    notice_path = repo_root / "NOTICE.md"
+    if notice_path.is_file():
+        notice = notice_path.read_text(encoding="utf-8")
+        for set_dir in sorted(p for p in (repo_root / "skills").iterdir() if p.is_dir()):
+            # Собственные одиночные навыки в таблицу апстримов не входят.
+            if set_dir.name not in vendored_sets(repo_root):
+                continue
+            if f"`{set_dir.name}/`" not in notice:
+                errors.append(
+                    f"NOTICE.md: вендоренный набор «{set_dir.name}» не упомянут "
+                    f"в таблице атрибуции"
+                )
+
+    # Внешние зависимости агентов должны быть перечислены в INSTALL.md: они не
+    # попадают в дистрибутив, и без этой таблицы профиль уезжает без инструментов.
+    install_path = repo_root / "INSTALL.md"
+    if install_path.is_file():
+        install_body = install_path.read_text(encoding="utf-8")
+        for name, agents in sorted(bare_skill_names(repo_root).items()):
+            if f"`{name}`" not in install_body:
+                errors.append(
+                    f"INSTALL.md: внешняя зависимость «{name}» "
+                    f"(её зовут: {', '.join(sorted(agents))}) не описана"
+                )
+
     return errors, warnings
+
+
+def attached_by_agent(repo_root: Path) -> dict[str, list[str]]:
+    """Что сборка вложит каждому агенту: {агент: [имена навыков]}.
+
+    Список, а не множество: по нему видно коллизию, когда два навыка из разных
+    наборов приносят одно `name` в один профиль (тогда один из них недоступен).
+    Считается логикой `build_profiles.py`, а не содержимым `dist/`: в CI валидация
+    идёт до сборки, и проверка по каталогу артефакта молча не выполнялась бы.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "_build_profiles_for_check", repo_root / "scripts" / "build_profiles.py"
+    )
+    if spec is None or spec.loader is None:  # pragma: no cover — повреждённый скрипт
+        return {}
+    bp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bp)
+
+    result: dict[str, list[str]] = {}
+    for agent_file in sorted((repo_root / "agents").glob("*.md")):
+        names: list[str] = []
+        text = agent_file.read_text(encoding="utf-8")
+        for ref in bp.skill_roots(text, repo_root):
+            resolved = bp.resolve_skill(repo_root, ref)
+            if resolved is not None:
+                names.append(resolved.name)
+        result[agent_file.stem] = names
+    return result
+
+
+def attached_skills(repo_root: Path) -> set[str]:
+    """Уникальные навыки из дерева `skills/`, которые сборка вкладывает хоть кому-то.
+
+    Считаем по логике сборки, а не по числу вложений в `dist/`: один навык,
+    привязанный к трём агентам, — это три вложения, но один уникальный навык.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "_build_profiles_for_check", repo_root / "scripts" / "build_profiles.py"
+    )
+    if spec is None or spec.loader is None:  # pragma: no cover — повреждённый скрипт
+        return set()
+    bp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bp)
+
+    attached: set[str] = set()
+    for agent_file in sorted((repo_root / "agents").glob("*.md")):
+        text = agent_file.read_text(encoding="utf-8")
+        for ref in bp.skill_roots(text, repo_root):
+            resolved = bp.resolve_skill(repo_root, ref)
+            if resolved is not None and (repo_root / "skills") in resolved.parents:
+                attached.add(str(resolved.relative_to(repo_root / "skills")))
+    return attached
+
+
+def _check_unassigned(repo_root: Path, errors: list[str]) -> None:
+    """Каждый навык либо попадает к агенту, либо объяснён как незакреплённый.
+
+    Новый навык, к которому не привязан ни один агент, — это либо забытая привязка,
+    либо осознанное решение; и то и другое должно быть видно явно.
+    """
+    attached = attached_skills(repo_root)
+    all_skills = {
+        str(p.parent.relative_to(repo_root / "skills"))
+        for p in (repo_root / "skills").rglob("SKILL.md")
+    }
+    for rel in sorted(all_skills - attached):
+        if rel.split("/")[0] in UNASSIGNED_BY_DESIGN:
+            continue
+        errors.append(
+            f"skills/{rel}: навык не привязан ни к одному агенту и не помечен как "
+            f"незакреплённый — добавьте ссылку агенту или внесите набор в UNASSIGNED_BY_DESIGN"
+        )
+
+
+def _check_name_collisions(repo_root: Path, errors: list[str]) -> None:
+    """Один навык = одно имя внутри дистрибутива.
+
+    Hermes адресует навык по имени из frontmatter, поэтому два навыка с одинаковым
+    `name` в одном профиле делают один из них недоступным: он остаётся в дереве,
+    но не выбирается агентом. Проверяем на том, что реально вкладывает сборка.
+    """
+    by_agent = attached_by_agent(repo_root)
+    for agent, names in sorted(by_agent.items()):
+        if len(names) != len(set(names)):
+            errors.append(f"{agent}: дубли имён навыков в дистрибутиве")
+    # Одно и то же имя из разных наборов, попавшее разным агентам, — норма;
+    # проблема только внутри одного профиля, её и ловим выше.
+
+
+def _check_stub_markers(repo_root: Path, errors: list[str]) -> None:
+    """Пометка «заготовка» должна совпадать с фактом.
+
+    Заготовка = профиль, которому сборка не вкладывает ни одного навыка репозитория.
+    Если такому агенту навык привяжут (или наоборот — у работающего профиля не останется
+    ни одного), статус в README/INSTALL/profiles обязан измениться вместе с ним, иначе
+    читатель поверит надписи, а не дереву.
+    """
+    by_agent = attached_by_agent(repo_root)
+    marked: set[str] = set()
+    for rel in ("README.md", "INSTALL.md", "profiles/README.md"):
+        path = repo_root / rel
+        if not path.is_file():
+            continue
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if "заготовка" not in line:
+                continue
+            for name in re.findall(r"`([a-z0-9-]+)`", line):
+                if name in by_agent:
+                    marked.add(name)
+
+    for name in sorted(marked):
+        if by_agent[name]:
+            errors.append(
+                f"{name}: помечен «заготовкой», но сборка вкладывает ему "
+                f"{len(by_agent[name])} навык(ов) — обновите статус в документации"
+            )
+    # Агент без навыков и без пометки — тоже расхождение: он едет пустым молча.
+    for name, skills in sorted(by_agent.items()):
+        if not skills and name not in marked:
+            errors.append(
+                f"{name}: профиль без навыков, но не помечен «заготовкой» ни в README, "
+                f"ни в INSTALL, ни в profiles/README"
+            )
+
+
+def _check_vendored_single(repo_root: Path, errors: list[str]) -> None:
+    """Имена из VENDORED_SINGLE должны существовать: опечатка не должна прятать набор."""
+    for name in sorted(VENDORED_SINGLE):
+        if not (repo_root / "skills" / name / "SKILL.md").is_file():
+            errors.append(
+                f"VENDORED_SINGLE: навыка «skills/{name}» нет — правило атрибуции "
+                f"молча не применяется"
+            )
+
+
+# Названия наборов/навыков, намеренно не привязанные ни к одному агенту, чтобы факт
+# «есть в дереве, но не в дистрибутиве» не выглядел пропуском в привязке.
+UNASSIGNED_BY_DESIGN = {
+    # наборы целиком
+    "github-repo-research", "vector-github-design", "timesfm-marketing",
+    # вендоренные наборы, у которых привязана часть навыков
+    "humblytics-marketing", "searchfit-seo", "pm-skills", "cowork-roles",
+    # одиночные навыки
+    "open-seo",
+}
 
 
 def main() -> int:
@@ -328,6 +669,10 @@ def main() -> int:
 
     repo_root = Path(args.repo_root).resolve()
     errors, warnings = validate_agents(repo_root)
+    _check_vendored_single(repo_root, errors)
+    _check_unassigned(repo_root, errors)
+    _check_name_collisions(repo_root, errors)
+    _check_stub_markers(repo_root, errors)
 
     if args.json:
         print(json.dumps({"errors": errors, "warnings": warnings}, ensure_ascii=False, indent=2))

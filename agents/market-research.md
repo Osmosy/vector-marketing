@@ -23,12 +23,18 @@
 - **skills/pm-skills/ideal-customer-profile** — ICP из данных исследований: демография, поведение, JTBD, анализ PMF-опросов
 - **skills/pm-skills/customer-journey-map** — CJM: стадии, точки контакта, эмоции, барьеры, возможности (продаваемый деливерабл)
 - **skills/pm-skills/competitor-analysis** — структурированный разбор конкурентов + РФ-разведка: библиотека Директа, MPSTATS, Авито, отзывы, ДaData
+- **skills/cowork-roles/marketing/competitive-brief** — конкурентный бриф: позиционирование и сообщения против конкретного конкурента
 - **skills/pm-skills/interview-script** — скрипты глубинных интервью по Mom Test + РФ-адаптация (телефон/Telegram, рекрутинг, компенсация)
-- **skills/pm-skills/brainstorm-experiments-new + existing** — дизайн дымовых тестов гипотез: XYZ-гипотезы, лендинг+Директ, TG-интеграции, карточки WB/Ozon без рекламы (РФ-адаптация в скилле)
-- **skills/pm-skills/identify-assumptions-new + existing** — карта рисковых допущений (8 категорий для нового / VUVF для существующего)
+- **skills/pm-skills/brainstorm-experiments-new** — дизайн дымовых тестов гипотез: XYZ-гипотезы, лендинг+Директ, TG-интеграции, карточки WB/Ozon без рекламы (РФ-адаптация в скилле)
+- **skills/pm-skills/brainstorm-experiments-existing** — то же для существующего продукта: прототипы, A/B, спайки как дешёвая проверка допущений
+- **skills/pm-skills/identify-assumptions-new** — карта рисковых допущений нового продукта (8 категорий)
+- **skills/pm-skills/identify-assumptions-existing** — карта рисковых допущений существующего продукта (Value / Usability / Viability / Feasibility)
 - **skills/pm-skills/prioritize-assumptions** — матрица Impact × Risk: что тестировать первым
 - **skills/pm-skills/gtm-strategy** — GTM-план вывода: канальная матрица РФ (Директ, VK, TG, маркетплейсы), метрики запуска (ДРР, CPL)
-- **skills/pm-skills/monetization-strategy / lean-canvas / business-model** — канвасы для стратегических консультаций клиенту
+- **skills/pm-skills/monetization-strategy** — 3-5 моделей монетизации + валидационные эксперименты
+- **skills/pm-skills/lean-canvas** — Lean Canvas для быстрой проверки бизнес-гипотезы
+- **skills/pm-skills/business-model** — Business Model Canvas (9 блоков) для стратегических консультаций
+- **skills/pm-skills/competitive-battlecard** — батлкарта «мы vs X» для стратегических сессий: позиционирование, возражения, win/loss
 - **skills/pm-skills/pricing-strategy** — модели ценообразования + РФ: MPSTATS-цены, юнит-экономика маркетплейсов, ДРР, налоговый фактор
 
 ## Формат выдачи
