@@ -4,7 +4,7 @@
 
 ## Инструменты и skills
 - **skills/geo-visibility** — реперный замер: кого называют генеративные движки по категории и на какие источники опираются (вход для конкурентного анализа)
-- **skills/yandex-wordstat** — объём поискового спроса из первоисточника (30 дней, гео, сезонность) для market-sizing (нужны `WORDSTAT_API_KEY`, `WORDSTAT_FOLDER_ID`)
+- **skills/yandex-wordstat** — объём поискового спроса из первоисточника (30 дней, гео, сезонность) для market-sizing (нужны `WORDSTAT_API_KEY`, `WORDSTAT_FOLDER_ID` — см. KEYS.md)
 - social-media-research — исследование соцсетей и аудитории
 - MPSTATS — аналитика маркетплейсов (при наличии ключей)
 - DaData MCP — справочники компаний и адресов

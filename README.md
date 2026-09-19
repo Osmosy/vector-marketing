@@ -15,7 +15,7 @@
 [![Company Brain](https://img.shields.io/badge/Company-Brain-8%20files-purple.svg)](#company-brain)
 [![Framework](https://img.shields.io/badge/Framework-Context%E2%86%92Harness%E2%86%92Loop-orange.svg)](FUNDAMENTALS.md)
 
-**Документация:** [Установка](INSTALL.md) · [Архитектура (live)](https://osmosy.github.io/vector-marketing/docs/vector-marketing.architecture.html) · [Презентация](deck/) · [Участие](CONTRIBUTING.md) · [Безопасность](SECURITY.md)
+**Документация:** [Установка](INSTALL.md) · [Ключи](KEYS.md) · [Архитектура (live)](https://osmosy.github.io/vector-marketing/docs/vector-marketing.architecture.html) · [Презентация](deck/) · [Участие](CONTRIBUTING.md) · [Безопасность](SECURITY.md)
 
 </div>
 
@@ -167,6 +167,7 @@ python3 tests/test_scripts.py        # краевые случаи самих с
 vector-marketing/
 ├── README.md
 ├── INSTALL.md                   ← как поставить и использовать (для внешнего пользователя)
+├── KEYS.md                      ← какие ключи нужны, где взять, что без них не работает
 ├── CONTRIBUTING.md              ← что нужно знать перед правкой и что проверяет CI
 ├── SECURITY.md                  ← как сообщить об уязвимости, границы ответственности
 ├── FUNDAMENTALS.md              ← Context → Harness → Loop

@@ -730,5 +730,68 @@ class CompanyBrainTest(unittest.TestCase):
                 self.assertIn(needle, (REPO_ROOT / rel).read_text(encoding="utf-8"))
 
 
+class KeysManifestTest(unittest.TestCase):
+    """env_requires собирается из навыков агента, а не выдаётся всем одинаково.
+
+    Ошибка тут не видна глазом: профиль ставится, работает, но ключ для его
+    навыка установщик не спрашивает — агент уезжает без рабочего инструмента.
+    """
+
+    def test_манифест_содержит_ключи_навыка_агента(self) -> None:
+        with RepoCopy() as repo:
+            run_script("build_profiles", repo)
+            seo = (repo / "dist" / "seo" / "distribution.yaml").read_text(encoding="utf-8")
+            self.assertIn("WORDSTAT_API_KEY", seo)
+            self.assertIn("WORDSTAT_FOLDER_ID", seo)
+            self.assertIn("DEEPSEEK_API_KEY", seo)
+
+    def test_манифест_не_содержит_чужих_ключей(self) -> None:
+        """Агент без навыка Wordstat не должен запрашивать его ключ."""
+        with RepoCopy() as repo:
+            run_script("build_profiles", repo)
+            orch = (repo / "dist" / "orchestrator" / "distribution.yaml").read_text(encoding="utf-8")
+            self.assertNotIn("WORDSTAT_API_KEY", orch)
+
+    def test_env_обязательность_сохраняется(self) -> None:
+        with RepoCopy() as repo:
+            run_script("build_profiles", repo)
+            text = (repo / "dist" / "seo" / "distribution.yaml").read_text(encoding="utf-8")
+            block = text.split("WORDSTAT_API_KEY")[1]
+            self.assertIn("required: true", block[:200])
+            tail = text.split("HERMES_GATEWAY_TOKEN")[1]
+            self.assertIn("required: false", tail[:200])
+
+    def test_карта_env_ссылается_на_существующие_навыки(self) -> None:
+        """Опечатка в имени навыка молча отключает правило — проверяем имена."""
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location(
+            "_bp_env", SCRIPTS / "build_profiles.py"
+        )
+        bp = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(bp)
+        slugs = {p.parent.name for p in (REPO_ROOT / "skills").rglob("SKILL.md")}
+        for slug in bp.ENV_BY_SKILL:
+            with self.subTest(slug=slug):
+                self.assertIn(slug, slugs)
+
+    def test_keys_doc_описывает_все_переменные_манифеста(self) -> None:
+        """KEYS.md — то, что читает внешний пользователь; он не должен отставать."""
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location(
+            "_bp_keys", SCRIPTS / "build_profiles.py"
+        )
+        bp = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(bp)
+        declared = {v[0] for v in bp.BASE_ENV}
+        for vars_for_skill in bp.ENV_BY_SKILL.values():
+            declared |= {v[0] for v in vars_for_skill}
+        body = (REPO_ROOT / "KEYS.md").read_text(encoding="utf-8")
+        for var_name in sorted(declared):
+            with self.subTest(var=var_name):
+                self.assertIn(f"`{var_name}`", body)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

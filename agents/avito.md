@@ -4,7 +4,7 @@
 
 ## Инструменты и skills
 - avito-api — управление объявлениями
-- **skills/yandex-wordstat** — частотные формулировки для заголовков объявлений и гео по спросу (нужны `WORDSTAT_API_KEY`, `WORDSTAT_FOLDER_ID`)
+- **skills/yandex-wordstat** — частотные формулировки для заголовков объявлений и гео по спросу (нужны `WORDSTAT_API_KEY`, `WORDSTAT_FOLDER_ID` — см. KEYS.md)
 - web_search — анализ конкурентов на Авито
 
 ## Формат выдачи

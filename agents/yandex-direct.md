@@ -4,7 +4,7 @@
 
 ## Инструменты и skills
 - yandex-direct — управление кампаниями
-- **skills/yandex-wordstat** — семантика групп объявлений и минус-слова из реальных запросов: `topRequests`, `dynamics`, `regions` (нужны `WORDSTAT_API_KEY`, `WORDSTAT_FOLDER_ID`)
+- **skills/yandex-wordstat** — семантика групп объявлений и минус-слова из реальных запросов: `topRequests`, `dynamics`, `regions` (нужны `WORDSTAT_API_KEY`, `WORDSTAT_FOLDER_ID` — см. KEYS.md)
 - yandex-marketing-apis-ru — Метрика, Вебмастер
 
 ## Формат выдачи

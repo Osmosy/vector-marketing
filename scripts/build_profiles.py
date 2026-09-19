@@ -37,6 +37,28 @@ BRAIN_FILES = (
 
 IDENTITY_RE = re.compile(r"^# (.+)$", re.M)
 
+# Переменные окружения, которые нужны конкретному навыку. Манифест профиля
+# собирается ИЗ ЭТОЙ КАРТЫ, а не одинаковым списком для всех: иначе установщик
+# печатает про ключ модели каждому, а seo-агенту не сообщает, что без ключа
+# Yandex Cloud его навык семантики не работает. Формат:
+#   набор/навык → [(имя переменной, описание, обязательна ли)]
+ENV_BY_SKILL: dict[str, list[tuple[str, str, bool]]] = {
+    "yandex-wordstat": [
+        ("WORDSTAT_API_KEY",
+         "API-ключ сервисного аккаунта Yandex Cloud (роль search-api.webSearchUser) "
+         "для семантики Wordstat", True),
+        ("WORDSTAT_FOLDER_ID",
+         "ID каталога Yandex Cloud, ровно 20 символов (для Wordstat)", True),
+    ],
+}
+
+# Базовые переменные: модель нужна любому агенту, токен канала — только gateway.
+BASE_ENV: list[tuple[str, str, bool]] = [
+    ("DEEPSEEK_API_KEY", "Ключ модели (пример: DeepSeek)", True),
+    ("HERMES_GATEWAY_TOKEN",
+     "Токен мессенджер-канала (нужен только для gateway)", False),
+]
+
 
 def agent_identity(name: str, text: str) -> str:
     m = IDENTITY_RE.search(text)
@@ -154,6 +176,16 @@ def build_one(repo_root: Path, out_root: Path, agent_file: Path, brain_dir: Path
     )
     (target / "README.md").write_text(version_note, encoding="utf-8")
 
+    # env_requires: базовые переменные + те, что требует вложенный навык.
+    env_vars: list[tuple[str, str, bool]] = list(BASE_ENV)
+    seen = {v[0] for v in env_vars}
+    for ref in refs:
+        for var_name, var_desc, var_required in ENV_BY_SKILL.get(ref, []):
+            if var_name in seen:
+                continue
+            env_vars.append((var_name, var_desc, var_required))
+            seen.add(var_name)
+
     manifest = [
         f"name: {name}",
         "version: 1.0.0",
@@ -161,13 +193,13 @@ def build_one(repo_root: Path, out_root: Path, agent_file: Path, brain_dir: Path
         'author: "Osmosy"',
         'license: "MIT"',
         "env_requires:",
-        "  - name: DEEPSEEK_API_KEY",
-        '    description: "Ключ модели (пример: DeepSeek)"',
-        "    required: true",
-        "  - name: HERMES_GATEWAY_TOKEN",
-        '    description: "Токен мессенджер-канала (нужен только для gateway)"',
-        "    required: false",
     ]
+    for var_name, var_desc, var_required in env_vars:
+        manifest += [
+            f"  - name: {var_name}",
+            f'    description: "{var_desc}"',
+            f"    required: {'true' if var_required else 'false'}",
+        ]
     (target / "distribution.yaml").write_text("\n".join(manifest) + "\n", encoding="utf-8")
 
     (target / ".gitignore").write_text(

@@ -512,6 +512,30 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
                     f"в таблице атрибуции"
                 )
 
+    # Ключи: манифест профиля собирается из ENV_BY_SKILL, поэтому переменная,
+    # названная у навыка, должна быть и в карте, и в KEYS.md. Иначе установщик
+    # молча не спросит ключ, а агент уедет без рабочего инструмента.
+    bp_env, bp_base = _build_env_maps(repo_root)
+    keys_doc = repo_root / "KEYS.md"
+    if not keys_doc.is_file():
+        errors.append("нет KEYS.md — описания ключей для внешнего пользователя")
+    else:
+        keys_body = keys_doc.read_text(encoding="utf-8")
+        declared_env: set[str] = {v[0] for v in bp_base}
+        for vars_for_skill in bp_env.values():
+            declared_env |= {v[0] for v in vars_for_skill}
+        for var_name in sorted(declared_env):
+            if f"`{var_name}`" not in keys_body:
+                errors.append(f"KEYS.md: переменная «{var_name}» из карты env_requires не описана")
+        # И наоборот: навык, объявленный в ENV_BY_SKILL, должен существовать.
+        existing_slugs = {p.parent.name for p in (repo_root / "skills").rglob("SKILL.md")}
+        for slug in sorted(bp_env):
+            if slug not in existing_slugs:
+                errors.append(
+                    f"ENV_BY_SKILL: навыка «{slug}» нет в skills/ — правило env_requires "
+                    f"молча не применяется"
+                )
+
     # Внешние зависимости агентов должны быть перечислены в INSTALL.md: они не
     # попадают в дистрибутив, и без этой таблицы профиль уезжает без инструментов.
     install_path = repo_root / "INSTALL.md"
@@ -525,6 +549,24 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
                 )
 
     return errors, warnings
+
+
+def _build_env_maps(repo_root: Path) -> tuple[dict, list]:
+    """Прочитать ENV_BY_SKILL и BASE_ENV из build_profiles.py.
+
+    Импортируем модуль сборки, а не дублируем карту: две копии одного списка
+    расходятся, и проверка начинает охранять несуществующее правило.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "_build_profiles_for_env", repo_root / "scripts" / "build_profiles.py"
+    )
+    if spec is None or spec.loader is None:  # pragma: no cover
+        return {}, []
+    bp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bp)
+    return dict(getattr(bp, "ENV_BY_SKILL", {})), list(getattr(bp, "BASE_ENV", []))
 
 
 def attached_by_agent(repo_root: Path) -> dict[str, list[str]]:
