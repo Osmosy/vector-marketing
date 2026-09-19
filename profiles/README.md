@@ -51,16 +51,16 @@ hermes -p seo "Семантика для клиента X: кластеры + и
 | Профиль | Блок | Ключевые skills (в дистрибутиве) |
 |---------|------|--------------------------------|
 | orchestrator | Оркестрация | strategy-red-team, vector-work |
-| market-research | Стратегия | market-sizing, swot-analysis, pestle-analysis, porters-five-forces, user-personas, ideal-customer-profile, customer-journey-map, competitor-analysis, gtm-strategy, lean-canvas, business-model, competitive-battlecard, competitive-brief (27 из набора pm-skills) |
+| market-research | Стратегия | yandex-wordstat, market-sizing, swot-analysis, pestle-analysis, porters-five-forces, user-personas, ideal-customer-profile, customer-journey-map, competitor-analysis, gtm-strategy, lean-canvas, business-model, competitive-battlecard, competitive-brief (27 из набора pm-skills) |
 | analytics | Стратегия | north-star-metric, ab-test-analysis, revenue-attributor, analytics-dashboard, post-scorer, performance-report |
 | performance | Привлечение | growth-loops, pre-mortem, gtm-motions, gtm-strategy, marketing-strategist, ad-expert, campaign-plan |
-| yandex-direct | Привлечение | **заготовка** — внешние: yandex-direct, yandex-wordstat, yandex-marketing-apis-ru |
-| seo | Привлечение | ai-visibility, technical-seo, on-page-seo, keyword-clustering, internal-linking, schema-markup, broken-links, content-strategy, seo-audit, seo-strategist, content-translation, local-seo-manager |
+| yandex-direct | Привлечение | yandex-wordstat (семантика по спросу); внешние: yandex-direct, yandex-marketing-apis-ru |
+| seo | Привлечение | yandex-wordstat, ai-visibility, technical-seo, on-page-seo, keyword-clustering, internal-linking, schema-markup, broken-links, content-strategy, seo-audit, seo-strategist, content-translation, local-seo-manager |
 | vk-ads | Привлечение | **заготовка** — внешние: social-media-research, yandex-marketing-apis-ru |
-| avito | Привлечение | **заготовка** — внешние: avito-api, yandex-wordstat |
+| avito | Привлечение | yandex-wordstat (частотные формулировки и гео); внешние: avito-api |
 | marketplaces | Привлечение | pricing-strategy (юнит-экономика МП); внешние: ozon-seller-api, wildberries-api, MPSTATS |
 | landing-cro | Упаковка | page-cro, cro-optimizer, heatmap-analyst, funnel-reporter, ab-test-analysis, ab-test-generator, privacy-policy, shipping-artifacts, intended-vs-implemented |
-| content | Упаковка | product-name, copywriting, content-brief, value-prop-statements, brand-review, draft-content |
+| content | Упаковка | yandex-wordstat, product-name, copywriting, content-brief, value-prop-statements, brand-review, draft-content |
 | smm-telegram | Упаковка | linkedin-profile, linkedin-content, linkedin-engagement, linkedin-strategy, linkedin-analytics, linkedin-skills, voice-builder, post-writer, hook-generator, content-matrix, newsletter-voice, post-formatter, quote-post, pinned-comment, niche-research, profile-optimizer, post-scorer, content-creation (25 всего) |
 | creative | Упаковка | gemini-carousel, gemini-infographic, graphic-designer, youtube-thumbnail, reels-scripting |
 | presentation | Упаковка | **заготовка** — внешние: powerpoint, document-deliverables |
@@ -70,8 +70,7 @@ hermes -p seo "Семантика для клиента X: кластеры + и
 | support | Операции | ticket-triage, draft-response, kb-article, customer-research, customer-escalation |
 | ops | Операции | task-management, capacity-plan, vendor-review, stakeholder-map, draft-nda, status-report, start, update, process-doc, runbook, risk-assessment, change-request, compliance-tracking, process-optimization |
 
-**Заготовка** — профиль без навыков репозитория: `yandex-direct`, `vk-ads`, `avito`,
-`presentation`, `reputation`. Роль и SOUL описаны, но всё, на что они опираются, — внешние
+**Заготовка** — профиль без навыков репозитория: `vk-ads`, `presentation`, `reputation`. Роль и SOUL описаны, но всё, на что они опираются, — внешние
 зависимости (см. [INSTALL.md](../INSTALL.md#внешние-зависимости-профиля)). Профиль поставится
 и запустится, но работать ему нечем: **разработаем позже**. Исключение — `marketplaces`: 1
 навык репозитория (`pricing-strategy`), поэтому он в статусе «работает», фактически тоже почти пустой.

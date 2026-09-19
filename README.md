@@ -11,7 +11,7 @@
 [![Hermes Agent](https://img.shields.io/badge/Hermes-Agent-blue.svg)](https://github.com/NousResearch/hermes-agent)
 [![Ecosystem: Vector](https://img.shields.io/badge/Ecosystem-Vector-blue.svg)](https://osmosy.github.io/)
 [![Agents: 19](https://img.shields.io/badge/Agents-19-green.svg)](#агенты)
-[![Skills: 158](https://img.shields.io/badge/Skills-158-blueviolet.svg)](#навыки)
+[![Skills: 159](https://img.shields.io/badge/Skills-159-blueviolet.svg)](#навыки)
 [![Company Brain](https://img.shields.io/badge/Company-Brain-7%20files-purple.svg)](#company-brain)
 [![Framework](https://img.shields.io/badge/Framework-Context%E2%86%92Harness%E2%86%92Loop-orange.svg)](FUNDAMENTALS.md)
 
@@ -83,10 +83,10 @@
 | `market-research` | Стратегия | Рынок, ЦА, конкуренты, позиционирование, JTBD | работает |
 | `analytics` | Стратегия | Метрики, воронки, ROMI, аномалии, дашборды | работает |
 | `performance` | Привлечение | Канальная стратегия, медиаплан, бюджетирование, тесты | работает |
-| `yandex-direct` | Привлечение | Директ: семантика, минус-слова, ставки, аудит | **заготовка** |
+| `yandex-direct` | Привлечение | Директ: семантика, минус-слова, ставки, аудит | работает (1 навык + внешние API) |
 | `seo` | Привлечение | SEO + AEO + GEO (ChatGPT/Perplexity) + Local SEO | работает |
 | `vk-ads` | Привлечение | VK Реклама: аудитории, пиксель, лид-формы, ретаргетинг | **заготовка** |
-| `avito` | Привлечение | Авито: объявления, SEO, продвижение, лиды | **заготовка** |
+| `avito` | Привлечение | Авито: объявления, SEO, продвижение, лиды | работает (1 навык + внешние API) |
 | `marketplaces` | Привлечение | Ozon, WB, Яндекс Маркет: карточки, SEO, юнит-экономика | работает (1 навык) |
 | `landing-cro` | Упаковка | Лендинги, первые экраны, формы, CTA, A/B-гипотезы | работает |
 | `content` | Упаковка | Статьи, SEO-тексты, контент-планы, tone of voice | работает |
@@ -101,8 +101,8 @@
 
 **Заготовка** — профиль без навыков репозитория: SOUL и роль описаны, но работать ему
 нечем (всё заявленное — внешние зависимости, их надо доставить себе). Разработаем позже.
-Готовых к работе профилей — 13 из 19; пятью заготовками не пользуйтесь, пока не появятся
-навыки под канал.
+Готовых к работе профилей — 16 из 19; тремя заготовками (`vk-ads`, `presentation`,
+`reputation`) не пользуйтесь, пока не появятся навыки под канал.
 
 Каждый агент в формате SOUL: Identity → Tools → Format → Rules → Guardrails → Handoff.
 
@@ -208,7 +208,7 @@ vector-marketing/
 ├── profiles/                     ← Настройка профилей Hermes
 ├── scripts/                      ← validate_agents.py, build_profiles.py, check_dist.py
 ├── .github/workflows/validate.yml ← CI: валидация SOUL + сборка + проверка dist
-├── skills/                       ← Навыки (66 Cowork + 40 PM + 17 соцсети + 12 Humblytics + 11 searchfit + 7 LinkedIn + 1 open-seo + 4 собственных)
+├── skills/                       ← Навыки (66 Cowork + 40 PM + 17 соцсети + 12 Humblytics + 11 searchfit + 7 LinkedIn + 1 open-seo + 1 yandex-wordstat + 4 собственных)
 ├── THIRD_PARTY_LICENSES/         ← Тексты лицензий апстримов
 └── assets/                       ← Логотипы
 ```
@@ -217,7 +217,7 @@ vector-marketing/
 
 ## Навыки
 
-158 скиллов: 154 из сторонних наборов (каждый — с блоком `### Attribution` и лицензией в `THIRD_PARTY_LICENSES/`) и 4 собственных.
+159 скиллов: 154 из сторонних наборов (каждый — с блоком `### Attribution` и лицензией в `THIRD_PARTY_LICENSES/`) и 5 собственных.
 
 | Набор | Скиллов | Лицензия | Что даёт агентству |
 |-------|---------|----------|--------------------|
@@ -228,11 +228,11 @@ vector-marketing/
 | `searchfit-seo/` | 11 | MIT | AI-visibility, технический и on-page SEO, кластеризация, схемы, перелинковка |
 | `claude-skills/` | 7 | MIT | LinkedIn-набор (6) + локальное SEO |
 | `open-seo/` | 1 | MIT | обзор open-source SEO-стека (Semrush/Ahrefs-альтернатива) + установка |
-| собственные | 4 | MIT | github-repo-research, timesfm-marketing, vector-work, vector-github-design |
+| собственные | 5 | MIT | github-repo-research, timesfm-marketing, vector-work, vector-github-design, yandex-wordstat (официальный API Wordstat: семантика, сезонность, гео — скрипт + методология) |
 
-В профиль агента попадают только его профильные навыки — всего 132 вложения на 19 профилей
-(например, `market-research` получает 27, `smm-telegram` — 25, `ops` — 14). 121 навык из 158
-закреплён хотя бы за одним агентом; остальные 37 никуда не вкладываются и ставятся отдельно,
+В профиль агента попадают только его профильные навыки — всего 137 вложений на 19 профилей
+(например, `market-research` получает 28, `smm-telegram` — 25, `ops` — 14). 122 навыка из 159
+закреплено хотя бы за одним агентом; остальные 37 никуда не вкладываются и ставятся отдельно,
 если нужны. README при этом описывает весь набор: он остаётся частью поставки, даже когда
 профиль его не получает.
 
@@ -241,7 +241,7 @@ vector-marketing/
 Какой выбран и почему — в [CONTRIBUTING.md](CONTRIBUTING.md#коллизии-имён-навыков-проверено-на-живом-профиле).
 
 Часть имён в секции «Инструменты и skills» у агентов — не навыки этого репозитория, а
-внешние зависимости (наборы Яндекс Директа/Wordstat, API Авито, Ozon, WB, `ru-text`,
+внешние зависимости (наборы Яндекс Директа, API Авито, Ozon, WB, `ru-text`,
 `document-deliverables` и т.п.). Полный список и способ поставить их себе — в
 [INSTALL.md](INSTALL.md#внешние-зависимости-профиля).
 

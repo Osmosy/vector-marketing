@@ -85,10 +85,10 @@ hermes -p orchestrator --skills vector-work "Клиент: интернет-ма
 | `market-research` | рынок, ЦА, конкуренты, позиционирование, JTBD | работает |
 | `analytics` | метрики, воронки, ROMI, аномалии, дашборды | работает |
 | `performance` | канальная стратегия, медиаплан, бюджет, тесты гипотез | работает |
-| `yandex-direct` | Яндекс Директ: семантика, минус-слова, ставки, аудит | **заготовка** |
+| `yandex-direct` | Яндекс Директ: семантика, минус-слова, ставки, аудит | работает (1 навык + внешние API) |
 | `seo` | SEO + AEO + GEO (цитируемость в AI-ответах) + локальное SEO | работает |
 | `vk-ads` | VK Реклама: аудитории, пиксель, лид-формы, ретаргетинг | **заготовка** |
-| `avito` | Авито: объявления, продвижение, лиды | **заготовка** |
+| `avito` | Авито: объявления, продвижение, лиды | работает (1 навык + внешние API) |
 | `marketplaces` | Ozon / WB / Яндекс Маркет: карточки, SEO, юнит-экономика | работает |
 | `landing-cro` | лендинги, первые экраны, формы, A/B-гипотезы | работает |
 | `content` | статьи, SEO-тексты, контент-планы, tone of voice | работает |
@@ -101,8 +101,8 @@ hermes -p orchestrator --skills vector-work "Клиент: интернет-ма
 | `support` | поддержка клиентов: триаж, база знаний, эскалация | работает |
 | `ops` | внутренние операции: задачи, календарь, вендоры, загрузка | работает |
 
-Готовых к работе — 13 профилей из 19; остальные шесть (заготовки) не ставьте, пока не
-доставите себе их инструменты.
+Готовых к работе — 16 профилей из 19; остальные три (`vk-ads`, `presentation`, `reputation`)
+не ставьте, пока не доставите себе их инструменты.
 
 ## Модель и ключи
 
@@ -131,7 +131,8 @@ hermes -p orchestrator --skills vector-work "Клиент: интернет-ма
 
 | Что | У кого | Как закрыть |
 |-----|--------|-------------|
-| `yandex-direct`, `yandex-wordstat`, `yandex-marketing-apis-ru` | yandex-direct, seo, avito, market-research, analytics, performance, vk-ads | поставить навыки Яндекс-стека из хаба (`hermes skills search yandex`) |
+| `yandex-direct`, `yandex-marketing-apis-ru` | yandex-direct, analytics, performance, vk-ads | поставить навыки Яндекс-стека из хаба (`hermes skills search yandex`) |
+| `WORDSTAT_API_KEY`, `WORDSTAT_FOLDER_ID` | seo, content, yandex-direct, avito, market-research | семантика уже в репозитории (`skills/yandex-wordstat`), нужен ключ сервисного аккаунта Yandex Cloud с ролью `search-api.webSearchUser` — см. `skills/yandex-wordstat/references/api-contract.md` |
 | `avito-api`, `ozon-seller-api`, `wildberries-api`, `MPSTATS` | avito, marketplaces, analytics, market-research | навыки API маркетплейсов и аналитики из хаба; нужны ключи продавца |
 | `social-media-research` | vk-ads, smm-telegram, market-research | навык из хаба либо свой |
 | `ru-text`, `document-deliverables`, `evidence-based-seo`, `humanizer`, `youtube-content`, `marketing-director-ru` | content, presentation, reputation, support, landing-cro, smm-telegram, performance | навыки из хаба либо свои |

@@ -9,7 +9,7 @@ DATA = dict(
     title='Vector Marketing',
     subtitle='19 профильных агентов под управлением Osmosy (CMO-оркестратор) — '
              'стратегия, привлечение, упаковка, удержание, операции',
-    chips=[('19', 'агентов'), ('158', 'навыков'), ('40', 'PM-методик')],
+    chips=[('19', 'агентов'), ('159', 'навыков'), ('40', 'PM-методик')],
     github='github.com/Osmosy/vector-marketing',
     footer_tag='Osmosy · Hermes Agent · 2026',
     intro_lead='Маркетинговое агентство на базе Hermes Agent: клиент ставит бизнес-задачу, '
@@ -49,7 +49,7 @@ DATA = dict(
     # 04 · Три слоя
     layers_items=[
         ('Context — что модель видит', 'company-brain/: brand-voice, anti-slop-rules, ICP, офферы, данные о бизнесе. Без контекста — генерик-выпуск; с контекстом — агент говорит голосом бренда клиента'),
-        ('Harness — что позволяет действовать', 'agents/*.md (19 ролей) + Hermes profile + 158 навыков в 6 наборах + MCP-инструменты: Яндекс Метрика/Директ API, MPSTATS, ДaData, Wordstat, карты'),
+        ('Harness — что позволяет действовать', 'agents/*.md (19 ролей) + Hermes profile + 159 навыков в 8 наборах + MCP-инструменты: Яндекс Метрика/Директ API, MPSTATS, ДaData, Wordstat, карты'),
         ('Loop — как обеспечивается качество', 'draft → check → retry: anti-slop чеклист, взаимная проверка агентов, handoff-протокол, cron-ритм. Red-team стратегии обязателен перед выдачей клиенту'),
     ],
 
@@ -58,10 +58,10 @@ DATA = dict(
     # с agents/ проверяет scripts/validate_agents.py (--check-stub-markers).
     ag_items=[
         ('СТРАТЕГИЯ', 'market-research (рынок, спрос, ICP, CJM, конкуренты, интервью) · analytics (метрики, воронки, A/B, NSM, дашборды)'),
-        ('ПРИВЛЕЧЕНИЕ', 'performance (медиапланы, pre-mortem, GTM) · seo (GEO/AEO) · marketplaces (Ozon/WB, юнит-экономика) · yandex-direct* · vk-ads* · avito*'),
+        ('ПРИВЛЕЧЕНИЕ', 'performance (медиапланы, pre-mortem, GTM) · seo (GEO/AEO) · marketplaces (Ozon/WB, юнит-экономика) · yandex-direct · avito · vk-ads*'),
         ('УПАКОВКА', 'landing-cro (лендинги, CRO, 152-ФЗ) · content (контент-планы, нейминг) · smm-telegram · creative · presentation*'),
         ('УДЕРЖАНИЕ + ОПЕРАЦИИ', 'crm-retention (RFM + когорты) · sales · support · ops (NDA, стейкхолдеры) · reputation*'),
-        ('* ЗАГОТОВКА', 'профиль без навыков репозитория: роль описана, работать нечем. Разработаем позже: yandex-direct, vk-ads, avito, presentation, reputation'),
+        ('* ЗАГОТОВКА', 'профиль без навыков репозитория: роль описана, работать нечем. Разработаем позже: vk-ads, presentation, reputation'),
     ],
 
     # 06 · PM-скиллы
@@ -120,7 +120,7 @@ DATA = dict(
 
     # 10 · Roadmap
     roadmap_items=[
-        ('Сейчас', ['40 PM-скиллов в 4 группах, 19 агентов, 158 навыков', 'Живая архитектурная диаграмма (Archify) + визуальная верификация']),
+        ('Сейчас', ['40 PM-скиллов в 4 группах, 19 агентов, 159 навыков', 'Живая архитектурная диаграмма (Archify) + визуальная верификация']),
         ('Следующий шаг', ['Прогон агентства на реальном клиенте: полный цикл от брифа до отчёта ROMI', 'Company Brain под конкретный бизнес — контекст решает качество']),
         ('Экосистема Vector', ['Связка с vector-prediction (прогноз спроса) и vector-work (роли)', 'Единый слой Company Brain для всех продуктов Osmosy']),
     ],

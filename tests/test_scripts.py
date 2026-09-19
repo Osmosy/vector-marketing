@@ -12,11 +12,14 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+import os
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -202,8 +205,8 @@ class ValidateAgentsTest(unittest.TestCase):
     def test_пометка_заготовка_сверяется_с_фактом(self) -> None:
         """Заготовка не может иметь навыков репозитория — и наоборот."""
         with RepoCopy() as repo:
-            # Даём заготовке (yandex-direct) настоящий навык, не сняв пометку.
-            agent = repo / "agents" / "yandex-direct.md"
+            # Даём заготовке (vk-ads) настоящий навык, не сняв пометку.
+            agent = repo / "agents" / "vk-ads.md"
             agent.write_text(
                 agent.read_text(encoding="utf-8").replace(
                     "## Формат выдачи",
@@ -246,12 +249,12 @@ class ValidateAgentsTest(unittest.TestCase):
             run_script("build_profiles", repo)
             install = repo / "INSTALL.md"
             install.write_text(
-                install.read_text(encoding="utf-8").replace("`yandex-wordstat`", "Вордстат"),
+                install.read_text(encoding="utf-8").replace("`avito-api`", "API Авито"),
                 encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
-            self.assertIn("yandex-wordstat", r.stdout)
+            self.assertIn("avito-api", r.stdout)
 
 
 class CheckDistTest(unittest.TestCase):
@@ -343,6 +346,106 @@ class SecretPatternsTest(unittest.TestCase):
                     )
                 ]
                 self.assertEqual(hits, [], value)
+
+
+def _load_skill_script(rel: str):
+    """Импортировать скрипт навыка по пути внутри skills/ (навыки — не пакет)."""
+    path = REPO_ROOT / "skills" / rel
+    spec = importlib.util.spec_from_file_location("_skill_" + path.stem, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+class WordstatSkillTest(unittest.TestCase):
+    """Краевые случаи skills/yandex-wordstat: счётчик лимита и привод типов.
+
+    Лимит API — 100 запросов в час; прогон, который упирается в отказ посреди работы,
+    теряет собранное, поэтому счётчик обязан резать запросы ДО вызова API и видеть
+    расход, накопленный прошлыми запусками (состояние на диске, а не в процессе).
+    """
+
+    def setUp(self) -> None:
+        self.ws = _load_skill_script("yandex-wordstat/scripts/wordstat.py")
+
+    def test_числа_из_api_приходят_строками(self) -> None:
+        """protobuf JSON отдаёт int64 строкой: без приведения арифметика ломается."""
+        self.assertEqual(self.ws._as_int("1234"), 1234)
+        self.assertEqual(self.ws._as_int(""), 0)
+        self.assertEqual(self.ws._as_int(None), 0)
+        self.assertEqual(self.ws._as_float("0.0000123"), 1.23e-05)
+        self.assertEqual(self.ws._as_float(None), 0.0)
+
+    def test_дата_превращается_в_timestamp(self) -> None:
+        self.assertEqual(self.ws._rfc3339("2026-08-01"), "2026-08-01T00:00:00Z")
+        self.assertEqual(
+            self.ws._rfc3339("2026-08-01T00:00:00Z"), "2026-08-01T00:00:00Z"
+        )
+        with self.assertRaises(ValueError):
+            self.ws._rfc3339("01.08.2026")
+
+    def test_бюджет_переживает_перезапуск_процесса(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            state = Path(tmp) / "requests.json"
+            first = self.ws.Budget(state, budget=3)
+            first.spend()
+            first.spend()
+            second = self.ws.Budget(state, budget=3)  # новый процесс, тот же файл
+            self.assertEqual(second.used_last_hour(), 2)
+            second.spend()
+            with self.assertRaises(self.ws.WordstatError):
+                second.check()
+
+    def test_часовой_лимит_режет_до_запроса(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            state = Path(tmp) / "requests.json"
+            budget = self.ws.Budget(state, budget=90)
+            budget.stamps = [time.time() for _ in range(self.ws.HOURLY_LIMIT)]
+            budget._save()
+            fresh = self.ws.Budget(state, budget=90)
+            with self.assertRaises(self.ws.WordstatError):
+                fresh.check()
+
+    def test_старые_запросы_в_лимит_не_считаются(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            state = Path(tmp) / "requests.json"
+            budget = self.ws.Budget(state, budget=90)
+            budget.stamps = [time.time() - 7200 for _ in range(50)]  # два часа назад
+            budget._save()
+            self.assertEqual(self.ws.Budget(state, 90).used_last_hour(), 0)
+
+    def test_дерево_регионов_разворачивается_рекурсивно(self) -> None:
+        tree = [
+            {"id": "225", "label": "Россия", "children": [{"id": "213", "label": "Москва"}]},
+            {"id": "2", "label": "Санкт-Петербург"},
+        ]
+        self.assertEqual(
+            self.ws._flatten_regions(tree),
+            [
+                {"id": "225", "label": "Россия"},
+                {"id": "213", "label": "Москва"},
+                {"id": "2", "label": "Санкт-Петербург"},
+            ],
+        )
+
+    def test_без_ключей_скрипт_объясняет_что_задать(self) -> None:
+        """Ни ключа, ни folderId — не трейсбек, а подсказка про переменные окружения."""
+        script = REPO_ROOT / "skills" / "yandex-wordstat" / "scripts" / "wordstat.py"
+        env = {k: v for k, v in os.environ.items()
+               if k not in ("WORDSTAT_API_KEY", "WORDSTAT_FOLDER_ID")}
+        r = subprocess.run(
+            [sys.executable, str(script), "top", "тест"],
+            capture_output=True, text=True, env=env, cwd=str(script.parent),
+        )
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("WORDSTAT_API_KEY", r.stderr)
+
+    def test_ошибки_api_расшифровываются_по_коду(self) -> None:
+        """Ориентир — code из тела ответа, а не HTTP-статус."""
+        for code, needle in ((3, "обязательные поля"), (8, "квота"), (16, "ключ")):
+            body = json.dumps({"code": code, "message": f"сообщение {code}"})
+            text = self.ws.Wordstat._explain(400, body)
+            self.assertIn(needle, text, code)
 
 
 if __name__ == "__main__":

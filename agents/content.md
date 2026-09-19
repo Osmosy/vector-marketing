@@ -5,6 +5,7 @@
 ## Инструменты и skills
 - ru-text — качество русского текста (инфостиль, грамматика, читаемость)
 - evidence-based-seo — SEO-принципы для контента
+- **skills/yandex-wordstat** — темы и приоритет статей по реальной частоте спроса + сезонный календарь публикаций (нужны `WORDSTAT_API_KEY`, `WORDSTAT_FOLDER_ID`)
 - humanizer — очеловечивание AI-текста
 - youtube-content — расшифровки и контент для YouTube
 - google-workspace — Google Docs для совместной работы

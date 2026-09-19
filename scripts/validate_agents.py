@@ -414,7 +414,7 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
             if not re.search(pattern, md):
                 errors.append(f"README: нет актуального числа для «{kind}» (ждали «{pattern}»)")
         # Имена, не закреплённые ни за одним агентом, названы прямо: иначе читатель
-        # считает, что все 158 навыков попадают в профили. Незакреплённое «по замыслу»
+        # считает, что все навыки дерева попадают в профили. Незакреплённое «по замыслу»
         # перечислено в UNASSIGNED_BY_DESIGN — новый навык без привязки валит сборку.
         unassigned = n_skills - len(attached_skills(repo_root))
         if unassigned > 0 and "не вкладываются" not in md:
