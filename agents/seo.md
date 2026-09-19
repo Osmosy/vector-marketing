@@ -8,7 +8,8 @@
 - open-seo — open-source SEO-инструменты
 - **skills/claude-skills/local-seo-manager** — локальное SEO: чек-лист, NAP-консистентность (скрипт-проверка), генерация LocalBusiness-схемы, шаблоны ответов на отзывы
 - **skills/article-distribution** — внешние материалы как источник цитируемости для GEO: выбор площадки, переупаковка, UTM-учёт
-- **skills/searchfit-seo/ai-visibility** — как бренд выглядит в ответах AI-поиска и что этому мешает
+- **skills/geo-visibility** — измеримый GEO-цикл: прогон по нескольким LLM (упоминание, позиция, тональность, омонимы, источники цитирования) скриптом `scripts/geo_probe.py` — замер до и после публикаций
+- **skills/searchfit-seo/ai-visibility** — методика: как бренд выглядит в ответах AI-поиска и что этому мешает
 - **skills/searchfit-seo/technical-seo** — технический аудит: индексация, скорость, канонизация, ошибки обхода
 - **skills/searchfit-seo/on-page-seo** — разбор страницы: заголовки, мета, структура, соответствие интенту
 - **skills/searchfit-seo/keyword-clustering** — кластеризация семантики по интенту и разнесение по страницам

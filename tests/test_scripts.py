@@ -538,5 +538,149 @@ class ArticleDistributionSkillTest(unittest.TestCase):
             self.assertEqual(row["platform"], "vc")
 
 
+class GeoVisibilitySkillTest(unittest.TestCase):
+    """Краевые случаи skills/geo-visibility: разбор ответов моделей.
+
+    Каждая эвристика появилась после конкретного ложного результата на живом
+    прогоне, поэтому проверяются именно ложные срабатывания: бренд-омоним,
+    «github» как форма бренда, источники без ссылок, слепое дописывание /v1.
+    """
+
+    def setUp(self) -> None:
+        self.gp = _load_skill_script("geo-visibility/scripts/geo_probe.py")
+        self.brand = {
+            "name": "Vector Marketing",
+            "aliases": ["vector-marketing", "Osmosy"],
+            "sites": ["https://github.com/Osmosy/vector-marketing"],
+        }
+
+    def test_платформа_не_становится_формой_бренда(self) -> None:
+        """«github» в ответе — про хостинг, а не про бренд."""
+        forms = self.gp.brand_forms({"name": "X", "sites": ["https://github.com/Osmosy/repo"]})
+        self.assertNotIn("github", forms)
+        self.assertIn("osmosy", forms)
+        self.assertIn("repo", forms)
+
+    def test_упоминание_ищется_по_границе_слова(self) -> None:
+        """«вектор» не должен находиться внутри «векторный»."""
+        hits = self.gp.find_mentions("векторный подход и Вектор отдельно", ["вектор"])
+        self.assertEqual(len(hits), 1)
+
+    def test_омоним_помечается_а_не_считается_знанием(self) -> None:
+        """Живой случай: модель описала чужую компанию с тем же названием."""
+        text = ("Vector Marketing — американская компания прямых продаж, связанная "
+                "с Cutco Corporation, основана в 1981 году.")
+        b = self.gp.analyze_answer(text, self.brand, [])["brand"]
+        self.assertTrue(b["mentioned"])
+        self.assertTrue(b["ambiguousEntity"], "омоним должен быть помечен")
+        self.assertFalse(b["distinguishingMatch"])
+
+    def test_различающий_алиас_снимает_подозрение_на_омоним(self) -> None:
+        text = "Vector Marketing от Osmosy — маркетинговое агентство на Hermes Agent."
+        b = self.gp.analyze_answer(text, self.brand, [])["brand"]
+        self.assertTrue(b["distinguishingMatch"])
+        self.assertFalse(b["ambiguousEntity"])
+
+    def test_связи_нет_распознаётся_в_живой_формулировке(self) -> None:
+        """Дословных шаблонов мало: нужен предмет + отрицание в одном предложении."""
+        text = ("Коротко: публично подтверждённой связи между проектом Vector Marketing "
+                "и компанией Osmosy нет.")
+        self.assertTrue(self.gp.detect_unknown_claim(text))
+
+    def test_наличие_данных_не_считается_их_отсутствием(self) -> None:
+        for text in (
+            "Есть данные о компании Vector Marketing: агентство на Hermes Agent.",
+            "Vector Marketing часто критикуют: слабая поддержка и жалобы клиентов.",
+        ):
+            with self.subTest(text=text[:40]):
+                self.assertFalse(self.gp.detect_unknown_claim(text))
+
+    def test_тональность_берётся_из_окна_вокруг_упоминания(self) -> None:
+        pos = self.gp.analyze_answer("Vector Marketing — надёжное решение, рекомендуют.", self.brand, [])
+        neg = self.gp.analyze_answer("Vector Marketing: слабый продукт, жалобы клиентов.", self.brand, [])
+        self.assertEqual(pos["brand"]["sentiment"], "positive")
+        self.assertEqual(neg["brand"]["sentiment"], "negative")
+
+    def test_источники_без_ссылок_собираются_слаги(self) -> None:
+        """В живом прогоне все ответы называли репозитории слагом, без URL."""
+        text = "Смотрите e2b-dev/ai-marketing-agency и VRSEN/agency-swarm."
+        slugs = self.gp.source_slugs(text)
+        self.assertIn("e2b-dev/ai-marketing-agency", slugs)
+        self.assertIn("VRSEN/agency-swarm", slugs)
+
+    def test_хвостовая_пунктуация_снимается_со_слага(self) -> None:
+        self.assertEqual(self.gp.source_slugs("это Marketing/Cutco."), ["Marketing/Cutco"])
+
+    def test_markdown_ссылки_дают_домен(self) -> None:
+        text = "Источник: [разбор](https://habr.com/ru/articles/123/) и http://example.com/a"
+        self.assertEqual(self.gp.cited_domains(text), ["habr.com", "example.com"])
+
+    def test_версия_api_не_дублируется(self) -> None:
+        cases = {
+            "https://api.deepseek.com": "https://api.deepseek.com/v1",
+            "https://api.z.ai/api/paas/v4": "https://api.z.ai/api/paas/v4",
+            "http://127.0.0.1:11434/": "http://127.0.0.1:11434/v1",
+        }
+        for raw, expected in cases.items():
+            with self.subTest(raw=raw):
+                self.assertEqual(self.gp.normalize_base_url(raw), expected)
+
+    def test_сводка_разделяет_знание_омоним_и_незнание(self) -> None:
+        runs = [
+            {"model": "m", "analysis": {
+                "brand": {"mentioned": True, "firstPosition": 1, "sentiment": "neutral",
+                          "ambiguousEntity": True, "claimsUnknown": True},
+                "competitors": {"C": {"mentioned": True}}, "citedDomains": ["habr.com"],
+                "sourceSlugs": ["a/b"]}},
+            {"model": "m", "analysis": {
+                "brand": {"mentioned": False, "firstPosition": None, "sentiment": None,
+                          "ambiguousEntity": False, "claimsUnknown": False},
+                "competitors": {"C": {"mentioned": False}}, "citedDomains": [],
+                "sourceSlugs": []}},
+        ]
+        s = self.gp.summarize(runs, "X")["models"]["m"]
+        self.assertEqual(s["prompts"], 2)
+        self.assertEqual(s["mentioned"], 1)
+        self.assertEqual(s["ambiguous"], 1)
+        self.assertEqual(s["claimsUnknown"], 1)
+        self.assertEqual(s["mentionRate"], 0.5)
+        self.assertEqual(s["topCitedDomains"], ["habr.com"])
+
+    def test_конфиг_без_промптов_или_моделей_отклоняется(self) -> None:
+        script = REPO_ROOT / "skills" / "geo-visibility" / "scripts" / "geo_probe.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            for cfg, needle in (
+                ({"brand": {"name": "X"}, "prompts": [], "models": [{"name": "m", "base_url": "http://x", "model": "y"}]}, "prompts"),
+                ({"brand": {"name": "X"}, "prompts": ["p"], "models": []}, "models"),
+                ({"prompts": ["p"], "models": [{"name": "m", "base_url": "http://x", "model": "y"}]}, "brand.name"),
+            ):
+                with self.subTest(needle=needle):
+                    path = Path(tmp) / "cfg.json"
+                    path.write_text(json.dumps(cfg, ensure_ascii=False), encoding="utf-8")
+                    r = subprocess.run(
+                        [sys.executable, str(script), "--config", str(path)],
+                        capture_output=True, text=True, cwd=str(script.parent),
+                    )
+                    self.assertEqual(r.returncode, 1)
+                    self.assertIn(needle, r.stderr)
+
+    def test_dry_run_не_делает_запросов(self) -> None:
+        """План вызовов проверяется без обращений к провайдеру."""
+        script = REPO_ROOT / "skills" / "geo-visibility" / "scripts" / "geo_probe.py"
+        cfg = {"brand": {"name": "X"}, "prompts": ["p1", "p2"],
+               "models": [{"name": "m", "base_url": "http://127.0.0.1:1", "model": "y",
+                           "api_key_env": ""}]}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "cfg.json"
+            path.write_text(json.dumps(cfg, ensure_ascii=False), encoding="utf-8")
+            r = subprocess.run(
+                [sys.executable, str(script), "--config", str(path), "--dry-run"],
+                capture_output=True, text=True, cwd=str(script.parent), timeout=60,
+            )
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertIn("вызовов: 2", r.stderr)
+            self.assertEqual(r.stdout.count("←"), 2)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

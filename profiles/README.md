@@ -50,12 +50,12 @@ hermes -p seo "Семантика для клиента X: кластеры + и
 
 | Профиль | Блок | Ключевые skills (в дистрибутиве) |
 |---------|------|--------------------------------|
-| orchestrator | Оркестрация | strategy-red-team, article-distribution, vector-work |
-| market-research | Стратегия | yandex-wordstat, market-sizing, swot-analysis, pestle-analysis, porters-five-forces, user-personas, ideal-customer-profile, customer-journey-map, competitor-analysis, gtm-strategy, lean-canvas, business-model, competitive-battlecard, competitive-brief (27 из набора pm-skills) |
-| analytics | Стратегия | north-star-metric, ab-test-analysis, revenue-attributor, analytics-dashboard, post-scorer, performance-report |
+| orchestrator | Оркестрация | strategy-red-team, article-distribution, geo-visibility, vector-work |
+| market-research | Стратегия | yandex-wordstat, geo-visibility, market-sizing, swot-analysis, pestle-analysis, porters-five-forces, user-personas, ideal-customer-profile, customer-journey-map, competitor-analysis, gtm-strategy, lean-canvas, business-model, competitive-battlecard, competitive-brief (27 из набора pm-skills) |
+| analytics | Стратегия | geo-visibility, north-star-metric, ab-test-analysis, revenue-attributor, analytics-dashboard, post-scorer, performance-report |
 | performance | Привлечение | growth-loops, pre-mortem, gtm-motions, gtm-strategy, marketing-strategist, ad-expert, campaign-plan |
 | yandex-direct | Привлечение | yandex-wordstat (семантика по спросу); внешние: yandex-direct, yandex-marketing-apis-ru |
-| seo | Привлечение | yandex-wordstat, article-distribution, ai-visibility, technical-seo, on-page-seo, keyword-clustering, internal-linking, schema-markup, broken-links, content-strategy, seo-audit, seo-strategist, content-translation, local-seo-manager |
+| seo | Привлечение | yandex-wordstat, article-distribution, geo-visibility, ai-visibility, technical-seo, on-page-seo, keyword-clustering, internal-linking, schema-markup, broken-links, content-strategy, seo-audit, seo-strategist, content-translation, local-seo-manager |
 | vk-ads | Привлечение | **заготовка** — внешние: social-media-research, yandex-marketing-apis-ru |
 | avito | Привлечение | yandex-wordstat (частотные формулировки и гео); внешние: avito-api |
 | marketplaces | Привлечение | pricing-strategy (юнит-экономика МП); внешние: ozon-seller-api, wildberries-api, MPSTATS |

@@ -11,7 +11,7 @@
 [![Hermes Agent](https://img.shields.io/badge/Hermes-Agent-blue.svg)](https://github.com/NousResearch/hermes-agent)
 [![Ecosystem: Vector](https://img.shields.io/badge/Ecosystem-Vector-blue.svg)](https://osmosy.github.io/)
 [![Agents: 19](https://img.shields.io/badge/Agents-19-green.svg)](#агенты)
-[![Skills: 160](https://img.shields.io/badge/Skills-160-blueviolet.svg)](#навыки)
+[![Skills: 161](https://img.shields.io/badge/Skills-161-blueviolet.svg)](#навыки)
 [![Company Brain](https://img.shields.io/badge/Company-Brain-7%20files-purple.svg)](#company-brain)
 [![Framework](https://img.shields.io/badge/Framework-Context%E2%86%92Harness%E2%86%92Loop-orange.svg)](FUNDAMENTALS.md)
 
@@ -208,7 +208,7 @@ vector-marketing/
 ├── profiles/                     ← Настройка профилей Hermes
 ├── scripts/                      ← validate_agents.py, build_profiles.py, check_dist.py
 ├── .github/workflows/validate.yml ← CI: валидация SOUL + сборка + проверка dist
-├── skills/                       ← Навыки (66 Cowork + 40 PM + 17 соцсети + 12 Humblytics + 11 searchfit + 7 LinkedIn + 1 open-seo + 1 yandex-wordstat + 1 article-distribution + 4 собственных)
+├── skills/                       ← Навыки (66 Cowork + 40 PM + 17 соцсети + 12 Humblytics + 11 searchfit + 7 LinkedIn + 1 open-seo + 1 yandex-wordstat + 1 article-distribution + 1 geo-visibility + 4 собственных)
 ├── THIRD_PARTY_LICENSES/         ← Тексты лицензий апстримов
 └── assets/                       ← Логотипы
 ```
@@ -217,7 +217,7 @@ vector-marketing/
 
 ## Навыки
 
-160 скиллов: 154 из сторонних наборов (каждый — с блоком `### Attribution` и лицензией в `THIRD_PARTY_LICENSES/`) и 6 собственных.
+161 скилл: 154 из сторонних наборов (каждый — с блоком `### Attribution` и лицензией в `THIRD_PARTY_LICENSES/`) и 7 собственных.
 
 | Набор | Скиллов | Лицензия | Что даёт агентству |
 |-------|---------|----------|--------------------|
@@ -228,10 +228,10 @@ vector-marketing/
 | `searchfit-seo/` | 11 | MIT | AI-visibility, технический и on-page SEO, кластеризация, схемы, перелинковка |
 | `claude-skills/` | 7 | MIT | LinkedIn-набор (6) + локальное SEO |
 | `open-seo/` | 1 | MIT | обзор open-source SEO-стека (Semrush/Ahrefs-альтернатива) + установка |
-| собственные | 6 | MIT | github-repo-research, timesfm-marketing, vector-work, vector-github-design, yandex-wordstat (официальный API Wordstat: семантика, сезонность, гео), article-distribution (посевы статей: площадки, правила, UTM-журнал) |
+| собственные | 7 | MIT | github-repo-research, timesfm-marketing, vector-work, vector-github-design, yandex-wordstat (официальный API Wordstat), article-distribution (посевы статей), geo-visibility (замер видимости в AI-ответах) |
 
-В профиль агента попадают только его профильные навыки — всего 142 вложения на 19 профилей
-(например, `market-research` получает 28, `smm-telegram` — 25, `ops` — 14). 123 навыка из 160
+В профиль агента попадают только его профильные навыки — всего 146 вложений на 19 профилей
+(например, `market-research` получает 29, `smm-telegram` — 25, `ops` — 14). 124 навыка из 161
 закреплено хотя бы за одним агентом; остальные 37 никуда не вкладываются и ставятся отдельно,
 если нужны. README при этом описывает весь набор: он остаётся частью поставки, даже когда
 профиль его не получает.

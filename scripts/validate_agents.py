@@ -53,6 +53,20 @@ VENDORED_SINGLE = {"open-seo"}
 MENTION_EXEMPT = {"mention"}
 
 
+def plural_ru(n: int, one: str, few: str, many: str) -> str:
+    """Русская форма числа: 1 навык / 2 навыка / 5 навыков.
+
+    Без этого валидатор требовал «161 навыков» и «5 навыков» одинаково —
+    верная форма в документе считалась расхождением, а неверная проходила.
+    """
+    n = abs(int(n))
+    if n % 10 == 1 and n % 100 != 11:
+        return one
+    if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14:
+        return few
+    return many
+
+
 def attribution_count(body: str) -> int:
     """Сколько блоков лицензионной атрибуции в SKILL.md."""
     lines = body.splitlines()
@@ -364,8 +378,8 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
             "pm": [f"('{n_pm}', 'PM-методик')", f"{n_pm} PM-скиллов"],
         },
         "agent-description.md": {
-            "agents": [f"{n_agents} агентов"],
-            "skills": [f"{n_skills} навыков"],
+            "agents": [f"{n_agents} {plural_ru(n_agents, 'агент', 'агента', 'агентов')}"],
+            "skills": [f"{n_skills} {plural_ru(n_skills, 'навык', 'навыка', 'навыков')}"],
         },
     }
     for label, path in artifacts.items():
@@ -383,8 +397,9 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
     diag = repo_root / "docs" / "vector-marketing.architecture.json"
     if diag.is_file():
         body = diag.read_text(encoding="utf-8")
-        if f"{n_skills} скиллов" not in body:
-            errors.append(f"диаграмма: нет подписи «{n_skills} скиллов»")
+        expected_skills = f"{n_skills} {plural_ru(n_skills, 'скилл', 'скилла', 'скиллов')}"
+        if expected_skills not in body:
+            errors.append(f"диаграмма: нет подписи «{expected_skills}»")
         if f"{n_pm} PM-скиллов" not in body:
             errors.append(f"диаграмма: нет «{n_pm} PM-скиллов» во вью")
 

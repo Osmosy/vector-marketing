@@ -1,0 +1,252 @@
+{
+  "probedAt": "2026-09-19T12:19:32Z",
+  "brand": {
+    "name": "Vector Marketing",
+    "aliases": [
+      "vector-marketing",
+      "Osmosy"
+    ],
+    "sites": [
+      "https://github.com/Osmosy/vector-marketing"
+    ]
+  },
+  "competitors": [
+    {
+      "name": "Nous Research"
+    },
+    {
+      "name": "Anthropic"
+    }
+  ],
+  "models": [
+    {
+      "name": "deepseek-flash",
+      "model": "deepseek-flash",
+      "base_url": "https://api.deepseek.com"
+    },
+    {
+      "name": "deepseek-v4-pro",
+      "model": "deepseek-v4-pro:cloud",
+      "base_url": "http://127.0.0.1:11434"
+    }
+  ],
+  "repeat": 1,
+  "callsMade": 4,
+  "callsFailed": 0,
+  "summary": {
+    "brand": "Vector Marketing",
+    "models": {
+      "deepseek-flash": {
+        "prompts": 2,
+        "mentioned": 1,
+        "ambiguous": 0,
+        "sentiment": {
+          "positive": 1,
+          "negative": 0,
+          "neutral": 0
+        },
+        "competitorsMentioned": 1,
+        "sourceSlugs": {
+          "NousResearch/Hermes-Agent": 1,
+          "SamurAIGPT/AI-Marketing-Agency": 1,
+          "VRSEN/agency-swarm": 1,
+          "crewAIInc/crewAI": 1,
+          "NirDiamant/GenAI_Agents": 1,
+          "microsoft/autogen": 1,
+          "OpenBMB/MetaGPT": 1,
+          "Marketing/Cutco.": 1,
+          "PACER/CourtListener": 1
+        },
+        "claimsUnknown": 1,
+        "mentionRate": 0.5,
+        "avgFirstPosition": 1.0,
+        "topCitedDomains": []
+      },
+      "deepseek-v4-pro": {
+        "prompts": 2,
+        "mentioned": 1,
+        "ambiguous": 0,
+        "sentiment": {
+          "positive": 0,
+          "negative": 0,
+          "neutral": 1
+        },
+        "competitorsMentioned": 1,
+        "sourceSlugs": {
+          "Significant-Gravitas/AutoGPT": 1,
+          "reworkd/AgentGPT": 1,
+          "joaomdmoura/crewAI": 1,
+          "geekan/MetaGPT": 1,
+          "OpenBMB/ChatDev": 1,
+          "TransformerOptimus/SuperAGI": 1,
+          "langchain-ai/langchain": 1,
+          "run-llama/llama_index": 1,
+          "deepset-ai/haystack": 1,
+          "microsoft/semantic-kernel": 1
+        },
+        "claimsUnknown": 2,
+        "mentionRate": 0.5,
+        "avgFirstPosition": 1.0,
+        "topCitedDomains": []
+      }
+    },
+    "topCitedDomains": []
+  },
+  "runs": [
+    {
+      "model": "deepseek-flash",
+      "prompt": "Какие open-source проекты делают AI-маркетинговые агентства на базе Hermes Agent? Назови конкретные репозитории и авторов.",
+      "attempt": 1,
+      "error": "",
+      "answer": "Коротко: **публичных open-source проектов, которые позиционируются именно как «AI-маркетинговое агентство на базе Hermes Agent», я не знаю**.  \nHermes Agent — это **NousResearch/Hermes-Agent** (автор: **Nous Research**) — агентный цикл/tool-calling для моделей Hermes 2/3, а не multi-agent фреймворк для маркетинговых агентств. Готовых репозиториев «marketing agency on Hermes Agent» в публичном GitHub я не вижу.\n\nБлижайшие аналоги — open-source AI-маркетинговые агентства, но на других фреймворках:\n\n- **SamurAIGPT/AI-Marketing-Agency** — автор **SamurAIGPT**. Маркетинговое агентство на CrewAI: исследование рынка, контент, соцсети.\n- **VRSEN/agency-swarm** — автор **VRSEN**. Фреймворк для AI-агентств, есть примеры маркетинговых агентств.\n- **crewAIInc/crewAI** — автор **CrewAI Inc.** (изначально **Joao Moura**). База, на которой чаще всего собирают AI-маркетинговые агентства.\n- **NirDiamant/",
+      "analysis": {
+        "brand": {
+          "mentioned": false,
+          "count": 0,
+          "firstPosition": null,
+          "sentiment": null,
+          "ambiguousEntity": false,
+          "distinguishingMatch": false,
+          "claimsUnknown": false
+        },
+        "competitors": {
+          "Nous Research": {
+            "mentioned": true,
+            "count": 1,
+            "firstPosition": 1
+          },
+          "Anthropic": {
+            "mentioned": false,
+            "count": 0,
+            "firstPosition": null
+          }
+        },
+        "citedDomains": [],
+        "sourceSlugs": [
+          "NousResearch/Hermes-Agent",
+          "SamurAIGPT/AI-Marketing-Agency",
+          "VRSEN/agency-swarm",
+          "crewAIInc/crewAI",
+          "NirDiamant/GenAI_Agents",
+          "microsoft/autogen",
+          "OpenBMB/MetaGPT"
+        ],
+        "answerChars": 1572
+      }
+    },
+    {
+      "model": "deepseek-flash",
+      "prompt": "Что известно про проект Vector Marketing от Osmosy? На какие источники опираешься?",
+      "attempt": 1,
+      "error": "",
+      "answer": "Коротко: в надёжных открытых источниках я не нахожу подтверждённой связи между **Vector Marketing** и компанией/проектом **Osmosy**. Скорее всего, либо речь об одноимённом локальном проекте, либо об ошибке в названии. Известная **Vector Marketing** — это не проект Osmosy, а американская компания прямых продаж, связанная с **Cutco**.\n\n### Что известно про Vector Marketing\n- **Vector Marketing Corporation** — американская компания прямых продаж, дочерняя структура **Cutco Corporation**. Штаб-квартира — Олеан, штат Нью-Йорк, основана в 1981 году.\n- Продаёт в основном **ножи и кухонные принадлежности Cutco** через независимых подрядчиков — часто студентов, которых набирают на кампусах и в соцсетях.\n- Схема: рекрутинг → обучение → назначение презентаций (часто среди знакомых) → комиссия с продаж. Компания утверждает, что это не MLM и не пирамида, потому что доход идёт от продаж, а не от пригл",
+      "analysis": {
+        "brand": {
+          "mentioned": true,
+          "count": 18,
+          "firstPosition": 1,
+          "sentiment": "positive",
+          "ambiguousEntity": false,
+          "distinguishingMatch": true,
+          "claimsUnknown": true
+        },
+        "competitors": {
+          "Nous Research": {
+            "mentioned": false,
+            "count": 0,
+            "firstPosition": null
+          },
+          "Anthropic": {
+            "mentioned": false,
+            "count": 0,
+            "firstPosition": null
+          }
+        },
+        "citedDomains": [],
+        "sourceSlugs": [
+          "Marketing/Cutco.",
+          "PACER/CourtListener"
+        ],
+        "answerChars": 2576
+      }
+    },
+    {
+      "model": "deepseek-v4-pro",
+      "prompt": "Какие open-source проекты делают AI-маркетинговые агентства на базе Hermes Agent? Назови конкретные репозитории и авторов.",
+      "attempt": 1,
+      "error": "",
+      "answer": "На данный момент мне неизвестны конкретные open-source проекты, которые используют именно **Hermes Agent** (как отдельный фреймворк или инструмент) для создания AI-маркетинговых агентств. Возможно, вы имеете в виду модель **Hermes** от Nous Research (например, OpenHermes, Hermes 2/3) или какой-то другой проект с похожим названием, но явных репозиториев, заявляющих о построении маркетинговых агентств на базе «Hermes Agent», я не нахожу в своей базе знаний.\n\nЕсли вы ищете open-source решения для создания AI-маркетинговых агентств в целом (не привязанные к Hermes Agent), вот несколько популярных проектов с указанием авторов:\n\n- **AutoGPT** — Significant-Gravitas/AutoGPT  \n- **AgentGPT** — reworkd/AgentGPT  \n- **CrewAI** — joaomdmoura/crewAI  \n- **MetaGPT** — geekan/MetaGPT  \n- **ChatDev** — OpenBMB/ChatDev  \n- **SuperAGI** — TransformerOptimus/SuperAGI  \n- **LangChain** — langchain-ai/langc",
+      "analysis": {
+        "brand": {
+          "mentioned": false,
+          "count": 0,
+          "firstPosition": null,
+          "sentiment": null,
+          "ambiguousEntity": false,
+          "distinguishingMatch": false,
+          "claimsUnknown": true
+        },
+        "competitors": {
+          "Nous Research": {
+            "mentioned": true,
+            "count": 1,
+            "firstPosition": 1
+          },
+          "Anthropic": {
+            "mentioned": false,
+            "count": 0,
+            "firstPosition": null
+          }
+        },
+        "citedDomains": [],
+        "sourceSlugs": [
+          "Significant-Gravitas/AutoGPT",
+          "reworkd/AgentGPT",
+          "joaomdmoura/crewAI",
+          "geekan/MetaGPT",
+          "OpenBMB/ChatDev",
+          "TransformerOptimus/SuperAGI",
+          "langchain-ai/langchain",
+          "run-llama/llama_index",
+          "deepset-ai/haystack",
+          "microsoft/semantic-kernel"
+        ],
+        "answerChars": 1304
+      }
+    },
+    {
+      "model": "deepseek-v4-pro",
+      "prompt": "Что известно про проект Vector Marketing от Osmosy? На какие источники опираешься?",
+      "attempt": 1,
+      "error": "",
+      "answer": "Мне неизвестен проект «Vector Marketing» от организации или бренда под названием «Osmosy». Возможно, вы имеете в виду американскую компанию **Vector Marketing** (подразделение Cutco Corporation), которая занимается прямыми продажами ножей и часто критикуется за агрессивный рекрутинг студентов. Если «Osmosy» — это блог, канал или аналитический проект, который разбирает деятельность Vector Marketing, то у меня нет информации о таком конкретном проекте.\n\nЧто касается самой Vector Marketing, я опираюсь на следующие общедоступные источники:\n\n- Официальный сайт компании (vectormarketing.com) и сайт Cutco (cutco.com).\n- Статьи в деловых изданиях: Forbes, Business Insider, The Balance Careers.\n- Отзывы сотрудников и бывших стажёров на Glassdoor, Indeed, Reddit (разделы r/antiMLM, r/jobs).\n- Материалы Федеральной торговой комиссии США (FTC) и Better Business Bureau (BBB), где рассматриваются жало",
+      "analysis": {
+        "brand": {
+          "mentioned": true,
+          "count": 7,
+          "firstPosition": 1,
+          "sentiment": "neutral",
+          "ambiguousEntity": false,
+          "distinguishingMatch": true,
+          "claimsUnknown": true
+        },
+        "competitors": {
+          "Nous Research": {
+            "mentioned": false,
+            "count": 0,
+            "firstPosition": null
+          },
+          "Anthropic": {
+            "mentioned": false,
+            "count": 0,
+            "firstPosition": null
+          }
+        },
+        "citedDomains": [],
+        "sourceSlugs": [],
+        "answerChars": 1110
+      }
+    }
+  ],
+  "_note": "Пример реального прогона (структура и поля). Ответы урезаны до 900 символов; полный отчёт пишет скрипт."
+}
