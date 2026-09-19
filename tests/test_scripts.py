@@ -682,5 +682,53 @@ class GeoVisibilitySkillTest(unittest.TestCase):
             self.assertEqual(r.stdout.count("←"), 2)
 
 
+class CompanyBrainTest(unittest.TestCase):
+    """Company Brain: состав файлов и его синхронность с документацией.
+
+    Новый файл brain уезжает в профили только если он в BRAIN_FILES, а число
+    файлов заявлено в пяти местах. Проверяем связку целиком: файл на диске
+    без строки в BRAIN_FILES — молча не доедет до агента.
+    """
+
+    def test_каждый_файл_brain_попадает_в_сборку(self) -> None:
+        on_disk = {p.name for p in (REPO_ROOT / "company-brain").glob("*.md")}
+        declared = set(build.BRAIN_FILES)
+        missing = sorted(on_disk - declared)
+        self.assertEqual(
+            missing, [],
+            f"файлы company-brain не перечислены в BRAIN_FILES и не доедут до профилей: {missing}",
+        )
+        absent = sorted(declared - on_disk)
+        self.assertEqual(absent, [], f"BRAIN_FILES ссылается на отсутствующие файлы: {absent}")
+
+    def test_правовой_контур_есть_в_brain(self) -> None:
+        """38-ФЗ — сквозное требование, а не достояние одного навыка."""
+        path = REPO_ROOT / "company-brain" / "legal-compliance.md"
+        self.assertTrue(path.is_file(), "нет company-brain/legal-compliance.md")
+        body = path.read_text(encoding="utf-8")
+        for needle in ("38-ФЗ", "18.1", "152-ФЗ", "пометк"):
+            with self.subTest(needle=needle):
+                self.assertIn(needle, body)
+
+    def test_рабочий_разбор_по_рекламе_доступен_из_скилла(self) -> None:
+        """Памятка в brain ссылается на разбор, который лежит в навыке посевов."""
+        for rel in ("skills/article-distribution/references/rf-law.md",
+                    "skills/article-distribution/references/platform-rules.md"):
+            with self.subTest(rel=rel):
+                self.assertTrue((REPO_ROOT / rel).is_file(), rel)
+
+    def test_число_файлов_brain_совпадает_с_документацией(self) -> None:
+        n = len(list((REPO_ROOT / "company-brain").glob("*.md")))
+        claims = {
+            "README.md": f"Company-Brain-{n}%20files",
+            "INSTALL.md": f"company-brain/` ({n} файлов)",
+            "profiles/README.md": f"company-brain/` ({n} файлов)",
+            "agent-description.md": f"| Company Brain | {n} файлов",
+        }
+        for rel, needle in claims.items():
+            with self.subTest(rel=rel):
+                self.assertIn(needle, (REPO_ROOT / rel).read_text(encoding="utf-8"))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

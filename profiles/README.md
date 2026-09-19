@@ -13,7 +13,7 @@ hermes profile update <agent>                      # обновить после
 | Файл | Источник |
 |------|----------|
 | `SOUL.md` | `agents/<agent>.md` + блок про общий контекст |
-| `brain/*.md` | `company-brain/` (7 файлов) |
+| `brain/*.md` | `company-brain/` (8 файлов) |
 | `skills/…` | профильные навыки, на которые ссылается агент |
 | `scripts/…` | вспомогательные скрипты навыка, если они есть у апстрима (например, `nap_checker.py` у local-seo-manager) |
 | `distribution.yaml` | манифест дистрибутива Hermes (name, version, env_requires) |

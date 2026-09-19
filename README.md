@@ -12,7 +12,7 @@
 [![Ecosystem: Vector](https://img.shields.io/badge/Ecosystem-Vector-blue.svg)](https://osmosy.github.io/)
 [![Agents: 19](https://img.shields.io/badge/Agents-19-green.svg)](#агенты)
 [![Skills: 161](https://img.shields.io/badge/Skills-161-blueviolet.svg)](#навыки)
-[![Company Brain](https://img.shields.io/badge/Company-Brain-7%20files-purple.svg)](#company-brain)
+[![Company Brain](https://img.shields.io/badge/Company-Brain-8%20files-purple.svg)](#company-brain)
 [![Framework](https://img.shields.io/badge/Framework-Context%E2%86%92Harness%E2%86%92Loop-orange.svg)](FUNDAMENTALS.md)
 
 **Документация:** [Установка](INSTALL.md) · [Архитектура (live)](https://osmosy.github.io/vector-marketing/docs/vector-marketing.architecture.html) · [Презентация](deck/) · [Участие](CONTRIBUTING.md) · [Безопасность](SECURITY.md)
@@ -74,6 +74,7 @@
 | `offers-positioning.md` | Офферы, прайс, УТП, позиционирование |
 | `channels-geo.md` | Канальный приоритет, гео, GEO (генеративные движки) |
 | `media-list.md` | Медиа-лист для PR, Telegram-каналы, подкасты |
+| `legal-compliance.md` | Правовые границы РФ: что считается рекламой (38-ФЗ), пометка и идентификатор, согласие на рассылку, ПДн, цитирование |
 
 ## Агенты
 
@@ -180,7 +181,8 @@ vector-marketing/
 │   ├── past-campaigns.md
 │   ├── offers-positioning.md
 │   ├── channels-geo.md
-│   └── media-list.md
+│   ├── media-list.md
+│   └── legal-compliance.md
 ├── agents/                      ← 19 SOUL-файлов (по одному на агента)
 │   ├── orchestrator.md
 │   ├── market-research.md
