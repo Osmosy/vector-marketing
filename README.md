@@ -11,7 +11,7 @@
 [![Hermes Agent](https://img.shields.io/badge/Hermes-Agent-blue.svg)](https://github.com/NousResearch/hermes-agent)
 [![Ecosystem: Vector](https://img.shields.io/badge/Ecosystem-Vector-blue.svg)](https://osmosy.github.io/)
 [![Agents: 19](https://img.shields.io/badge/Agents-19-green.svg)](#агенты)
-[![Skills: 159](https://img.shields.io/badge/Skills-159-blueviolet.svg)](#навыки)
+[![Skills: 160](https://img.shields.io/badge/Skills-160-blueviolet.svg)](#навыки)
 [![Company Brain](https://img.shields.io/badge/Company-Brain-7%20files-purple.svg)](#company-brain)
 [![Framework](https://img.shields.io/badge/Framework-Context%E2%86%92Harness%E2%86%92Loop-orange.svg)](FUNDAMENTALS.md)
 
@@ -94,15 +94,15 @@
 | `creative` | Упаковка | Креативы, баннеры, AI-промпты, сториборды | работает |
 | `presentation` | Упаковка | Презентации, КП, отчёты, PDF/PPTX, data storytelling | **заготовка** |
 | `crm-retention` | Удержание | CRM, сегментация, LTV, реактивация, цепочки | работает |
-| `reputation` | Удержание | Отзывы, карты, рейтинги, SERM | **заготовка** |
+| `reputation` | Удержание | Отзывы, карты, рейтинги, SERM, посевы и упоминания | работает (1 навык + внешние API) |
 | `sales` | Операции | Привлечение клиентов агентства, пайплайн, outreach | работает |
 | `support` | Операции | Поддержка клиентов, KB, эскалация | работает |
 | `ops` | Операции | Задачи, календарь, вендоры, закупки | работает |
 
 **Заготовка** — профиль без навыков репозитория: SOUL и роль описаны, но работать ему
 нечем (всё заявленное — внешние зависимости, их надо доставить себе). Разработаем позже.
-Готовых к работе профилей — 16 из 19; тремя заготовками (`vk-ads`, `presentation`,
-`reputation`) не пользуйтесь, пока не появятся навыки под канал.
+Готовых к работе профилей — 17 из 19; двумя заготовками (`vk-ads`, `presentation`)
+не пользуйтесь, пока не появятся навыки под канал.
 
 Каждый агент в формате SOUL: Identity → Tools → Format → Rules → Guardrails → Handoff.
 
@@ -208,7 +208,7 @@ vector-marketing/
 ├── profiles/                     ← Настройка профилей Hermes
 ├── scripts/                      ← validate_agents.py, build_profiles.py, check_dist.py
 ├── .github/workflows/validate.yml ← CI: валидация SOUL + сборка + проверка dist
-├── skills/                       ← Навыки (66 Cowork + 40 PM + 17 соцсети + 12 Humblytics + 11 searchfit + 7 LinkedIn + 1 open-seo + 1 yandex-wordstat + 4 собственных)
+├── skills/                       ← Навыки (66 Cowork + 40 PM + 17 соцсети + 12 Humblytics + 11 searchfit + 7 LinkedIn + 1 open-seo + 1 yandex-wordstat + 1 article-distribution + 4 собственных)
 ├── THIRD_PARTY_LICENSES/         ← Тексты лицензий апстримов
 └── assets/                       ← Логотипы
 ```
@@ -217,7 +217,7 @@ vector-marketing/
 
 ## Навыки
 
-159 скиллов: 154 из сторонних наборов (каждый — с блоком `### Attribution` и лицензией в `THIRD_PARTY_LICENSES/`) и 5 собственных.
+160 скиллов: 154 из сторонних наборов (каждый — с блоком `### Attribution` и лицензией в `THIRD_PARTY_LICENSES/`) и 6 собственных.
 
 | Набор | Скиллов | Лицензия | Что даёт агентству |
 |-------|---------|----------|--------------------|
@@ -228,10 +228,10 @@ vector-marketing/
 | `searchfit-seo/` | 11 | MIT | AI-visibility, технический и on-page SEO, кластеризация, схемы, перелинковка |
 | `claude-skills/` | 7 | MIT | LinkedIn-набор (6) + локальное SEO |
 | `open-seo/` | 1 | MIT | обзор open-source SEO-стека (Semrush/Ahrefs-альтернатива) + установка |
-| собственные | 5 | MIT | github-repo-research, timesfm-marketing, vector-work, vector-github-design, yandex-wordstat (официальный API Wordstat: семантика, сезонность, гео — скрипт + методология) |
+| собственные | 6 | MIT | github-repo-research, timesfm-marketing, vector-work, vector-github-design, yandex-wordstat (официальный API Wordstat: семантика, сезонность, гео), article-distribution (посевы статей: площадки, правила, UTM-журнал) |
 
-В профиль агента попадают только его профильные навыки — всего 137 вложений на 19 профилей
-(например, `market-research` получает 28, `smm-telegram` — 25, `ops` — 14). 122 навыка из 159
+В профиль агента попадают только его профильные навыки — всего 142 вложения на 19 профилей
+(например, `market-research` получает 28, `smm-telegram` — 25, `ops` — 14). 123 навыка из 160
 закреплено хотя бы за одним агентом; остальные 37 никуда не вкладываются и ставятся отдельно,
 если нужны. README при этом описывает весь набор: он остаётся частью поставки, даже когда
 профиль его не получает.

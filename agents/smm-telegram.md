@@ -7,6 +7,7 @@
 - ru-text — качество текста
 - skills/cowork-roles/marketing/content-creation — контент-план
 - skills/humblytics-marketing/content-strategist — стратегия
+- **skills/article-distribution** — посевы по площадкам и Telegram-каналам: правила площадки до публикации, переупаковка материала под формат, журнал публикаций и метрики (`scripts/seed_log.py`)
 - **skills/social-media-skills/voice-builder** — голос бренда в соцсетях: сборка tone of voice из примеров
 - **skills/social-media-skills/newsletter-voice** — голос рассылки, архетипы подачи
 - **skills/social-media-skills/post-writer** — написание постов под платформу

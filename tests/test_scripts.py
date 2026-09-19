@@ -448,5 +448,95 @@ class WordstatSkillTest(unittest.TestCase):
             self.assertIn(needle, text, code)
 
 
+class ArticleDistributionSkillTest(unittest.TestCase):
+    """Краевые случаи skills/article-distribution: разметка и учёт посевов.
+
+    Посевы без разметки и журнала не измеряются: через месяц нельзя сказать,
+    какая площадка дала переходы. Поэтому проверяем именно те места, где учёт
+    молча теряет данные — канонизацию источника, слияние существующих query-
+    параметров и подсчёт публикаций без метрик.
+    """
+
+    def setUp(self) -> None:
+        self.sl = _load_skill_script("article-distribution/scripts/seed_log.py")
+
+    def test_источник_канонизируется(self) -> None:
+        """«vc», «vc.ru» и «VC» — одна площадка, иначе метрика расползается."""
+        for value in ("VC", "vc.ru", "vc", "vc.RU"):
+            self.assertEqual(self.sl.canonical_source(value), "vc", value)
+        self.assertEqual(self.sl.canonical_source("Zen"), "dzen")
+        self.assertEqual(self.sl.canonical_source("tg"), "telegram")
+        self.assertEqual(self.sl.canonical_source("нечто"), "нечто")
+
+    def test_utm_добавляется_к_существующим_параметрам(self) -> None:
+        url = self.sl.build_utm("https://a.ru/p?x=1#frag", "Habr", "camp", "longread")
+        self.assertIn("x=1", url)
+        self.assertIn("utm_source=habr", url)
+        self.assertIn("utm_medium=content", url)
+        self.assertIn("utm_campaign=camp", url)
+        self.assertIn("utm_content=longread", url)
+        self.assertTrue(url.endswith("#frag"))
+
+    def test_utm_на_невалидном_url_отклоняется(self) -> None:
+        for bad in ("not-a-url", "/blog/post", ""):
+            with self.subTest(bad=bad):
+                with self.assertRaises(ValueError):
+                    self.sl.build_utm(bad, "habr", "camp")
+
+    def test_сводка_складывает_площадку_и_считает_ctr(self) -> None:
+        """Публикации по одной площадке — одна строка; CTR и CR считаются из сумм."""
+        rows = [
+            {"platform": "vc", "impressions": 100, "clicks": 10, "leads": 1},
+            {"source": "VC", "impressions": 300, "clicks": 20, "leads": 2},
+            {"platform": "habr"},  # без метрик — публикация всё равно считается
+        ]
+        data = self.sl.summarize(rows)
+        self.assertEqual(set(data), {"vc", "habr"})
+        self.assertEqual(data["vc"]["publications"], 2)
+        self.assertEqual(data["vc"]["clicks"], 30)
+        self.assertEqual(data["vc"]["ctr"], 0.075)
+        self.assertEqual(data["vc"]["cr"], 0.1)
+        self.assertEqual(data["habr"]["publications"], 1)
+        self.assertEqual(data["habr"]["ctr"], 0.0)
+
+    def test_битая_строка_журнала_не_роняет_сводку(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "seed.jsonl"
+            path.write_text(
+                json.dumps({"platform": "habr", "clicks": 5}) + "\n" + "{не json}\n",
+                encoding="utf-8",
+            )
+            rows = self.sl.load_log(path)
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(self.sl.summarize(rows)["habr"]["clicks"], 5.0)
+
+    def test_неизвестная_площадка_не_пишется_в_журнал(self) -> None:
+        """Опечатка в площадке не должна создавать фантомную строку отчёта."""
+        script = REPO_ROOT / "skills" / "article-distribution" / "scripts" / "seed_log.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            log = Path(tmp) / "seed.jsonl"
+            r = subprocess.run(
+                [sys.executable, str(script), "--log", str(log), "add",
+                 "--platform", "хабр", "--title", "Тест", "--url", "https://e.ru/x"],
+                capture_output=True, text=True, cwd=str(script.parent),
+            )
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("неизвестна", r.stderr)
+            self.assertFalse(log.exists(), "журнал не должен получить запись")
+
+    def test_алиас_площадки_при_записи_канонизируется(self) -> None:
+        script = REPO_ROOT / "skills" / "article-distribution" / "scripts" / "seed_log.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            log = Path(tmp) / "seed.jsonl"
+            r = subprocess.run(
+                [sys.executable, str(script), "--log", str(log), "add",
+                 "--platform", "vc.ru", "--title", "Кейс", "--url", "https://e.ru/x"],
+                capture_output=True, text=True, cwd=str(script.parent),
+            )
+            self.assertEqual(r.returncode, 0, r.stderr)
+            row = json.loads(log.read_text(encoding="utf-8").splitlines()[0])
+            self.assertEqual(row["platform"], "vc")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

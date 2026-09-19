@@ -39,7 +39,7 @@
           "attract",
           "strategy"
         ],
-        "note": "Performance, SEO/AEO/GEO, маркетплейсы. Заготовки (роль есть, навыков нет — разработаем позже): vk-ads, presentation, reputation."
+        "note": "Performance, SEO/AEO/GEO, маркетплейсы, посевы статей. Заготовки (роль есть, навыков нет — разработаем позже): vk-ads, presentation."
       },
       {
         "id": "pm-skills",
@@ -102,7 +102,7 @@
       "id": "skills-lib",
       "type": "database",
       "label": "Библиотека skills",
-      "sublabel": "159 скиллов · 40 PM-методик",
+      "sublabel": "160 скиллов · 6 собственных",
       "pos": [
         290,
         550
@@ -158,7 +158,7 @@
       "id": "retain",
       "type": "backend",
       "label": "Удержание",
-      "sublabel": "crm-retention, reputation",
+      "sublabel": "crm, reputation",
       "pos": [
         560,
         480

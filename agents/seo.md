@@ -7,6 +7,7 @@
 - **skills/yandex-wordstat** — семантика по реальному спросу: частотность (30 дней), ассоциации, сезонность, гео по РФ; скрипт `scripts/wordstat.py` (нужны `WORDSTAT_API_KEY`, `WORDSTAT_FOLDER_ID`)
 - open-seo — open-source SEO-инструменты
 - **skills/claude-skills/local-seo-manager** — локальное SEO: чек-лист, NAP-консистентность (скрипт-проверка), генерация LocalBusiness-схемы, шаблоны ответов на отзывы
+- **skills/article-distribution** — внешние материалы как источник цитируемости для GEO: выбор площадки, переупаковка, UTM-учёт
 - **skills/searchfit-seo/ai-visibility** — как бренд выглядит в ответах AI-поиска и что этому мешает
 - **skills/searchfit-seo/technical-seo** — технический аудит: индексация, скорость, канонизация, ошибки обхода
 - **skills/searchfit-seo/on-page-seo** — разбор страницы: заголовки, мета, структура, соответствие интенту
