@@ -408,6 +408,7 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
     readme_path = repo_root / "README.md"
     if readme_path.is_file():
         md = readme_path.read_text(encoding="utf-8")
+        vendored_names = vendored_sets(repo_root)
         for set_dir in sorted(p for p in (repo_root / "skills").iterdir() if p.is_dir()):
             actual = len(list(set_dir.rglob("SKILL.md")))
             claim = re.search(rf"\|\s*`{re.escape(set_dir.name)}/`\s*\|\s*(\d+)\s*\|", md)
@@ -416,13 +417,63 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
                     f"README: у набора «{set_dir.name}» заявлено {claim.group(1)} скиллов, "
                     f"а в дереве их {actual}"
                 )
+            elif claim is None and set_dir.name in vendored_names:
+                # Условие «если строка есть» пропускало набор, выпавший из таблицы
+                # целиком: строку `open-seo/` можно было удалить, и CI молчал. Для
+                # вендоренного набора это ещё и потеря лицензионной атрибуции
+                # в README — читатель не узнает, откуда навык и под чем он.
+                errors.append(
+                    f"README: вендоренного набора «{set_dir.name}» нет в таблице навыков — "
+                    f"набор в поставке, но о нём и его лицензии в README не сказано"
+                )
         # Вендоренная часть библиотеки: производное от тех же чисел.
-        vendored_names = vendored_sets(repo_root)
         n_vendored = sum(
             len(list((repo_root / "skills" / s).rglob("SKILL.md")))
             for s in sorted(vendored_names)
         )
         n_own = n_skills - n_vendored
+        # Company Brain: состав, а не только число. Бейдж `Brain-N files` проверялся,
+        # а таблица и список в дереве структуры — нет, поэтому строка про
+        # `legal-compliance.md` могла исчезнуть при живом файле и CI молчал. Ровно этот
+        # класс расхождения однажды дал «7 файлов» при фактических 8.
+        brain_files = {p.name for p in (repo_root / "company-brain").glob("*.md")}
+        if brain_files:
+            head = md.find("## Company Brain")
+            tail = md.find("\n## ", head + 5) if head >= 0 else -1
+            section = md[head:tail] if head >= 0 and tail > head else ""
+            listed = set(re.findall(r"^\|\s*`([\w.-]+\.md)`\s*\|", section, re.M))
+            for missing in sorted(brain_files - listed):
+                errors.append(
+                    f"README: файла Company Brain «{missing}» нет в таблице раздела — "
+                    f"файл есть в дереве, а читатель о нём не знает"
+                )
+            for extra in sorted(listed - brain_files):
+                errors.append(
+                    f"README: в таблице Company Brain строка про «{extra}», "
+                    f"а файла company-brain/{extra} в дереве нет"
+                )
+            # Тот же список продублирован внутри блока «Структура репозитория» —
+            # третья копия, которая расходится молча. Строку-маркер ищем по имени
+            # каталога в дереве: поиск по подстроке «company-brain/» попадал и на
+            # соседнюю строку про `.gitignore`, и зона разбора оказывалась пустой.
+            tree_zone: list[str] = []
+            in_zone = False
+            for line in md.splitlines():
+                if re.match(r"^[├└]── company-brain/\s", line):
+                    in_zone = True
+                    continue
+                if in_zone and re.match(r"^[├└]── ", line):
+                    break  # следующий элемент верхнего уровня
+                if in_zone:
+                    m_tree = re.match(r"^[│\s]*[├└]── ([\w.-]+\.md)$", line.strip())
+                    if m_tree:
+                        tree_zone.append(m_tree.group(1))
+            if tree_zone:
+                for missing in sorted(brain_files - set(tree_zone)):
+                    errors.append(
+                        f"README: файла Company Brain «{missing}» нет в дереве структуры "
+                        f"репозитория — список разошёлся с каталогом"
+                    )
         # Собственные наборы: сумма «7 собственных» сходится и когда один набор вырос,
         # а другой упал, и когда новый набор вообще не назван в README. Сверяем имена.
         for set_name in sorted(
@@ -575,6 +626,29 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
                 f"NOTICE.md: вендоренного набора «{set_name}» нет в таблице с ссылкой "
                 f"на апстрим — по нему нельзя найти лицензию"
             )
+        # Число скиллов в колонке «Взято в `skills/`» — тоже утверждение о дереве.
+        # Проверялось лишь упоминание набора: `pm-skills/ — 40 скиллов` → 41 проходило
+        # CI молча, а NOTICE — лицензионный документ и источник списка вендоренных
+        # наборов, так что расхождение здесь дороже, чем в README.
+        # Формат строки разный («— 1 скилл», «— 66 скиллов из 6 плагинов»), поэтому
+        # берём число и слово «скилл» с любой формой окончания.
+        for set_name in sorted(vend_set_dirs):
+            actual = len(list((repo_root / "skills" / set_name).rglob("SKILL.md")))
+            m_count = re.search(
+                rf"`{re.escape(set_name)}/`\s*—\s*(\d+)\s+скилл", notice
+            )
+            if not m_count:
+                # Обойти проверку переформулировкой строки нельзя: отсутствие числа
+                # для вендоренного набора — такая же ошибка.
+                errors.append(
+                    f"NOTICE.md: у набора «{set_name}» нет числа скиллов в колонке "
+                    f"«Взято в `skills/`» — сверить с деревом нечем"
+                )
+            elif int(m_count.group(1)) != actual:
+                errors.append(
+                    f"NOTICE.md: у набора «{set_name}» заявлено {m_count.group(1)} скиллов, "
+                    f"а в дереве их {actual}"
+                )
         for owner, set_name in sorted(notice_rows):
             if set_name not in vend_set_dirs:
                 continue  # строка про источник идей, а не про вендоренный набор

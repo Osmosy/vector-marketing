@@ -148,6 +148,97 @@ class ValidateAgentsTest(unittest.TestCase):
             self.assertEqual(r.returncode, 1)
             self.assertIn("@pr", r.stdout)
 
+    def test_число_скиллов_в_notice_сверяется_с_деревом(self) -> None:
+        """NOTICE — лицензионный документ и источник списка вендоренных наборов.
+
+        Проверялось только упоминание набора: `pm-skills/ — 40 скиллов` → 41
+        проходило CI молча (мутация из TASK-2, воспроизведена).
+        """
+        with RepoCopy() as repo:
+            notice = repo / "NOTICE.md"
+            body = notice.read_text(encoding="utf-8")
+            self.assertIn("`pm-skills/` — 40 скиллов", body)
+            notice.write_text(
+                body.replace("`pm-skills/` — 40 скиллов", "`pm-skills/` — 41 скиллов", 1),
+                encoding="utf-8",
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("pm-skills", r.stdout)
+            self.assertIn("41", r.stdout)
+
+    def test_отсутствие_числа_в_notice_ловится(self) -> None:
+        """Переформулировкой строки проверку обойти нельзя."""
+        with RepoCopy() as repo:
+            notice = repo / "NOTICE.md"
+            notice.write_text(
+                notice.read_text(encoding="utf-8").replace(
+                    "`open-seo/` — 1 скилл", "`open-seo/` — скилл", 1
+                ),
+                encoding="utf-8",
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("open-seo", r.stdout)
+
+    def test_вендоренный_набор_обязан_быть_в_таблице_readme(self) -> None:
+        """Набор, выпавший из таблицы целиком, — потеря атрибуции в README."""
+        with RepoCopy() as repo:
+            readme = repo / "README.md"
+            body = readme.read_text(encoding="utf-8")
+            self.assertIn("| `open-seo/` | 1 |", body)
+            readme.write_text(
+                "\n".join(l for l in body.splitlines() if not l.startswith("| `open-seo/`")),
+                encoding="utf-8",
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("open-seo", r.stdout)
+
+    def test_таблица_company_brain_сверяется_с_каталогом(self) -> None:
+        """Бейдж проверялся, состав таблицы — нет: ровно этот класс давал 7 против 8."""
+        with RepoCopy() as repo:
+            readme = repo / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8").replace(
+                    "| `legal-compliance.md` |", "| `legal-compliance-x.md` |", 1
+                ),
+                encoding="utf-8",
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("legal-compliance.md", r.stdout)
+
+    def test_дерево_структуры_сверяется_с_каталогом_brain(self) -> None:
+        """Третья копия списка brain — в блоке «Структура репозитория»."""
+        with RepoCopy() as repo:
+            readme = repo / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8").replace(
+                    "│   ├── media-list.md", "│   ├── media-list-x.md", 1
+                ),
+                encoding="utf-8",
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("media-list.md", r.stdout)
+
+    def test_лишняя_строка_в_таблице_brain_ловится(self) -> None:
+        """Обратная сторона: строка про несуществующий файл — тоже ошибка."""
+        with RepoCopy() as repo:
+            readme = repo / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8").replace(
+                    "| `media-list.md` |",
+                    "| `media-list-ghost.md` |\n| `media-list.md` |",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("media-list-ghost.md", r.stdout)
+
     def test_число_в_таблице_readme_ловится(self) -> None:
         with RepoCopy() as repo:
             run_script("build_profiles", repo)

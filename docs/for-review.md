@@ -1,6 +1,6 @@
 # Что проверить (для внешней проверки)
 
-Коммит: `ee0f18a` — на нём собран файл. Хеши ниже описывают ДЕРЕВО этого коммита: если присланный архив совпадает по ним, значит он не из кеша. Сам файл добавлен следующим коммитом (иначе он называл бы коммит, которого ещё нет), поэтому точную ревизию берите так: `git log -1 --format=%H -- docs/for-review.md`.
+Коммит: `7eadbdd` — на нём собран файл. Хеши ниже описывают ДЕРЕВО этого коммита: если присланный архив совпадает по ним, значит он не из кеша. Сам файл добавлен следующим коммитом (иначе он называл бы коммит, которого ещё нет), поэтому точную ревизию берите так: `git log -1 --format=%H -- docs/for-review.md`.
 
 ## Файлы
 
@@ -14,10 +14,10 @@
 | `SECURITY.md` | 6167 | `94802b00787afbac…` |
 | `FUNDAMENTALS.md` | 6128 | `08b01dd184674590…` |
 | `KEYS.md` | 7120 | `c43bdb8c88435422…` |
-| `scripts/validate_agents.py` | 47229 | `516faa61a220eea7…` |
+| `scripts/validate_agents.py` | 52942 | `41a2391771869e03…` |
 | `scripts/build_profiles.py` | 10769 | `f4047bd381824c8e…` |
 | `scripts/check_dist.py` | 8032 | `76d836c895bb3efc…` |
-| `tests/test_scripts.py` | 45242 | `195c51ebf1d811c1…` |
+| `tests/test_scripts.py` | 49847 | `7cb87142b4a3cd57…` |
 | `.github/workflows/validate.yml` | 1711 | `6d717dcb8cb21a84…` |
 | `profiles/README.md` | 7232 | `c8edaf24371bcb67…` |
 
@@ -28,7 +28,7 @@
 - PM-методик 40 (`skills/pm-skills/*/SKILL.md`)
 - файлов Company Brain 8 (`company-brain/*.md`)
 - в собранных дистрибутивах: профилей 19, навыков 146 (analytics, avito, content, creative…)
-- тестов: 67 (`python3 tests/test_scripts.py`)
+- тестов: 73 (`python3 tests/test_scripts.py`)
 
 ## Навыки по наборам
 
@@ -67,4 +67,4 @@
 - `python3 scripts/build_profiles.py --clean && python3 scripts/check_dist.py` — форма дистрибутивов (манифест, симлинки, следы секретов).
 - `python3 scripts/build_for_review.py --check` — этот файл воспроизводится из дерева.
 
-Прогон CI на этом коммите: https://github.com/Osmosy/vector-marketing/actions/runs/35523738292 (workflow `validate`, conclusion `success`).
+Прогон CI на этом коммите: https://github.com/Osmosy/vector-marketing/actions/runs/35525283152 (workflow `validate`, conclusion `success`).
