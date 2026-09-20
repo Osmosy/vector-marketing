@@ -358,11 +358,22 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
     n_skills = len(list((repo_root / "skills").rglob("SKILL.md")))
     n_pm = len(list((repo_root / "skills" / "pm-skills").glob("*/SKILL.md"))) if (repo_root / "skills" / "pm-skills").is_dir() else 0
     n_brain = len(list((repo_root / "company-brain").glob("*.md"))) if (repo_root / "company-brain").is_dir() else 0
+    # Число НАБОРОВ навыков. Не сверялось нигде, поэтому в деке жило «161 навык
+    # в 8 наборах» (наборов 14): «8» — старая раскладка README, где собственные
+    # шли одной строкой. Считаем каталоги, в которых реально есть хоть один SKILL.md.
+    n_sets = len([
+        d for d in (repo_root / "skills").iterdir()
+        if d.is_dir() and any(d.rglob("SKILL.md"))
+    ])
 
     artifacts = {
         "README.md": repo_root / "README.md",
         "deck/deck-marketing.py": repo_root / "deck" / "deck-marketing.py",
         "agent-description.md": repo_root / "agent-description.md",
+        # Эти два документа были вне валидатора: «17 профилей из 19» → 18 и
+        # «company-brain (8 файлов)» → 7 проходили CI молча (проверено мутацией).
+        "INSTALL.md": repo_root / "INSTALL.md",
+        "profiles/README.md": repo_root / "profiles" / "README.md",
     }
     # Для каждого артефакта — обязательные числа (регуляркой, чтобы не ловить лишнее).
     required_numbers = {
@@ -381,6 +392,17 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
             "agents": [f"{n_agents} {plural_ru(n_agents, 'агент', 'агента', 'агентов')}"],
             "skills": [f"{n_skills} {plural_ru(n_skills, 'навык', 'навыка', 'навыков')}"],
         },
+        "INSTALL.md": {
+            # Формулировки именно этого документа: «из 19 агентов», «17 профилей
+            # из 19», «`company-brain/` (8 файлов)». Требовать одну каноническую
+            # фразу нельзя — документ пишется для читателя, а не под регулярку.
+            "agents": [f"из {n_agents} агентов", f"{n_agents} профилей из"],
+            "brain": [f"`company-brain/` ({n_brain} файлов)"],
+        },
+        "profiles/README.md": {
+            "agents": [f"({n_agents} профилей)"],
+            "brain": [f"`company-brain/` ({n_brain} файлов)"],
+        },
     }
     for label, path in artifacts.items():
         if not path.is_file():
@@ -391,6 +413,62 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
                 errors.append(
                     f"{label}: нет актуального числа для «{kind}» "
                     f"(ждали одно из {needles})"
+                )
+
+    # «в N наборах» — во всех местах, где фраза встречается. Требовать её наличия
+    # нельзя (в большинстве документов её нет), но найденное вхождение обязано быть
+    # верным: из-за отсутствия этой сверки дек говорил «161 навык в 8 наборах».
+    # Список шире `artifacts`: `deck/README.md` описывает деку, но сам декой не
+    # является и в required_numbers не входит — он выпал из первой версии проверки.
+    for rel in (
+        "README.md", "agent-description.md", "INSTALL.md", "profiles/README.md",
+        "deck/deck-marketing.py", "deck/README.md",
+        "docs/vector-marketing.architecture.json",
+    ):
+        path = repo_root / rel
+        if not path.is_file():
+            continue
+        body = path.read_text(encoding="utf-8")
+        for m_sets in re.finditer(r"(\d+)\s+набор(?:ах|ов|а)?(?!\w)", body):
+            if int(m_sets.group(1)) != n_sets:
+                errors.append(
+                    f"{rel}: сказано «{m_sets.group(0)}», а наборов в skills/ — {n_sets}"
+                )
+
+    # Готовые к работе профили: число и ИМЕНА заготовок. Считаем по логике сборки
+    # (профиль с нулём навыков репозитория — заготовка), а не по dist/: валидация идёт
+    # до сборки, и проверка по каталогу артефакта молча не выполнялась бы.
+    by_agent_skills = attached_by_agent(repo_root)
+    idle = sorted(name for name, skills in by_agent_skills.items() if not skills)
+    n_ready = len(by_agent_skills) - len(idle)
+    install_path = repo_root / "INSTALL.md"
+    if install_path.is_file():
+        install_body = install_path.read_text(encoding="utf-8")
+        m_ready = re.search(r"Готовых к работе — (\d+) профилей из (\d+)", install_body)
+        if not m_ready:
+            errors.append(
+                "INSTALL.md: нет строки «Готовых к работе — N профилей из M» — "
+                "число рабочих профилей не сверяется"
+            )
+        elif (int(m_ready.group(1)), int(m_ready.group(2))) != (n_ready, len(by_agent_skills)):
+            errors.append(
+                f"INSTALL.md: заявлено {m_ready.group(1)} готовых профилей из "
+                f"{m_ready.group(2)}, а фактически {n_ready} из {len(by_agent_skills)}"
+            )
+        # Заготовки называем по имени: иначе после доработки профиля документ
+        # останется в прошлом, а число «готовых» сойдётся за счёт другого.
+        for name in idle:
+            row = re.search(rf"^\|\s*`{re.escape(name)}`\s*\|[^|]*\|\s*([^|]*)\|", install_body, re.M)
+            if row and "заготовка" not in row.group(1):
+                errors.append(
+                    f"INSTALL.md: у «{name}» нет навыков, но он не помечен «заготовкой»"
+                )
+        for name, skills in sorted(by_agent_skills.items()):
+            row = re.search(rf"^\|\s*`{re.escape(name)}`\s*\|[^|]*\|\s*([^|]*)\|", install_body, re.M)
+            if row and skills and "заготовка" in row.group(1):
+                errors.append(
+                    f"INSTALL.md: «{name}» помечен заготовкой, а сборка вкладывает "
+                    f"ему {len(skills)} навыков"
                 )
 
     # Диаграмма: подпись библиотеки навыков и число PM-методик во вью.
@@ -409,6 +487,30 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
     if readme_path.is_file():
         md = readme_path.read_text(encoding="utf-8")
         vendored_names = vendored_sets(repo_root)
+        notice_body = (
+            (repo_root / "NOTICE.md").read_text(encoding="utf-8")
+            if (repo_root / "NOTICE.md").is_file() else ""
+        )
+
+        def spdx(value: str) -> str:
+            """Имя лицензии без копирайта: «MIT (© 2026 X)» → «MIT»."""
+            head = value.split("(")[0].strip()
+            return head.split()[0].rstrip(",") if head else ""
+
+        def notice_license(set_name: str) -> str:
+            """Лицензия набора из таблицы NOTICE — разбором строки по колонкам.
+
+            Регулярка по «|» ломалась: имя набора стоит третьей колонкой после
+            лицензии, и любое уточнение формулировки её сбивало.
+            """
+            for line in notice_body.splitlines():
+                if not line.startswith("|"):
+                    continue
+                cells = [c.strip() for c in line.strip().strip("|").split("|")]
+                if len(cells) >= 3 and cells[2].startswith(f"`{set_name}/`"):
+                    return cells[1]
+            return ""
+
         for set_dir in sorted(p for p in (repo_root / "skills").iterdir() if p.is_dir()):
             actual = len(list(set_dir.rglob("SKILL.md")))
             claim = re.search(rf"\|\s*`{re.escape(set_dir.name)}/`\s*\|\s*(\d+)\s*\|", md)
@@ -417,7 +519,22 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
                     f"README: у набора «{set_dir.name}» заявлено {claim.group(1)} скиллов, "
                     f"а в дереве их {actual}"
                 )
-            elif claim is None and set_dir.name in vendored_names:
+            if claim is not None and set_dir.name in vendored_names:
+                # Колонка лицензии README против строки NOTICE. `Apache-2.0` → `MIT`
+                # у cowork-roles проходило CI молча: расхождение в лицензионном
+                # утверждении, тот же класс, что open-seo (второй буллит TASK-2 §2).
+                row_lic = re.search(
+                    rf"^\|\s*`{re.escape(set_dir.name)}/`\s*\|\s*\d+\s*\|\s*([^|]+?)\s*\|",
+                    md, re.M,
+                )
+                want = spdx(notice_license(set_dir.name))
+                have = spdx(row_lic.group(1)) if row_lic else ""
+                if want and have and want.lower() != have.lower():
+                    errors.append(
+                        f"README: у набора «{set_dir.name}» лицензия «{have}», "
+                        f"а в NOTICE — «{want}»"
+                    )
+            if claim is None and set_dir.name in vendored_names:
                 # Условие «если строка есть» пропускало набор, выпавший из таблицы
                 # целиком: строку `open-seo/` можно было удалить, и CI молчал. Для
                 # вендоренного набора это ещё и потеря лицензионной атрибуции

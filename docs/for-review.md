@@ -1,6 +1,6 @@
 # Что проверить (для внешней проверки)
 
-Коммит: `7eadbdd` — на нём собран файл. Хеши ниже описывают ДЕРЕВО этого коммита: если присланный архив совпадает по ним, значит он не из кеша. Сам файл добавлен следующим коммитом (иначе он называл бы коммит, которого ещё нет), поэтому точную ревизию берите так: `git log -1 --format=%H -- docs/for-review.md`.
+Коммит: `fec4f54` — на нём собран файл. Хеши ниже описывают ДЕРЕВО этого коммита: если присланный архив совпадает по ним, значит он не из кеша. Сам файл добавлен следующим коммитом (иначе он называл бы коммит, которого ещё нет), поэтому точную ревизию берите так: `git log -1 --format=%H -- docs/for-review.md`.
 
 ## Файлы
 
@@ -8,16 +8,16 @@
 |---|---|---|
 | `README.md` | 28556 | `8074eda54c2afddc…` |
 | `NOTICE.md` | 4207 | `992109d48201ad43…` |
-| `INSTALL.md` | 20900 | `350522a4912e848a…` |
+| `INSTALL.md` | 20936 | `0d284fd1bfead3a0…` |
 | `agent-description.md` | 1997 | `022358b16d3becb7…` |
 | `CONTRIBUTING.md` | 8793 | `5050096fe1dab47b…` |
 | `SECURITY.md` | 6167 | `94802b00787afbac…` |
 | `FUNDAMENTALS.md` | 6128 | `08b01dd184674590…` |
 | `KEYS.md` | 7120 | `c43bdb8c88435422…` |
-| `scripts/validate_agents.py` | 52942 | `41a2391771869e03…` |
+| `scripts/validate_agents.py` | 60663 | `7b1a911dd302094a…` |
 | `scripts/build_profiles.py` | 10769 | `f4047bd381824c8e…` |
 | `scripts/check_dist.py` | 8032 | `76d836c895bb3efc…` |
-| `tests/test_scripts.py` | 49847 | `7cb87142b4a3cd57…` |
+| `tests/test_scripts.py` | 54245 | `bcc48fc750aed70b…` |
 | `.github/workflows/validate.yml` | 1711 | `6d717dcb8cb21a84…` |
 | `profiles/README.md` | 7232 | `c8edaf24371bcb67…` |
 
@@ -28,7 +28,7 @@
 - PM-методик 40 (`skills/pm-skills/*/SKILL.md`)
 - файлов Company Brain 8 (`company-brain/*.md`)
 - в собранных дистрибутивах: профилей 19, навыков 146 (analytics, avito, content, creative…)
-- тестов: 73 (`python3 tests/test_scripts.py`)
+- тестов: 78 (`python3 tests/test_scripts.py`)
 
 ## Навыки по наборам
 
@@ -67,4 +67,4 @@
 - `python3 scripts/build_profiles.py --clean && python3 scripts/check_dist.py` — форма дистрибутивов (манифест, симлинки, следы секретов).
 - `python3 scripts/build_for_review.py --check` — этот файл воспроизводится из дерева.
 
-Прогон CI на этом коммите: https://github.com/Osmosy/vector-marketing/actions/runs/35525283152 (workflow `validate`, conclusion `success`).
+Прогон CI на этом коммите: https://github.com/Osmosy/vector-marketing/actions/runs/35526568546 (workflow `validate`, conclusion `success`).

@@ -148,6 +148,86 @@ class ValidateAgentsTest(unittest.TestCase):
             self.assertEqual(r.returncode, 1)
             self.assertIn("@pr", r.stdout)
 
+    def test_число_наборов_в_деке_ловится(self) -> None:
+        """«161 навык в 8 наборах» жило в деке молча: число наборов не проверялось.
+
+        Дек — клиентский материал, и это было единственное число в репозитории,
+        расходившееся с деревом (наборов 14).
+        """
+        with RepoCopy() as repo:
+            for rel in ("deck/deck-marketing.py", "deck/README.md"):
+                path = repo / rel
+                body = path.read_text(encoding="utf-8")
+                self.assertIn("161 навык в 14 наборах", body, rel)
+                path.write_text(
+                    body.replace("161 навык в 14 наборах", "161 навык в 8 наборах", 1),
+                    encoding="utf-8",
+                )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("наборов в skills/ — 14", r.stdout)
+
+    def test_готовые_профили_в_install_сверяются(self) -> None:
+        """«Готовых к работе — 17 профилей из 19»: число выводимо из логики сборки."""
+        with RepoCopy() as repo:
+            install = repo / "INSTALL.md"
+            body = install.read_text(encoding="utf-8")
+            self.assertIn("Готовых к работе — 17 профилей из 19", body)
+            install.write_text(
+                body.replace(
+                    "Готовых к работе — 17 профилей из 19",
+                    "Готовых к работе — 18 профилей из 19",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("готовых профилей", r.stdout)
+
+    def test_заготовка_в_install_сверяется_с_фактом(self) -> None:
+        """Снятая пометка «заготовка» у профиля без навыков — ошибка."""
+        with RepoCopy() as repo:
+            install = repo / "INSTALL.md"
+            body = install.read_text(encoding="utf-8")
+            self.assertIn("| **заготовка** |", body)
+            install.write_text(
+                body.replace("| **заготовка** |", "| работает |", 1), encoding="utf-8"
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("заготовкой", r.stdout)
+
+    def test_brain_в_install_и_profiles_сверяется(self) -> None:
+        """INSTALL и profiles/README были вне валидатора — число brain не сверялось."""
+        with RepoCopy() as repo:
+            for rel in ("INSTALL.md", "profiles/README.md"):
+                path = repo / rel
+                body = path.read_text(encoding="utf-8")
+                self.assertIn("`company-brain/` (8 файлов)", body, rel)
+                path.write_text(
+                    body.replace("`company-brain/` (8 файлов)", "`company-brain/` (7 файлов)", 1),
+                    encoding="utf-8",
+                )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("company-brain", r.stdout)
+
+    def test_лицензия_в_таблице_readme_сверяется_с_notice(self) -> None:
+        """`Apache-2.0` → `MIT` у cowork-roles проходило CI: это было утверждение о лицензии."""
+        with RepoCopy() as repo:
+            readme = repo / "README.md"
+            body = readme.read_text(encoding="utf-8")
+            self.assertIn("| `cowork-roles/` | 66 | Apache-2.0 |", body)
+            readme.write_text(
+                body.replace("| `cowork-roles/` | 66 | Apache-2.0 |", "| `cowork-roles/` | 66 | MIT |", 1),
+                encoding="utf-8",
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("cowork-roles", r.stdout)
+            self.assertIn("Apache-2.0", r.stdout)
+
     def test_число_скиллов_в_notice_сверяется_с_деревом(self) -> None:
         """NOTICE — лицензионный документ и источник списка вендоренных наборов.
 
