@@ -28,6 +28,12 @@ jobs:
       - name: Проверка формы dist (без hermes CLI)
         run: python3 scripts/check_dist.py
 
+      # Файл для внешней проверки называет коммит и хеши файлов; он обязан
+      # воспроизводиться из дерева, иначе проверяющий сверяет архив с устаревшими
+      # числами (в vector-health рукописный вариант разошёлся именно так).
+      - name: docs/for-review.md собран из текущего дерева
+        run: python3 scripts/build_for_review.py --check
+
       - uses: actions/upload-artifact@v4
         with:
           name: profile-distributions
