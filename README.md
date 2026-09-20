@@ -234,7 +234,7 @@ vector-marketing/
 | собственные | 7 | MIT | github-repo-research, timesfm-marketing, vector-work, vector-github-design, yandex-wordstat (официальный API Wordstat), article-distribution (посевы статей), geo-visibility (замер видимости в AI-ответах) |
 
 В профиль агента попадают только его профильные навыки — всего 146 вложений на 19 профилей
-(например, `market-research` получает 29, `smm-telegram` — 25, `ops` — 14). 124 навыка из 161
+(например, `market-research` получает 29, `smm-telegram` — 26, `ops` — 14). 124 навыка из 161
 закреплено хотя бы за одним агентом; остальные 37 никуда не вкладываются и ставятся отдельно,
 если нужны. README при этом описывает весь набор: он остаётся частью поставки, даже когда
 профиль его не получает.

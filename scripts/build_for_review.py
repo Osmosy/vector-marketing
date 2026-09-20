@@ -106,6 +106,54 @@ def test_count() -> int:
     return int(m.group(1)) if m else 0
 
 
+def write_sums() -> pathlib.Path:
+    """docs/SHA256SUMS — полные хеши файлов набора, пригодные для `sha256sum -c`.
+
+    В таблице for-review хеши усечены до 16 символов: этого хватает на глаз, но
+    проверить ими нельзя. Файл контрольных сумм — то, чем проверяющий реально
+    сверяет архив одной командой.
+    """
+    out = ROOT / "docs" / "SHA256SUMS"
+    rows = []
+    for rel in KEY_FILES:
+        path = ROOT / rel
+        if path.is_file():
+            rows.append(f"{sha256(path)}  {rel}")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(rows) + "\n", encoding="utf-8")
+    return out
+
+
+def ci_run_url() -> str:
+    """Ссылка на последний успешный прогон CI по текущему коммиту.
+
+    «Все проверки прогнаны локально» внешнему проверяющему ничего не доказывает:
+    локальный прогон не воспроизводим с его стороны. Ссылка на прогон — доказуема.
+    Без gh или сети возвращаем пустую строку, а не выдуманный адрес.
+    """
+    try:
+        proc = subprocess.run(
+            ["gh", "run", "list", "--limit", "20", "--json",
+             "conclusion,headSha,workflowName,url,databaseId"],
+            cwd=ROOT, capture_output=True, text=True, timeout=60,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+    if proc.returncode != 0:
+        return ""
+    try:
+        runs = json.loads(proc.stdout or "[]")
+    except json.JSONDecodeError:
+        return ""
+    head = head_commit()
+    for run in runs:
+        if (run.get("headSha", "").startswith(head)
+                and run.get("conclusion") == "success"
+                and run.get("workflowName") == "validate"):
+            return run.get("url", "")
+    return ""
+
+
 def per_set_rows() -> list[tuple[str, int]]:
     """Навыки по наборам — та таблица, которую README печатает, а CI не сверяет.
 
@@ -120,14 +168,32 @@ def per_set_rows() -> list[tuple[str, int]]:
     return rows
 
 
+# Строки, привязанные к HEAD: файл называет коммит, на котором собран, и прогон CI
+# по нему. Обе меняются самим фактом коммита, поэтому в сверке не участвуют —
+# иначе `--check` падал бы всегда сразу после коммита файла (проверено).
+HEAD_BOUND_PREFIXES = ("Коммит: ", "Прогон CI на этом коммите: ")
+
+
 def stable(text: str) -> str:
-    """Содержимое без строки с коммитом (см. докстринг модуля)."""
-    return "\n".join(l for l in text.splitlines() if not l.startswith("Коммит: "))
+    """Содержимое без строк, привязанных к HEAD (см. докстринг модуля)."""
+    return "\n".join(
+        l for l in text.splitlines() if not l.startswith(HEAD_BOUND_PREFIXES)
+    )
 
 
 def build() -> str:
     c, d = counts(), dist_counts()
     commit = head_commit()
+    url = ci_run_url()
+    # Обе ветки начинаются с одного префикса: строка привязана к HEAD и исключена из
+    # сверки. Иначе в CI (где нет `gh`) генерировался бы текст с другим началом, и
+    # `--check` падал бы на расхождении, которого нет в дереве.
+    ci_note = (
+        f"Прогон CI на этом коммите: {url} (workflow `validate`, conclusion `success`)."
+        if url else
+        "Прогон CI на этом коммите: ссылку подставить не удалось (нет `gh` или сети) — "
+        "результат воспроизводится командами ниже."
+    )
     lines = [
         "# Что проверить (для внешней проверки)",
         "",
@@ -186,19 +252,27 @@ def build() -> str:
         f"- Арифметика README: сторонних навыков {vendored} + собственных {own} = "
         f"{vendored + own} (в README заявлено {c['skills']})",
         f"- Сторонних наборов: {len(vendored_sets)} (по NOTICE), собственных навыков: "
-        f"{own} — в таблице README они идут одной строкой «собственные», а не поимённо.",
-        "- Разбивка по наборам выше — тот блок, который README печатает, а CI сверяет "
-        "только по сумме: расхождение внутри набора ищется здесь.",
+        f"{own} — в таблице README собственные названы поимённо, и валидатор требует, "
+        f"чтобы каждый каталог `skills/` был назван хотя бы в одном из двух списков.",
+        "- Разбивка по наборам выше сверяется валидатором построчно (таблица README → "
+        "дерево), а не только по сумме: перестановка между наборами валит CI.",
         "",
         "## Как проверить, не запуская репозиторий",
         "",
+        "- `sha256sum -c docs/SHA256SUMS` — сверка присланных файлов с хешами из "
+        "репозитория (таблица выше усечена до 16 символов и для проверки не годится).",
         "- Хеши и числа выше сверяются с архивом; строка с коммитом сверяется с `git log`.",
-        "- `python3 scripts/validate_agents.py` — SOUL-манифесты, числа README, диаграмма.",
+        "",
+        "Проверки, которые прогоняет CI (и которые можно повторить локально):",
+        "",
+        "- `python3 scripts/validate_agents.py` — SOUL-манифесты, числа README и NOTICE, "
+        "лицензии вендоренных наборов, диаграмма.",
         "- `python3 tests/test_scripts.py` — сборка профилей и валидатор.",
         "- `python3 scripts/build_profiles.py --clean && python3 scripts/check_dist.py` — "
         "форма дистрибутивов (манифест, симлинки, следы секретов).",
+        "- `python3 scripts/build_for_review.py --check` — этот файл воспроизводится из дерева.",
         "",
-        "Все три проверки прогнаны локально на указанном коммите: ошибок 0.",
+        ci_note,
     ]
     return "\n".join(lines)
 
@@ -225,12 +299,23 @@ def main() -> int:
             print("ОШИБКА: docs/for-review.md разошёлся с деревом — пересобери "
                   "python3 scripts/build_for_review.py", file=sys.stderr)
             return 1
-        print("docs/for-review.md совпадает с деревом (--check)")
+        sums = ROOT / "docs" / "SHA256SUMS"
+        want = "\n".join(
+            f"{sha256(ROOT / rel)}  {rel}" for rel in KEY_FILES if (ROOT / rel).is_file()
+        ) + "\n"
+        have = sums.read_text(encoding="utf-8") if sums.is_file() else ""
+        if have != want:
+            print("ОШИБКА: docs/SHA256SUMS разошёлся с деревом — пересобери "
+                  "python3 scripts/build_for_review.py", file=sys.stderr)
+            return 1
+        print("docs/for-review.md и docs/SHA256SUMS совпадают с деревом (--check)")
         return 0
 
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(text, encoding="utf-8")
+    sums = write_sums()
     print(f"docs/for-review.md пересобран: {len(KEY_FILES)} файлов, коммит {head_commit()}")
+    print(f"docs/SHA256SUMS перезаписан: {len(KEY_FILES)} полных хешей")
     return 0
 
 

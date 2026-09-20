@@ -417,11 +417,27 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
                     f"а в дереве их {actual}"
                 )
         # Вендоренная часть библиотеки: производное от тех же чисел.
+        vendored_names = vendored_sets(repo_root)
         n_vendored = sum(
             len(list((repo_root / "skills" / s).rglob("SKILL.md")))
-            for s in sorted(vendored_sets(repo_root))
+            for s in sorted(vendored_names)
         )
         n_own = n_skills - n_vendored
+        # Собственные наборы: сумма «7 собственных» сходится и когда один набор вырос,
+        # а другой упал, и когда новый набор вообще не назван в README. Сверяем имена.
+        for set_name in sorted(
+            p.name for p in (repo_root / "skills").iterdir()
+            if p.is_dir() and p.name not in vendored_names
+        ):
+            # Имя в README может быть и без кавычек — в строке «собственные» они идут
+            # списком через запятую («github-repo-research, timesfm-marketing, …»).
+            # Границы слова обязательны: без них «timesfm-marketingX» считался бы
+            # упоминанием «timesfm-marketing», и проверка пропускала подмену.
+            if not re.search(rf"(?<![A-Za-z0-9-]){re.escape(set_name)}(?![A-Za-z0-9-])", md):
+                errors.append(
+                    f"README: собственный набор «{set_name}» не назван — читатель не "
+                    f"узнает, что он в поставке, а сумма «собственных» его скрывает"
+                )
         for pattern, kind in (
             (rf"{n_vendored} из сторонних наборов", "вендоренных скиллов"),
             (rf"и {n_own} собственных", "собственных скиллов"),
@@ -436,12 +452,44 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
             errors.append(
                 f"README: не сказано, что {unassigned} навыков не попадают ни в один профиль"
             )
-        declared_unassigned = re.search(r"остальные (\d+)\s*\(", md)
+        # Регулярка была «остальные (\d+)\s*\(» — в README стоит «остальные 37 никуда
+        # не вкладываются», скобки в тексте не открываются, и проверка не срабатывала
+        # никогда. Якорь — по словам, которые в тексте есть.
+        declared_unassigned = re.search(r"остальные (\d+)\s+никуда", md)
         if declared_unassigned and int(declared_unassigned.group(1)) != unassigned:
             errors.append(
                 f"README: заявлено {declared_unassigned.group(1)} незакреплённых навыков, "
                 f"а фактически {unassigned}"
             )
+        # Сумма вложений в профили и примеры по конкретным агентам. Число наборов и
+        # навыков сверялось, а эта величина — нет: «146 вложений» и «`smm-telegram` — 26»
+        # разошлись с деревом молча (25 против 26) и прошли CI.
+        by_agent_nums = attached_by_agent(repo_root)
+        total_attached = sum(len(v) for v in by_agent_nums.values())
+        m_total = re.search(r"всего (\d+) вложений на (\d+) профилей", md)
+        if not m_total:
+            errors.append(
+                "README: нет строки «всего N вложений на M профилей» — число вложений "
+                "в профили не проверяется, а читатель сверяет именно его"
+            )
+        else:
+            if int(m_total.group(1)) != total_attached:
+                errors.append(
+                    f"README: заявлено {m_total.group(1)} вложений в профили, "
+                    f"а сборка вкладывает {total_attached}"
+                )
+            if int(m_total.group(2)) != len(agent_names):
+                errors.append(
+                    f"README: заявлено {m_total.group(2)} профилей, а агентов {len(agent_names)}"
+                )
+        for name, num in re.findall(r"`([a-z0-9-]+)`\s+(?:получает|—)\s+(\d+)", md):
+            if name not in agent_names:  # пример про навык, а не про профиль
+                continue
+            actual = len(by_agent_nums.get(name, []))
+            if actual != int(num):
+                errors.append(
+                    f"README: «{name}» получает {num} навыков, а сборка вкладывает {actual}"
+                )
 
     # Таблица «Ключевые skills» в profiles/README.md должна совпадать с реальной
     # выдачей сборки — иначе обещание профиля расходится с дистрибутивом.
@@ -510,6 +558,34 @@ def validate_agents(repo_root: Path) -> tuple[list[str], list[str]]:
                 errors.append(
                     f"NOTICE.md: вендоренный набор «{set_dir.name}» не упомянут "
                     f"в таблице атрибуции"
+                )
+        # Каждому вендоренному набору — текст лицензии апстрима. Атрибуция в SKILL.md
+        # ссылается на `THIRD_PARTY_LICENSES/`, поэтому без файла ссылка ведёт в пустоту,
+        # а набор уезжает без лицензии. Проверка была только на уровне «есть блок
+        # Attribution», наличие самого файла не сверял никто.
+        lic_dir = repo_root / "THIRD_PARTY_LICENSES"
+        notice_rows = re.findall(
+            r"^\|\s*\[[^\]]*\]\(https://github\.com/([\w.-]+)/[^)]*\)[^|]*\|[^|]*\|\s*`([\w-]+)/`",
+            notice, re.M,
+        )
+        vend_set_dirs = vendored_sets(repo_root)
+        named_in_notice = {s for _, s in notice_rows}
+        for set_name in sorted(vend_set_dirs - named_in_notice):
+            errors.append(
+                f"NOTICE.md: вендоренного набора «{set_name}» нет в таблице с ссылкой "
+                f"на апстрим — по нему нельзя найти лицензию"
+            )
+        for owner, set_name in sorted(notice_rows):
+            if set_name not in vend_set_dirs:
+                continue  # строка про источник идей, а не про вендоренный набор
+            # Регистр не значим: владелец в URL пишется как «Humblytics», а файл
+            # лицензии — как «humblytics-marketing-skills-MIT.txt».
+            if not lic_dir.is_dir() or not any(
+                p.name.lower().startswith(owner.lower()) for p in lic_dir.iterdir()
+            ):
+                errors.append(
+                    f"THIRD_PARTY_LICENSES/: нет текста лицензии апстрима «{owner}» "
+                    f"(набор «{set_name}»)"
                 )
 
     # Ключи: манифест профиля собирается из ENV_BY_SKILL, поэтому переменная,

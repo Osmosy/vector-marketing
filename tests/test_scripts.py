@@ -162,6 +162,71 @@ class ValidateAgentsTest(unittest.TestCase):
             self.assertEqual(r.returncode, 1)
             self.assertIn("pm-skills", r.stdout)
 
+    def test_число_вложений_в_профили_ловится(self) -> None:
+        """«146 вложений» и примеры по агентам сверяются с логикой сборки.
+
+        Именно это число разошлось молча: README говорил «`smm-telegram` — 25»,
+        а сборка вкладывала 26, и CI проходил.
+        """
+        with RepoCopy() as repo:
+            readme = repo / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8").replace(
+                    "всего 146 вложений", "всего 145 вложений"
+                ),
+                encoding="utf-8",
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("вложений в профили", r.stdout)
+
+    def test_число_навыков_у_агента_в_readme_ловится(self) -> None:
+        with RepoCopy() as repo:
+            readme = repo / "README.md"
+            body = readme.read_text(encoding="utf-8")
+            self.assertIn("`market-research` получает 29", body)
+            readme.write_text(
+                body.replace("`market-research` получает 29", "`market-research` получает 30"),
+                encoding="utf-8",
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("market-research", r.stdout)
+
+    def test_незакреплённые_навыки_сверяются_с_фактом(self) -> None:
+        """Счётчик «остальные N никуда не вкладываются» — не декорация."""
+        with RepoCopy() as repo:
+            readme = repo / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8").replace(
+                    "остальные 37 никуда", "остальные 38 никуда"
+                ),
+                encoding="utf-8",
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("незакреплённых", r.stdout)
+
+    def test_собственный_набор_обязан_быть_назван(self) -> None:
+        """Сумма «7 собственных» сходится и когда один набор выпал из README."""
+        with RepoCopy() as repo:
+            readme = repo / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8").replace("timesfm-marketing", "timesfm-x", 1),
+                encoding="utf-8",
+            )
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("timesfm-marketing", r.stdout)
+
+    def test_файл_лицензии_вендоренного_набора_обязателен(self) -> None:
+        """Без текста лицензии атрибуция в SKILL.md ссылается в пустоту."""
+        with RepoCopy() as repo:
+            (repo / "THIRD_PARTY_LICENSES" / "every-app-open-seo-MIT.txt").unlink()
+            r = run_script("validate_agents", repo)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("THIRD_PARTY_LICENSES", r.stdout)
+
     def test_атрибуция_вендоренного_набора_обязательна(self) -> None:
         with RepoCopy() as repo:
             skill = repo / "skills" / "open-seo" / "SKILL.md"
