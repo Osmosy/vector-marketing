@@ -19,7 +19,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import json
 import os
 import pathlib
 import re
@@ -97,9 +96,26 @@ def test_count() -> int:
     Подсчёт по исходнику здесь не годится: тесты собираются через subTest в циклах,
     и статический счёт даёт число меньше фактического.
     """
+    raw = os.environ.get("VM_TEST_DEPTH", "0")
+    depth = int(raw) if raw.isdigit() else 0
+    if depth >= 2:
+        # Второй барьер, независимый от маркера VM_INNER_TEST_RUN: даже если
+        # пропуск BuildForReviewTest во вложенном прогоне кто-то снимет, рекурсия
+        # «--check → прогон тестов → --check» упрётся в этот предел, а не в
+        # бесконечность (замер до правки: 1042 процесса за четыре минуты).
+        print("глубина вложенности прогонов достигла предела — число тестов не измерено",
+              file=sys.stderr)
+        return 0
+    env = dict(os.environ)
+    # Маркер существует ради разрыва цикла, а не для ускорения: класс
+    # BuildForReviewTest в tests/test_scripts.py вызывает `build_for_review
+    # --check`, тот снова запускает прогон, и без маркера дерево процессов
+    # растёт неограниченно. По маркеру вложенный прогон пропускает этот класс.
+    env["VM_INNER_TEST_RUN"] = "1"
+    env["VM_TEST_DEPTH"] = str(depth + 1)
     try:
         proc = subprocess.run([sys.executable, "-B", "tests/test_scripts.py"], cwd=ROOT,
-                              capture_output=True, text=True, timeout=600)
+                              capture_output=True, text=True, timeout=600, env=env)
     except (OSError, subprocess.TimeoutExpired):
         return 0
     m = re.search(r"Ran (\d+) tests", (proc.stdout or "") + (proc.stderr or ""))
@@ -124,36 +140,6 @@ def write_sums() -> pathlib.Path:
     return out
 
 
-def ci_run_url() -> str:
-    """Ссылка на последний успешный прогон CI по текущему коммиту.
-
-    «Все проверки прогнаны локально» внешнему проверяющему ничего не доказывает:
-    локальный прогон не воспроизводим с его стороны. Ссылка на прогон — доказуема.
-    Без gh или сети возвращаем пустую строку, а не выдуманный адрес.
-    """
-    try:
-        proc = subprocess.run(
-            ["gh", "run", "list", "--limit", "20", "--json",
-             "conclusion,headSha,workflowName,url,databaseId"],
-            cwd=ROOT, capture_output=True, text=True, timeout=60,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        return ""
-    if proc.returncode != 0:
-        return ""
-    try:
-        runs = json.loads(proc.stdout or "[]")
-    except json.JSONDecodeError:
-        return ""
-    head = head_commit()
-    for run in runs:
-        if (run.get("headSha", "").startswith(head)
-                and run.get("conclusion") == "success"
-                and run.get("workflowName") == "validate"):
-            return run.get("url", "")
-    return ""
-
-
 def per_set_rows() -> list[tuple[str, int]]:
     """Навыки по наборам — та таблица, которую README печатает, а CI не сверяет.
 
@@ -168,23 +154,20 @@ def per_set_rows() -> list[tuple[str, int]]:
     return rows
 
 
-# Строки, привязанные к HEAD: файл называет коммит, на котором собран, и прогон CI
-# по нему. Обе меняются самим фактом коммита, поэтому в сверке не участвуют —
-# иначе `--check` падал бы всегда сразу после коммита файла (проверено).
-HEAD_BOUND_PREFIXES = ("Прогон CI по дереву, из которого собран этот файл: ",)
-
-
 def stable(text: str) -> str:
-    """Содержимое без строк, привязанных к HEAD (см. докстринг модуля)."""
-    return "\n".join(
-        l for l in text.splitlines() if not l.startswith(HEAD_BOUND_PREFIXES)
-    )
+    """Содержимое, участвующее в сверке --check.
+
+    Раньше отсюда исключалась строка с хешем коммита, потом — строка со ссылкой на
+    прогон CI: обе зависели от HEAD и менялись самим фактом коммита файла. Теперь
+    в файле нет ни хеша, ни ссылки на конкретный прогон (его не существует на
+    момент сборки), поэтому сверяется всё содержимое целиком.
+    """
+    return text
 
 
 def build() -> str:
     c, d = counts(), dist_counts()
     commit = head_commit()
-    url = ci_run_url()
     # Обе ветки начинаются с одного префикса: строка привязана к HEAD и исключена из
     # сверки. Иначе в CI (где нет `gh`) генерировался бы текст с другим началом, и
     # `--check` падал бы на расхождении, которого нет в дереве.
@@ -192,13 +175,16 @@ def build() -> str:
     # проверяющему не доказывает ничего. Оговорка та же, что у хешей: прогон взят для
     # дерева, ИЗ КОТОРОГО собран файл, — ревизия, где файл лежит, появляется на один
     # коммит позже, и её прогон виден в Actions после этого коммита.
+    # Ссылка на КОНКРЕТНЫЙ прогон здесь невозможна по построению: файл собирается из
+    # того же дерева, что и коммитится, поэтому прогон для ревизии, где файл лежит,
+    # на момент сборки ещё не запущен. Попытка подставить прогон предыдущего коммита
+    # давала ссылку, не относящуюся к цитируемой ревизии (и падение --check в CI
+    # из-за ветвления строки — прогон 35528269591). Постоянная ссылка на workflow
+    # верна всегда, и проверяющий находит прогон ревизии в этом же списке.
     ci_note = (
-        f"Прогон CI по дереву, из которого собран этот файл: {url} "
-        f"(workflow `validate`, conclusion `success`). Прогон ревизии, где файл лежит, "
-        f"появится в Actions следующим — он инициируется коммитом, добавившим файл."
-        if url else
-        "Прогон CI: ссылку подставить не удалось (нет `gh` или сети) — "
-        "результат воспроизводится командами ниже, список прогонов в Actions репозитория."
+        "Прогон CI: https://github.com/Osmosy/vector-marketing/actions/workflows/"
+        "validate.yml — прогон ревизии, в которой лежит этот файл, первый в списке "
+        "(шаги и их вывод видны там же)."
     )
     lines = [
         "# Что проверить (для внешней проверки)",

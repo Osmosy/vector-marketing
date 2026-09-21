@@ -11,11 +11,14 @@
 
 from __future__ import annotations
 
+import atexit
+import hashlib
 import importlib.util
 import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -40,26 +43,195 @@ check = _load("check_dist")
 build = _load("build_profiles")
 
 
-def run_script(name: str, cwd: Path) -> subprocess.CompletedProcess[str]:
+def run_script(name: str, cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    """Запустить скрипт из scripts/ в копии репозитория (аргументы — по вкусу)."""
     return subprocess.run(
-        [sys.executable, str(cwd / "scripts" / f"{name}.py")],
+        [sys.executable, str(cwd / "scripts" / f"{name}.py"), *args],
         cwd=cwd, capture_output=True, text=True,
     )
 
 
+def _link_or_copy(src: str, dst: str) -> None:
+    """copy_function для copytree: жёсткая ссылка, при OSError — честная копия."""
+    try:
+        os.link(src, dst)
+    except OSError:
+        # EXDEV: TMPDIR и репозиторий на разных файловых системах — os.link
+        # работает только внутри одной ФС, откатываемся на копирование.
+        shutil.copy2(src, dst)
+
+
+def _rewrite(path: Path, text: str) -> None:
+    """Перезаписать файл в копии, не задев исходный inode.
+
+    Файлы копии — жёсткие ссылки на рабочее дерево, а `write_text` усекает тот
+    же inode: правка «на месте» ушла бы в исходное дерево. Пишем во временный
+    файл и подменяем запись каталога — у копии появляется свой inode, исходная
+    ссылка остаётся при своих данных.
+    """
+    tmp = path.with_name(path.name + ".vm-rewrite")
+    tmp.write_text(text, encoding="utf-8")
+    shutil.copymode(path, tmp)
+    os.replace(tmp, path)
+
+
+def _detach(path: Path) -> None:
+    """Отвязать файл копии от общего inode (для файлов, которые скрипты пишут на месте).
+
+    `build_for_review` перезаписывает docs/for-review.md и docs/SHA256SUMS
+    усечением того же inode. В копии из жёстких ссылок такая правка уходит на
+    уровень выше — в источник ссылок (копию уровнем выше или рабочее дерево),
+    поэтому перед запуском скрипта именно эти файлы получают собственные данные.
+    """
+    if path.stat().st_nlink == 1:
+        return
+    tmp = path.with_name(path.name + ".vm-detach")
+    shutil.copy2(path, tmp)
+    os.replace(tmp, path)
+
+
+def _detach_review_files(repo: Path) -> None:
+    """Два файла, которые build_for_review пишет на месте в копии."""
+    for rel in ("docs/for-review.md", "docs/SHA256SUMS"):
+        path = repo / rel
+        if path.is_file():
+            _detach(path)
+
+
+# Живые копии: __exit__ снимает свою, atexit и обработчики сигналов — все.
+# Без реестра прерванный прогон оставлял копии на диске (замер: 1054 шт.).
+_LIVE_COPIES: set[Path] = set()
+
+
+def _purge_live_copies() -> None:
+    for tmp in list(_LIVE_COPIES):
+        shutil.rmtree(tmp, ignore_errors=True)
+    _LIVE_COPIES.clear()
+
+
+def _sig_purge_and_exit(signum: int, _frame) -> None:
+    """SIGTERM/SIGINT: снять копии и завершиться штатно, как без обработчика."""
+    _purge_live_copies()
+    signal.signal(signum, signal.SIG_DFL)
+    os.kill(os.getpid(), signum)
+
+
+atexit.register(_purge_live_copies)
+for _sig in (signal.SIGTERM, signal.SIGINT):
+    try:
+        signal.signal(_sig, _sig_purge_and_exit)
+    except ValueError:  # обработчики сигналов ставятся только из главного потока
+        pass
+
+
 class RepoCopy:
-    """Копия репозитория во временном каталоге: тесты не трогают рабочее дерево."""
+    """Копия репозитория во временном каталоге: тесты не трогают рабочее дерево.
+
+    Файлы копии создаются жёсткими ссылками на исходники: данные не копируются,
+    у файла копии тот же inode, что у исходника, — и копия не стоит 18 МБ.
+    Откат на `shutil.copy2` нужен потому, что `os.link` работает только внутри
+    одной файловой системы (EXDEV — TMPDIR и репозиторий на разных ФС).
+
+    Почему ссылки не ломают тесты: `build_profiles` копирует файлы в `dist/`,
+    а не правит их на месте. Если какой-то тест правит файл копии на месте —
+    это дефект теста: правка ушла бы в исходное дерево, и её надо поймать, а
+    не замаскировать. Поэтому мутации в копии идут через `_rewrite` — новый
+    inode и подмена записи каталога, а не усечение чужого.
+
+    Уборка: `__exit__`, `atexit` и SIGTERM/SIGINT (обработчик снимает реестр
+    и завершает процесс штатно). SIGKILL перехватить нельзя — поэтому ссылки
+    важнее уборки: копия-ссылка дешева, даже если останется.
+    """
 
     def __enter__(self) -> Path:
         self._tmp = Path(tempfile.mkdtemp())
+        _LIVE_COPIES.add(self._tmp)
         self.path = self._tmp / "vector-marketing"
         shutil.copytree(
-            REPO_ROOT, self.path, ignore=shutil.ignore_patterns(".git", "__pycache__", "dist")
+            REPO_ROOT, self.path,
+            ignore=shutil.ignore_patterns(".git", "__pycache__", "dist"),
+            copy_function=_link_or_copy,
         )
         return self.path
 
     def __exit__(self, *exc) -> None:
+        _LIVE_COPIES.discard(self._tmp)
         shutil.rmtree(self._tmp, ignore_errors=True)
+
+
+class RepoCopyTest(unittest.TestCase):
+    """Механика самой копии: данные не дублируются, мутации не уезжают в источник,
+    каталог снимается при падении."""
+
+    @unittest.skipUnless(
+        os.stat(REPO_ROOT).st_dev == os.stat(tempfile.gettempdir()).st_dev,
+        "TMPDIR на другой ФС: os.link откатывается на copy2, inode расходятся",
+    )
+    def test_копия_не_копирует_данные(self) -> None:
+        with RepoCopy() as repo:
+            src = os.stat(REPO_ROOT / "README.md")
+            dst = os.stat(repo / "README.md")
+            self.assertEqual(dst.st_ino, src.st_ino)
+            self.assertGreater(dst.st_nlink, 1)
+
+    @unittest.skipUnless(
+        os.stat(REPO_ROOT).st_dev == os.stat(tempfile.gettempdir()).st_dev,
+        "TMPDIR на другой ФС: копия без хардлинков, отвязку проверять не на чем",
+    )
+    def test_rewrite_отвязывает_копию_от_источника(self) -> None:
+        """Замена `os.replace` на `path.write_text(...)` в _rewrite молча правит рабочее дерево.
+
+        Файлы копии — жёсткие ссылки: запись «на месте» усекает тот же inode,
+        что у источника. Проверяем обещание _rewrite целиком: источник не тронут,
+        у копии собственный inode, в копии — новый текст.
+        """
+        with RepoCopy() as repo:
+            src = REPO_ROOT / "README.md"
+            src_ino = src.stat().st_ino
+            src_text = src.read_text(encoding="utf-8")
+            _rewrite(repo / "README.md", "текст, который обязан остаться в копии")
+            self.assertEqual(
+                src.read_text(encoding="utf-8"), src_text,
+                "правка копии ушла в рабочее дерево",
+            )
+            self.assertNotEqual(
+                (repo / "README.md").stat().st_ino, src_ino,
+                "копия живёт на inode источника — запись на месте уедет в источник",
+            )
+            self.assertEqual(
+                (repo / "README.md").read_text(encoding="utf-8"),
+                "текст, который обязан остаться в копии",
+            )
+
+    @unittest.skipUnless(
+        os.stat(REPO_ROOT).st_dev == os.stat(tempfile.gettempdir()).st_dev,
+        "TMPDIR на другой ФС: копия без хардлинков, отвязку проверять не на чем",
+    )
+    def test_detach_отвязывает_файл_от_источника(self) -> None:
+        """_detach существует ради файлов, которые скрипты пишут на месте.
+
+        Подмена его логики записью в тот же inode — и `build_for_review` в копии
+        ехал бы по рабочему дереву. После _detach у файла копии единственная
+        ссылка и собственный inode, содержимое источника и копии не изменилось.
+        """
+        with RepoCopy() as repo:
+            src = REPO_ROOT / "docs" / "for-review.md"
+            src_ino = src.stat().st_ino
+            src_text = src.read_text(encoding="utf-8")
+            copy = repo / "docs" / "for-review.md"
+            _detach(copy)
+            self.assertEqual(copy.stat().st_nlink, 1, "у копии осталась общая ссылка")
+            self.assertNotEqual(copy.stat().st_ino, src_ino)
+            self.assertEqual(src.read_text(encoding="utf-8"), src_text)
+            self.assertEqual(copy.read_text(encoding="utf-8"), src_text)
+
+    def test_копия_снимается_даже_когда_тест_упал(self) -> None:
+        with self.assertRaises(RuntimeError):
+            with RepoCopy() as repo:
+                tmp = repo.parent
+                self.assertTrue((repo / "README.md").is_file())
+                raise RuntimeError("тест упал посреди with")
+        self.assertFalse(tmp.is_dir(), "каталог копии обязан исчезнуть после падения")
 
 
 class BuildProfilesTest(unittest.TestCase):
@@ -88,12 +260,12 @@ class BuildProfilesTest(unittest.TestCase):
         """Ссылка агента на несуществующий навык — сборка возвращает ошибку."""
         with RepoCopy() as repo:
             agent = repo / "agents" / "seo.md"
-            agent.write_text(
+            _rewrite(
+                agent,
                 agent.read_text(encoding="utf-8").replace(
                     "## Формат выдачи",
                     "- **skills/pm-skills/nonexistent-skill-for-test** — которого нет\n\n## Формат выдачи",
                 ),
-                encoding="utf-8",
             )
             r = run_script("build_profiles", repo)
             self.assertEqual(r.returncode, 1, r.stdout)
@@ -119,6 +291,256 @@ class BuildProfilesTest(unittest.TestCase):
             self.assertEqual(len(names), len(set(names)))
 
 
+@unittest.skipIf(
+    os.environ.get("VM_INNER_TEST_RUN"),
+    "вложенный прогон: build_for_review запускает тесты, и вызов из теста "
+    "замкнул бы рекурсию",
+)
+class BuildForReviewTest(unittest.TestCase):
+    """Файл для внешней проверки обязан воспроизводиться из дерева в ЛЮБОЙ среде.
+
+    Проверка уже ловила два дефекта, которые локально не воспроизводились:
+    строка с хешем коммита отставала на коммит, а ветвление строки про прогон CI
+    давала расхождение в CI, где нет `gh` (именно из-за него упал прогон
+    35528269591). Поэтому `--check` гоняется и с выключенным `gh`.
+
+    Пропуск по маркеру не искажает измеряемое число: unittest включает
+    пропущенные тесты в «Ran N tests», поэтому вложенный прогон сообщает столько
+    же тестов, сколько внешний. Если бы числа расходились, `--check` падал бы на
+    расхождении числа тестов в docs/for-review.md — и правка была бы неверной.
+    """
+
+    def _prepare(self, repo: Path) -> None:
+        """Нужно готовое дерево, как в приёмке: dist собран, коммит есть.
+
+        --check в CI гоняется ПОСЛЕ `build_profiles.py --clean`, и строка
+        «в собранных дистрибутивах: …» сверяется по факту — без dist в копии
+        --check падает на расхождении, которого в приёмке нет. Коммит тоже
+        нужен: файл берёт хеш HEAD, а у репозитория без коммита HEAD не
+        существует, и генератор честно отказывается работать вместо прочерка.
+        """
+        run_script("build_profiles", repo)
+        for cmd in (
+            ["git", "init", "-q"],
+            ["git", "-c", "user.email=t@t", "-c", "user.name=t", "add", "-A"],
+            ["git", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "copy"],
+        ):
+            subprocess.run(cmd, cwd=repo, capture_output=True, check=False)
+
+    def test_check_проходит_на_чистом_дереве(self) -> None:
+        with RepoCopy() as repo:
+            self._prepare(repo)
+            r = run_script("build_for_review", repo, "--check")
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
+    def test_check_проходит_без_gh(self) -> None:
+        """В CI нет `gh` — обе ветки строки про прогон должны собирать один текст."""
+        with RepoCopy() as repo:
+            self._prepare(repo)
+            blind = repo / "no-gh-bin"
+            blind.mkdir()
+            gh = blind / "gh"
+            gh.write_text("#!/bin/sh\nexit 127\n", encoding="utf-8")
+            gh.chmod(0o755)
+            env = dict(os.environ)
+            env["PATH"] = f"{blind}{os.pathsep}{env.get('PATH', '')}"
+            r = subprocess.run(
+                [sys.executable, "-B", str(repo / "scripts" / "build_for_review.py"), "--check"],
+                cwd=repo, capture_output=True, text=True, env=env,
+            )
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
+    def test_расхождение_хеша_ловится(self) -> None:
+        """Если файл правили руками, --check обязан упасть, а не промолчать."""
+        with RepoCopy() as repo:
+            self._prepare(repo)
+            doc = repo / "docs" / "for-review.md"
+            _rewrite(
+                doc,
+                doc.read_text(encoding="utf-8").replace(
+                    "| `NOTICE.md` |", "| `NOTICE.md` | 1 |", 1
+                ),
+            )
+            r = run_script("build_for_review", repo, "--check")
+            self.assertEqual(r.returncode, 1)
+
+
+def _commit_copy(repo: Path) -> None:
+    """Дать копии репозитория коммит: build_for_review берёт хеш из HEAD.
+
+    Рассуждение то же, что у BuildForReviewTest._prepare: без коммита HEAD нет,
+    и генератор честно отказывается работать.
+    """
+    for cmd in (
+        ["git", "init", "-q"],
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", "add", "-A"],
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "copy"],
+    ):
+        subprocess.run(cmd, cwd=repo, capture_output=True, check=False)
+
+
+# Заглушка прогона тестов для CycleGuardTest: печатает ту же строку, что unittest,
+# и фиксирует факт вызова и значение маркера в файле по $STUB_LOG. Настоящий
+# tests/test_scripts.py подменять нельзя — проверяется именно замыкание, а не
+# содержимое тестов.
+STUB_TESTS = """\
+import os
+import sys
+
+log = os.environ.get("STUB_LOG")
+if log:
+    with open(log, "a", encoding="utf-8") as f:
+        f.write((os.environ.get("VM_INNER_TEST_RUN") or "") + "\\n")
+print("Ran 7 tests", file=sys.stderr)
+"""
+
+
+class CycleGuardTest(unittest.TestCase):
+    """Замыкание build_for_review ↔ tests/test_scripts: три барьера, три проверки.
+
+    До правки цикл воспроизведён на этой машине: `--check` запускает прогон
+    тестов ради строки «тестов: N», прогон вызывает `--check`, и за четыре
+    минуты плодились 1042 процесса (load average 36.5 на 4 ядрах). Каждый тест
+    ловит откат своего барьера и не запускает настоящего полного прогона:
+    маркер и предел проверяются на заглушке, пропуск класса — прогоном одного
+    только BuildForReviewTest, который в этих условиях обязан быть пропущен.
+    """
+
+    def test_вложенный_прогон_получает_маркер(self) -> None:
+        """Дочерний прогон видит VM_INNER_TEST_RUN=1 и вызывается ровно один раз."""
+        with RepoCopy() as repo:
+            _commit_copy(repo)
+            _detach_review_files(repo)
+            _rewrite(repo / "tests" / "test_scripts.py", STUB_TESTS)
+            with tempfile.TemporaryDirectory() as tmp:
+                log = Path(tmp) / "stub.log"
+                env = dict(os.environ)
+                env["STUB_LOG"] = str(log)
+                # timeout здесь — часть проверки: до правки этот запуск ветвился
+                # бесконечно, и «завершился в отведённое время» значит «цикла нет».
+                r = subprocess.run(
+                    [sys.executable, "-B", str(repo / "scripts" / "build_for_review.py")],
+                    cwd=repo, capture_output=True, text=True, env=env, timeout=120,
+                )
+                self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+                calls = log.read_text(encoding="utf-8").splitlines()
+            self.assertEqual(calls, ["1"],
+                             "ребёнок обязан увидеть маркер и ровно один раз")
+            self.assertIn(
+                "тестов: 7",
+                (repo / "docs" / "for-review.md").read_text(encoding="utf-8"),
+            )
+
+    @unittest.skipIf(
+        os.environ.get("VM_INNER_TEST_RUN"),
+        "вложенный прогон: проверяется только снаружи, иначе сам замкнул бы цикл",
+    )
+    def test_класс_пропускается_во_вложенном_прогоне(self) -> None:
+        """С маркером BuildForReviewTest пропущен — значит, --check не вызывается."""
+        env = dict(os.environ)
+        env["VM_INNER_TEST_RUN"] = "1"
+        env["VM_TEST_DEPTH"] = "1"
+        r = subprocess.run(
+            [sys.executable, "-B", "tests/test_scripts.py", "BuildForReviewTest"],
+            cwd=REPO_ROOT, capture_output=True, text=True, env=env, timeout=120,
+        )
+        out = (r.stdout or "") + (r.stderr or "")
+        self.assertEqual(r.returncode, 0, out)
+        # Прогон подробный (verbosity=2), но unittest переносит «... skipped» на
+        # отдельную строку, когда у теста есть docstring, — поэтому считаем строки
+        # результатов, а не имена. Три skipped с причиной маркера и ни одного ok:
+        # «ok» означало бы, что тесты класса выполнялись и породили процессы
+        # build_for_review --check.
+        self.assertEqual(out.count("... skipped"), 3, out)
+        self.assertNotIn("... ok", out)
+        self.assertEqual(out.count("замкнул бы рекурсию"), 3, out)
+        self.assertIn("Ran 3 tests", out)
+        self.assertIn("OK (skipped=3)", out)
+
+    def test_предел_глубины_останавливает_прогон(self) -> None:
+        """При VM_TEST_DEPTH=2 дочерний прогон не запускается вовсе."""
+        with RepoCopy() as repo:
+            _commit_copy(repo)
+            _detach_review_files(repo)
+            _rewrite(repo / "tests" / "test_scripts.py", STUB_TESTS)
+            with tempfile.TemporaryDirectory() as tmp:
+                log = Path(tmp) / "stub.log"
+                env = dict(os.environ)
+                env["STUB_LOG"] = str(log)
+                env["VM_TEST_DEPTH"] = "2"
+                r = subprocess.run(
+                    [sys.executable, "-B", str(repo / "scripts" / "build_for_review.py")],
+                    cwd=repo, capture_output=True, text=True, env=env, timeout=120,
+                )
+                self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+                self.assertFalse(log.exists(), "на пределе глубины прогон не запускается")
+            self.assertIn("глубина вложенности прогонов достигла предела", r.stderr)
+            self.assertIn(
+                "тестов: 0",
+                (repo / "docs" / "for-review.md").read_text(encoding="utf-8"),
+            )
+
+
+def _tree_hashes() -> dict[str, str]:
+    """sha256 всех файлов рабочего дерева, кроме .git/, dist/, __pycache__/ и *.pyc."""
+    hashes: dict[str, str] = {}
+    for dirpath, dirnames, filenames in os.walk(REPO_ROOT):
+        dirnames[:] = [d for d in dirnames if d not in (".git", "dist", "__pycache__")]
+        for name in filenames:
+            if name.endswith(".pyc"):
+                continue
+            path = Path(dirpath) / name
+            hashes[str(path.relative_to(REPO_ROOT))] = (
+                hashlib.sha256(path.read_bytes()).hexdigest()
+            )
+    return hashes
+
+
+@unittest.skipIf(
+    os.environ.get("VM_INNER_TEST_RUN"),
+    "вложенный прогон: инвариант запускает полный прогон и замкнул бы сам себя",
+)
+class TreeInvariantTest(unittest.TestCase):
+    """Полный прогон набора не меняет рабочее дерево — и это проверяется прогоном.
+
+    Файлы копий — жёсткие ссылки, `nlink > 1` у файла копии означает, что любая
+    запись «на месте» поедет в источник. Пока все правки в копиях идут через
+    подмену записи каталога, рабочее дерево бит в бит одно и то же до и после
+    прогона. Инвариант ловит целый класс таких дефектов (забытая отвязка,
+    `write_text` вместо `os.replace` в любом месте), а не конкретный вызов.
+
+    Вложенный прогон идёт с маркером VM_INNER_TEST_RUN — им же пропускаются
+    BuildForReviewTest и этот класс, поэтому рекурсии нет.
+    """
+
+    def test_полный_прогон_не_меняет_рабочее_дерево(self) -> None:
+        before = _tree_hashes()
+        with RepoCopy() as repo:
+            env = dict(os.environ)
+            env["VM_INNER_TEST_RUN"] = "1"
+            r = subprocess.run(
+                [sys.executable, "-B", "tests/test_scripts.py"],
+                cwd=repo, capture_output=True, text=True, env=env, timeout=600,
+            )
+            out = (r.stdout or "") + (r.stderr or "")
+            self.assertEqual(r.returncode, 0, f"вложенный прогон упал:\n{out}")
+            self.assertIn("OK", out, "вложенный прогон не дошёл до итога")
+        after = _tree_hashes()
+        changed = []
+        for rel in sorted(set(before) | set(after)):
+            if before.get(rel) == after.get(rel):
+                continue
+            fate = "пропал" if rel not in after else (
+                "появился" if rel not in before else "изменился"
+            )
+            changed.append(f"{rel} ({fate})")
+        self.assertFalse(
+            changed,
+            "полный прогон изменил рабочее дерево — где-то запись мимо "
+            f"_rewrite/_detach: {'; '.join(changed)}",
+        )
+
+
 class ValidateAgentsTest(unittest.TestCase):
     def test_чистое_дерево_проходит(self) -> None:
         with RepoCopy() as repo:
@@ -129,9 +551,9 @@ class ValidateAgentsTest(unittest.TestCase):
     def test_битый_handoff_ловится(self) -> None:
         with RepoCopy() as repo:
             agent = repo / "agents" / "sales.md"
-            agent.write_text(
+            _rewrite(
+                agent,
                 agent.read_text(encoding="utf-8").replace("# Handoff", "## Handoff", 1),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -141,8 +563,9 @@ class ValidateAgentsTest(unittest.TestCase):
         with RepoCopy() as repo:
             run_script("build_profiles", repo)
             wf = repo / "workflows" / "handoff-protocol.md"
-            wf.write_text(
-                wf.read_text(encoding="utf-8").replace("@sales →", "@pr →"), encoding="utf-8"
+            _rewrite(
+                wf,
+                wf.read_text(encoding="utf-8").replace("@sales →", "@pr →"),
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -159,9 +582,9 @@ class ValidateAgentsTest(unittest.TestCase):
                 path = repo / rel
                 body = path.read_text(encoding="utf-8")
                 self.assertIn("161 навык в 14 наборах", body, rel)
-                path.write_text(
+                _rewrite(
+                    path,
                     body.replace("161 навык в 14 наборах", "161 навык в 8 наборах", 1),
-                    encoding="utf-8",
                 )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -173,13 +596,13 @@ class ValidateAgentsTest(unittest.TestCase):
             install = repo / "INSTALL.md"
             body = install.read_text(encoding="utf-8")
             self.assertIn("Готовых к работе — 17 профилей из 19", body)
-            install.write_text(
+            _rewrite(
+                install,
                 body.replace(
                     "Готовых к работе — 17 профилей из 19",
                     "Готовых к работе — 18 профилей из 19",
                     1,
                 ),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -191,8 +614,9 @@ class ValidateAgentsTest(unittest.TestCase):
             install = repo / "INSTALL.md"
             body = install.read_text(encoding="utf-8")
             self.assertIn("| **заготовка** |", body)
-            install.write_text(
-                body.replace("| **заготовка** |", "| работает |", 1), encoding="utf-8"
+            _rewrite(
+                install,
+                body.replace("| **заготовка** |", "| работает |", 1),
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -205,9 +629,9 @@ class ValidateAgentsTest(unittest.TestCase):
                 path = repo / rel
                 body = path.read_text(encoding="utf-8")
                 self.assertIn("`company-brain/` (8 файлов)", body, rel)
-                path.write_text(
+                _rewrite(
+                    path,
                     body.replace("`company-brain/` (8 файлов)", "`company-brain/` (7 файлов)", 1),
-                    encoding="utf-8",
                 )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -219,9 +643,11 @@ class ValidateAgentsTest(unittest.TestCase):
             readme = repo / "README.md"
             body = readme.read_text(encoding="utf-8")
             self.assertIn("| `cowork-roles/` | 66 | Apache-2.0 |", body)
-            readme.write_text(
-                body.replace("| `cowork-roles/` | 66 | Apache-2.0 |", "| `cowork-roles/` | 66 | MIT |", 1),
-                encoding="utf-8",
+            _rewrite(
+                readme,
+                body.replace(
+                    "| `cowork-roles/` | 66 | Apache-2.0 |", "| `cowork-roles/` | 66 | MIT |", 1
+                ),
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -238,9 +664,9 @@ class ValidateAgentsTest(unittest.TestCase):
             notice = repo / "NOTICE.md"
             body = notice.read_text(encoding="utf-8")
             self.assertIn("`pm-skills/` — 40 скиллов", body)
-            notice.write_text(
+            _rewrite(
+                notice,
                 body.replace("`pm-skills/` — 40 скиллов", "`pm-skills/` — 41 скиллов", 1),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -251,11 +677,11 @@ class ValidateAgentsTest(unittest.TestCase):
         """Переформулировкой строки проверку обойти нельзя."""
         with RepoCopy() as repo:
             notice = repo / "NOTICE.md"
-            notice.write_text(
+            _rewrite(
+                notice,
                 notice.read_text(encoding="utf-8").replace(
                     "`open-seo/` — 1 скилл", "`open-seo/` — скилл", 1
                 ),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -267,9 +693,9 @@ class ValidateAgentsTest(unittest.TestCase):
             readme = repo / "README.md"
             body = readme.read_text(encoding="utf-8")
             self.assertIn("| `open-seo/` | 1 |", body)
-            readme.write_text(
+            _rewrite(
+                readme,
                 "\n".join(l for l in body.splitlines() if not l.startswith("| `open-seo/`")),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -279,11 +705,11 @@ class ValidateAgentsTest(unittest.TestCase):
         """Бейдж проверялся, состав таблицы — нет: ровно этот класс давал 7 против 8."""
         with RepoCopy() as repo:
             readme = repo / "README.md"
-            readme.write_text(
+            _rewrite(
+                readme,
                 readme.read_text(encoding="utf-8").replace(
                     "| `legal-compliance.md` |", "| `legal-compliance-x.md` |", 1
                 ),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -293,11 +719,11 @@ class ValidateAgentsTest(unittest.TestCase):
         """Третья копия списка brain — в блоке «Структура репозитория»."""
         with RepoCopy() as repo:
             readme = repo / "README.md"
-            readme.write_text(
+            _rewrite(
+                readme,
                 readme.read_text(encoding="utf-8").replace(
                     "│   ├── media-list.md", "│   ├── media-list-x.md", 1
                 ),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -307,13 +733,13 @@ class ValidateAgentsTest(unittest.TestCase):
         """Обратная сторона: строка про несуществующий файл — тоже ошибка."""
         with RepoCopy() as repo:
             readme = repo / "README.md"
-            readme.write_text(
+            _rewrite(
+                readme,
                 readme.read_text(encoding="utf-8").replace(
                     "| `media-list.md` |",
                     "| `media-list-ghost.md` |\n| `media-list.md` |",
                     1,
                 ),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -323,11 +749,11 @@ class ValidateAgentsTest(unittest.TestCase):
         with RepoCopy() as repo:
             run_script("build_profiles", repo)
             readme = repo / "README.md"
-            readme.write_text(
+            _rewrite(
+                readme,
                 readme.read_text(encoding="utf-8").replace(
                     "| `pm-skills/` | 40 |", "| `pm-skills/` | 41 |"
                 ),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -341,11 +767,11 @@ class ValidateAgentsTest(unittest.TestCase):
         """
         with RepoCopy() as repo:
             readme = repo / "README.md"
-            readme.write_text(
+            _rewrite(
+                readme,
                 readme.read_text(encoding="utf-8").replace(
                     "всего 146 вложений", "всего 145 вложений"
                 ),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -356,9 +782,9 @@ class ValidateAgentsTest(unittest.TestCase):
             readme = repo / "README.md"
             body = readme.read_text(encoding="utf-8")
             self.assertIn("`market-research` получает 29", body)
-            readme.write_text(
+            _rewrite(
+                readme,
                 body.replace("`market-research` получает 29", "`market-research` получает 30"),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -368,11 +794,11 @@ class ValidateAgentsTest(unittest.TestCase):
         """Счётчик «остальные N никуда не вкладываются» — не декорация."""
         with RepoCopy() as repo:
             readme = repo / "README.md"
-            readme.write_text(
+            _rewrite(
+                readme,
                 readme.read_text(encoding="utf-8").replace(
                     "остальные 37 никуда", "остальные 38 никуда"
                 ),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -382,9 +808,9 @@ class ValidateAgentsTest(unittest.TestCase):
         """Сумма «7 собственных» сходится и когда один набор выпал из README."""
         with RepoCopy() as repo:
             readme = repo / "README.md"
-            readme.write_text(
+            _rewrite(
+                readme,
                 readme.read_text(encoding="utf-8").replace("timesfm-marketing", "timesfm-x", 1),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -401,8 +827,9 @@ class ValidateAgentsTest(unittest.TestCase):
     def test_атрибуция_вендоренного_набора_обязательна(self) -> None:
         with RepoCopy() as repo:
             skill = repo / "skills" / "open-seo" / "SKILL.md"
-            skill.write_text(
-                skill.read_text(encoding="utf-8").split("### Attribution")[0], encoding="utf-8"
+            _rewrite(
+                skill,
+                skill.read_text(encoding="utf-8").split("### Attribution")[0],
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
@@ -433,7 +860,7 @@ class ValidateAgentsTest(unittest.TestCase):
                 text, count=1,
             )
             self.assertNotEqual(mutated, text, "мутация не применилась")
-            pr.write_text(mutated, encoding="utf-8")
+            _rewrite(pr, mutated)
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1, r.stdout)
             self.assertIn("nonexistent-for-test", r.stdout)
@@ -443,12 +870,12 @@ class ValidateAgentsTest(unittest.TestCase):
         with RepoCopy() as repo:
             # Даём заготовке (vk-ads) настоящий навык, не сняв пометку.
             agent = repo / "agents" / "vk-ads.md"
-            agent.write_text(
+            _rewrite(
+                agent,
                 agent.read_text(encoding="utf-8").replace(
                     "## Формат выдачи",
                     "- **skills/pm-skills/pricing-strategy** — лишний навык для заготовки\n\n## Формат выдачи",
                 ),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1, r.stdout)
@@ -458,8 +885,9 @@ class ValidateAgentsTest(unittest.TestCase):
         with RepoCopy() as repo:
             for rel in ("README.md", "INSTALL.md", "profiles/README.md"):
                 path = repo / rel
-                path.write_text(
-                    path.read_text(encoding="utf-8").replace("заготовка", "статус"), encoding="utf-8"
+                _rewrite(
+                    path,
+                    path.read_text(encoding="utf-8").replace("заготовка", "статус"),
                 )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1, r.stdout)
@@ -469,12 +897,12 @@ class ValidateAgentsTest(unittest.TestCase):
         """Два навыка с одним name в одном профиле — один из них недоступен агенту."""
         with RepoCopy() as repo:
             agent = repo / "agents" / "seo.md"
-            agent.write_text(
+            _rewrite(
+                agent,
                 agent.read_text(encoding="utf-8").replace(
                     "## Формат выдачи",
                     "- **skills/cowork-roles/marketing/seo-audit** — дубль имени с searchfit-версией\n\n## Формат выдачи",
                 ),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1, r.stdout)
@@ -484,9 +912,9 @@ class ValidateAgentsTest(unittest.TestCase):
         with RepoCopy() as repo:
             run_script("build_profiles", repo)
             install = repo / "INSTALL.md"
-            install.write_text(
+            _rewrite(
+                install,
                 install.read_text(encoding="utf-8").replace("`avito-api`", "API Авито"),
-                encoding="utf-8",
             )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
