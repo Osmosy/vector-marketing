@@ -270,7 +270,7 @@ def sl_agents(slide, th, D):
     for i, (head, line) in enumerate(D['ag_items']):
         wide_panel(slide, th, 0.62, y, 12.1, hs[i], head, [line])
         y += hs[i] + 0.12
-    footer(slide, th, 5)
+    footer(slide, th, 6)
 
 
 def sl_skills(slide, th, D):
@@ -281,7 +281,7 @@ def sl_skills(slide, th, D):
     for i, (head, lines) in enumerate(D['skills_cards']):
         card(slide, th, m + i*(cw+gap), 2.15, cw, 3.1, head, lines)
     wide_panel(slide, th, 0.62, 5.55, 12.1, 1.85, D['skills_panel'], D['skills_lines'])
-    footer(slide, th, 6)
+    footer(slide, th, 7)
 
 
 def sl_hypo(slide, th, D):
@@ -291,7 +291,7 @@ def sl_hypo(slide, th, D):
     _table(slide, th, 0.62, 2.05, [2.6, 6.6, 2.9],
            ('Шаг', 'Что происходит', 'Кто'), D['hypo_rows'], row_h=0.62, hl_col=0)
     wide_panel(slide, th, 0.62, 6.05, 12.1, 1.15, D['hypo_panel'], D['hypo_lines'])
-    footer(slide, th, 7)
+    footer(slide, th, 8)
 
 
 def sl_quality(slide, th, D):
@@ -303,7 +303,7 @@ def sl_quality(slide, th, D):
     for i, (head, line) in enumerate(D['qual_items']):
         wide_panel(slide, th, 0.62, y, 12.1, hs[i], head, [line])
         y += hs[i] + 0.14
-    footer(slide, th, 8)
+    footer(slide, th, 9)
 
 
 def sl_tools(slide, th, D):
@@ -314,7 +314,7 @@ def sl_tools(slide, th, D):
     for i, (head, lines) in enumerate(D['tools_cards']):
         card(slide, th, m + i*(cw+gap), 2.15, cw, 3.1, head, lines)
     wide_panel(slide, th, 0.62, 5.55, 12.1, 1.85, D['tools_panel'], D['tools_lines'])
-    footer(slide, th, 9)
+    footer(slide, th, 10)
 
 
 def sl_deliv(slide, th, D):
@@ -323,7 +323,7 @@ def sl_deliv(slide, th, D):
     title_block(slide, th, 'Что получает клиент')
     _table(slide, th, 0.62, 2.05, [2.9, 6.3, 2.9],
            ('Продукт', 'Состав', 'Срок'), D['deliv_rows'], row_h=0.72, hl_col=0)
-    footer(slide, th, 9)
+    footer(slide, th, 11)
 
 
 def sl_roadmap(slide, th, D):

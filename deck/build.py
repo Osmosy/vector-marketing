@@ -27,12 +27,11 @@ THEME = "01-obsidian-neon"
 ART = ("full", "hero-marketing.png")
 EMBLEM = ("vector_ray_t.png", "38B2F8")   # луч Vector, не весы
 
-# Брендинг подвала и число слайдов. Движок по умолчанию несёт юридический брендинг
-# («Vector Legal · Hermes Agent · Osmosy», total=12) — на этой деке это брак: 13 слайдов
-# и другое агентство. Длина строки подобрана под ширину подвала (3.1") — более длинный
-# вариант переносится на вторую строку, проверено рендером.
+# Брендинг подвала. Движок по умолчанию несёт юридический брендинг
+# («Vector Legal · Hermes Agent · Osmosy») — на этой деке это брак: другое агентство.
+# Число слайдов берём из самой деки (len(deck.SLIDES)), а не константой: константа
+# отставала от деки, и после аудита в подвале остались «N / 12» при 13 слайдах.
 FOOTER_BRAND = "Vector Marketing · Osmosy"
-SLIDE_TOTAL = 13
 
 # Файлы, которые восстановить неоткуда, если /tmp очистился.
 REQUIRED = [ART[1], EMBLEM[0]]
@@ -75,12 +74,17 @@ def main() -> int:
     if not themes:
         sys.exit(f"тема {THEME} не найдена в engine.py")
 
+    # Число слайдов и бренд — через движок, как это делает deck_builder.py:
+    # engine.footer читает модульный FOOTER, а не поле темы, поэтому поля
+    # footer_total/footer_brand в th молча игнорировались (из-за этого после
+    # аудита остались «N / 12» и «N / 13» вразнобой). Ассеты — тоже из движка.
+    eng.set_footer(len(deck.SLIDES), FOOTER_BRAND)
+    os.environ["VECTOR_DECK_ASSETS"] = str(ASSETS)
+
     for th in themes:
         th = dict(th)                       # не мутируем каталог тем движка
         th["art"] = ART
         th["emblem"] = EMBLEM
-        th["footer_brand"] = FOOTER_BRAND
-        th["footer_total"] = SLIDE_TOTAL
         prs = eng.Presentation()
         prs.slide_width, prs.slide_height = eng.SW, eng.SH
         blank = prs.slide_layouts[6]
