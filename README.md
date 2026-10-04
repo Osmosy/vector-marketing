@@ -159,7 +159,14 @@ python3 scripts/validate_agents.py   # SOUL-манифесты, @handoff, ссы
 python3 scripts/build_profiles.py --clean
 python3 scripts/check_dist.py        # форма собранных дистрибутивов
 python3 tests/test_scripts.py        # краевые случаи самих скриптов
+python3 scripts/build_bundle.py --check --out ~/Загрузки/vector-marketing-for-review.md  # набор для внешней проверки
 ```
+
+Набор для внешней проверки (`scripts/build_bundle.py`) — весь текстовый состав репозитория
+одним файлом: проверяющему не нужно распаковывать архив, достаточно открыть файл. Сборка —
+`python3 scripts/build_bundle.py --out <файл>`, сверка с деревом — `--check` (её же гоняют
+тесты). Внутренние файлы вендоренных наборов и генерируемые артефакты диаграммы в набор не
+входят, каждое исключение перечислено в его шапке с причиной.
 
 ## Структура репозитория
 
@@ -209,7 +216,7 @@ vector-marketing/
 │   ├── example-campaign.md
 │   └── example-output.md
 ├── profiles/                     ← Настройка профилей Hermes
-├── scripts/                      ← validate_agents.py, build_profiles.py, check_dist.py
+├── scripts/                      ← validate_agents.py, build_profiles.py, check_dist.py, build_bundle.py
 ├── .github/workflows/validate.yml ← CI: валидация SOUL + сборка + проверка dist
 ├── skills/                       ← Навыки (66 Cowork + 40 PM + 17 соцсети + 12 Humblytics + 11 searchfit + 7 LinkedIn + 1 open-seo + 1 yandex-wordstat + 1 article-distribution + 1 geo-visibility + 4 собственных)
 ├── THIRD_PARTY_LICENSES/         ← Тексты лицензий апстримов
@@ -342,3 +349,4 @@ python3 scripts/vendor_skill.py --set <набор> --skills имя1,имя2
 | content-matrix, niche-research, profile-optimizer, pinned-comment | smm-telegram |
 | analytics-dashboard, post-scorer | analytics |
 | gemini-carousel, gemini-infographic, graphic-designer, youtube-thumbnail, reels-scripting | creative |
+

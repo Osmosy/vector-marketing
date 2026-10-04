@@ -6,19 +6,19 @@
 
 | Файл | Байт | sha256 |
 |---|---|---|
-| `README.md` | 28556 | `8074eda54c2afddc…` |
+| `README.md` | 29441 | `709a89a55712de0f…` |
 | `NOTICE.md` | 4207 | `992109d48201ad43…` |
 | `INSTALL.md` | 20936 | `0d284fd1bfead3a0…` |
 | `agent-description.md` | 1997 | `022358b16d3becb7…` |
-| `CONTRIBUTING.md` | 10240 | `b00573a1f1229eac…` |
+| `CONTRIBUTING.md` | 10351 | `f7c0e43c076a0cd7…` |
 | `SECURITY.md` | 6167 | `94802b00787afbac…` |
 | `FUNDAMENTALS.md` | 6128 | `08b01dd184674590…` |
 | `KEYS.md` | 7120 | `c43bdb8c88435422…` |
 | `scripts/validate_agents.py` | 60663 | `7b1a911dd302094a…` |
 | `scripts/build_profiles.py` | 10769 | `f4047bd381824c8e…` |
 | `scripts/check_dist.py` | 8032 | `76d836c895bb3efc…` |
-| `tests/test_scripts.py` | 77726 | `a18e69c1155f8971…` |
-| `.github/workflows/validate.yml` | 1711 | `6d717dcb8cb21a84…` |
+| `tests/test_scripts.py` | 84072 | `7788cd5d10b732c1…` |
+| `.github/workflows/validate.yml` | 2362 | `cba6b7735907f648…` |
 | `profiles/README.md` | 7232 | `c8edaf24371bcb67…` |
 
 ## Ключевые числа
@@ -28,7 +28,7 @@
 - PM-методик 40 (`skills/pm-skills/*/SKILL.md`)
 - файлов Company Brain 8 (`company-brain/*.md`)
 - в собранных дистрибутивах: профилей 19, навыков 146 (analytics, avito, content, creative…)
-- тестов: 89 (`python3 tests/test_scripts.py`)
+- тестов: 95 (`python3 tests/test_scripts.py`)
 
 ## Навыки по наборам
 

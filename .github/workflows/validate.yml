@@ -36,6 +36,14 @@ jobs:
       - name: docs/for-review.md и docs/SHA256SUMS собраны из текущего дерева
         run: python3 scripts/build_for_review.py --check
 
+      # Набор для внешней проверки уезжает наружу целиком, поэтому расхождение
+      # состава и хешей с деревом обязано валить CI: проверяющий судит о
+      # репозитории по этому файлу и не может сверить его с деревом сам.
+      - name: Набор для внешней проверки собран из текущего дерева
+        run: |
+          python3 scripts/build_bundle.py --out /tmp/bundle.md
+          python3 scripts/build_bundle.py --check --out /tmp/bundle.md
+
       - uses: actions/upload-artifact@v4
         with:
           name: profile-distributions

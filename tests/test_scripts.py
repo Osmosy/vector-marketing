@@ -1457,5 +1457,108 @@ class KeysManifestTest(unittest.TestCase):
                 self.assertIn(f"`{var_name}`", body)
 
 
+class BuildBundleTest(unittest.TestCase):
+    """Набор для внешней проверки — файл, который уезжает наружу; он не должен врать.
+
+    Проверка нужна не ради самого файла, а ради того, что по нему судят о
+    репозитории: без неё набор тихо стареет (хеши и состав расходятся с деревом),
+    а внешний проверяющий сверяет с числами, которых в дереве уже нет — ровно этот
+    класс дефектов ловили в vector-health.
+    """
+
+    def _bundle(self, repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
+        return run_script("build_bundle", repo, *args)
+
+    def _out(self, repo: Path) -> Path:
+        """Набор пишем ВНЕ дерева копии.
+
+        Файл внутри дерева попадает в собственный набор (сборка идёт обходом
+        файлов), поэтому «собери и сразу проверь» ломалось бы само на себе:
+        файл-набор оказывается и в таблице, и лишним в дереве.
+        """
+        return Path(tempfile.mkdtemp()) / "bundle.md"
+
+    def test_сборка_и_check_на_чистом_дереве(self) -> None:
+        with RepoCopy() as repo:
+            out = self._out(repo)
+            r = self._bundle(repo, "--out", str(out))
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            self.assertTrue(out.is_file())
+            r = self._bundle(repo, "--check", "--out", str(out))
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
+    def test_набор_содержит_все_текстовые_файлы_и_их_хеши(self) -> None:
+        """Каждый текстовый файл дерева — в наборе, с верным хешем."""
+        with RepoCopy() as repo:
+            out = self._out(repo)
+            self._bundle(repo, "--out", str(out))
+            text = out.read_text(encoding="utf-8")
+            rows = {
+                rel: (size, digest)
+                for rel, size, digest in re.findall(
+                    r"^\| `([^`]+)` \| (\d+) \| `([0-9a-f]{64})` \|$", text, re.M
+                )
+            }
+            blocks = set(re.findall(r"^=== ФАЙЛ: (\S+) \(\d+ байт\)$", text, re.M))
+            self.assertEqual(set(rows), blocks, "таблица хешей и блоки содержимого разошлись")
+            # Файлы, которые обязаны быть в наборе: скрипты, тесты, документы, агенты.
+            for rel in ("README.md", "scripts/build_bundle.py", "tests/test_scripts.py",
+                        "agents/cmo.md", "company-brain/brand.md"):
+                if (repo / rel).is_file():
+                    with self.subTest(file=rel):
+                        self.assertIn(rel, rows)
+
+    def test_мусор_и_исключения_не_попадают(self) -> None:
+        """__pycache__ и .pyc — не файлы набора; исключённое описано с причиной."""
+        with RepoCopy() as repo:
+            out = self._out(repo)
+            self._bundle(repo, "--out", str(out))
+            text = out.read_text(encoding="utf-8")
+            for rel in re.findall(r"^=== ФАЙЛ: (\S+) \(\d+ байт\)$", text, re.M):
+                with self.subTest(file=rel):
+                    self.assertNotIn("__pycache__", rel)
+                    self.assertFalse(rel.endswith(".pyc"))
+
+    def test_check_падает_на_устаревшем_наборе(self) -> None:
+        """Мутация «файл правлен, набор не пересобран» обязана валить --check.
+
+        Файл копии — жёсткая ссылка на рабочее дерево, поэтому править его
+        «на месте» (`write_text`) нельзя: правка ушла бы в источник. Это не
+        гипотеза: первая версия теста так и сделала, и инвариант
+        `TreeInvariantTest` поймал 29 вставок в рабочем README.md. Правка идёт
+        через `_rewrite` — тот же приём, которым пользуются остальные тесты.
+        """
+        with RepoCopy() as repo:
+            out = self._out(repo)
+            self._bundle(repo, "--out", str(out))
+            doc = repo / "README.md"
+            _rewrite(doc, doc.read_text(encoding="utf-8") + "\nправка после сборки\n")
+            self.assertEqual(os.stat(doc).st_nlink, 1,
+                             "правка не отвязалась от рабочего дерева")
+            r = self._bundle(repo, "--check", "--out", str(out))
+            self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+            self.assertIn("разошёлся с деревом", r.stderr)
+
+    def test_check_падает_когда_файл_добавили_в_дерево(self) -> None:
+        """Новый файл без пересборки — тоже расхождение, а не «и так сойдёт».
+
+        Новых файлов жёсткие ссылки не касаются (этот файл создаётся в копии),
+        поэтому здесь правка безопасна и без отвязки.
+        """
+        with RepoCopy() as repo:
+            out = self._out(repo)
+            self._bundle(repo, "--out", str(out))
+            (repo / "NEW-NOTES.md").write_text("# новые заметки\n", encoding="utf-8")
+            r = self._bundle(repo, "--check", "--out", str(out))
+            self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+            self.assertIn("NEW-NOTES.md", r.stderr)
+
+    def test_check_падает_когда_файла_нет(self) -> None:
+        with RepoCopy() as repo:
+            r = self._bundle(repo, "--check", "--out", str(self._out(repo)))
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("файла нет", r.stderr)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -39,9 +39,10 @@ python3 scripts/validate_agents.py    # SOUL, @handoff, навыки, числа
 python3 tests/test_scripts.py         # краевые случаи самих скриптов
 python3 scripts/build_profiles.py --clean
 python3 scripts/check_dist.py         # форма дистрибутивов + поиск следов секретов
+python3 scripts/build_bundle.py --check --out <файл-набора>   # набор для внешней проверки
 ```
 
-Все четыре шага гоняются в CI (`.github/workflows/validate.yml`) — локальный прогон
+Все шаги гоняются в CI (`.github/workflows/validate.yml`) — локальный прогон
 избавляет от круга «красный CI → правка → красный CI».
 
 Тесты запускайте с `TMPDIR` в каталоге **на той же файловой системе, что и
