@@ -1,23 +1,30 @@
-# Дека Vector Marketing — obsidian-neon
+# Дека Vector Marketing — печатная print-bordo + экранная obsidian-neon
 
 13 слайдов: титул, введение, проблема, решение, три слоя, агенты, PM-скиллы,
 гипотезный цикл, контур качества, инструменты РФ, деливераблы, roadmap, финал.
 
-- **PPTX:** `vector-marketing-01-obsidian-neon.pptx` (готовая дека, 13 слайдов)
+- **Основная дека (печать):** `vector-marketing-print-bordo.pptx` — белые слайды,
+  бордовая обложка `5C1420`, Cambria/Calibri, без hero-арта. Тема `print-bordo`
+  из движка; на бумаге читается, в отличие от тёмной.
+- **Экранная дека:** `vector-marketing-01-obsidian-neon.pptx` — неон-синий на
+  тёмно-синем, hero-арт воронки; для показа на экране, не для печати
+  (`print_safe=False`).
 - **Исходник:** `deck-marketing.py` — контент в `DATA`, дизайн — движок тем
-  `~/projects/vector-legal-decks15/engine.py` (тема `01-obsidian-neon`)
-- **Сборка:** `build.py` — воспроизводимая, лежит в этой папке (см. ниже)
+  `~/projects/vector-legal-decks15/engine.py`
+- **Сборка:** `build.py` — воспроизводимая, собирает обе темы (см. ниже)
 - **Hero-арт:** `hero-marketing.png` — 1024×576, неоновая воронка + AI-ядро.
-  Сгенерирован локально Z-Image-Turbo (ROCm на iGPU); ZAI glm-image в тот момент
-  отдавал 429 (insufficient balance)
-- **Логотип:** `vector_ray_t.png` — обязателен на титуле и финале
+  Используется только в тёмной теме: у печатной арта нет по дизайну.
+- **Логотип:** `vector_ray_t.png` — обязателен на титуле и финале обеих дек
 
 ## Пересборка
 
 ```bash
-~/.venvs/pptx/bin/python deck/build.py          # собрать + положить pptx в deck/
-~/.venvs/pptx/bin/python deck/build.py --no-render
+env -u PYTHONPATH ~/.venvs/pptx/bin/python deck/build.py          # обе темы
 ```
+
+`env -u PYTHONPATH` нужен в окружении Hermes: его `PYTHONPATH` указывает на
+site-packages python3.14, и PIL внутри python3.12-venv падает с
+`ImportError: cannot import name '_imaging'`.
 
 Зависимости: venv `~/.venvs/pptx` (python-pptx, Pillow, numpy), движок тем в
 `~/projects/vector-legal-decks15/`.
@@ -42,10 +49,14 @@
 
 | Поле темы | В движке (Vector Legal) | Здесь |
 |-----------|-------------------------|-------|
-| `art` | `title_hero.png` (весы) | `hero-marketing.png` (воронка) |
-| `emblem` | `scales_icon_t.png` (весы) | `vector_ray_t.png` (луч Vector) |
+| `art` | `title_hero.png` (весы) | `hero-marketing.png` (воронка); у `print-bordo` — `None` |
+| `emblem` | `scales_icon_t.png` (весы) | `vector_ray_t.png` (луч Vector); у `print-bordo` — `None` |
 | `footer_brand` | `Vector Legal · Hermes Agent · Osmosy` | `Vector Marketing · Osmosy` |
 | `footer_total` | 12 | 13 |
+
+Печатная тема намеренно без арта и эмблемы: в образце
+`Обоснование_реальности_плана-4.pptx` их нет, а чужие весы или луч на белом листе
+только мешают. Обложка держится на цвете (`cover_bg=5C1420`), не на картинке.
 
 Это то же правило, что зафиксировано в скилле `vector-deck-themes`: при смене темы
 обязателен полный контент-слой — сохраняется только палитра и композиция.

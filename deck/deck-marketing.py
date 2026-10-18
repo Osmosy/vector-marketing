@@ -166,48 +166,60 @@ def _table(slide, th, x, y, col_ws, head, rows, row_h=0.46, head_h=0.42,
 
 
 def sl_title(slide, th, D):
+    cover = th.get('cover_bg')
+    if cover:
+        # Печатная обложка: сплошной бордовый фон, текст светлый.
+        add_rect(slide, 0, 0, 13.334, 7.5, fill=cover)
     if th.get('art'):
         from engine import full_art, half_art
         if th['art'][0] == 'full':
             full_art(slide, th, th['art'][1], overlay_pct=26)
         else:
             half_art(slide, th, th['art'][1])
+    c_title = (th.get('cover_title') or th['text']) if cover else th['text']
+    c_text = (th.get('cover_text') or th['text']) if cover else th['text']
+    c_accent = (th.get('cover_accent') or th['accent']) if cover else th['accent']
+    c_soft = (th.get('cover_text') or th['muted']) if cover else th['muted']
     ta = th['title_align']
     if ta == 'center' and not (th.get('art') and th['art'][0] == 'half'):
         add_rect(slide, (13.333-5.6)/2, 1.52, 5.6, 0.42, fill=th['surface'],
                  line=th['card_line'], radius=0.21, alpha=70)
         add_text(slide, (13.333-5.6)/2, 1.60, 5.6, 0.3, D['kicker'], size=10,
-                 bold=True, font=th['f_mono'], color=th['text'],
+                 bold=True, font=th['f_mono'], color=c_text,
                  align=PP_ALIGN.CENTER, spacing=140)
         add_text(slide, 1.67, 2.02, 10.0, 1.2, D['title'], size=60, bold=True,
-                 font=th['f_title'], color=th['accent'], align=PP_ALIGN.CENTER)
+                 font=th['f_title'], color=c_accent, align=PP_ALIGN.CENTER)
         add_text(slide, 2.17, 3.28, 9.0, 0.7, D['subtitle'], size=15.5,
-                 font=th['f_body'], color=th['text'], align=PP_ALIGN.CENTER)
+                 font=th['f_body'], color=c_text, align=PP_ALIGN.CENTER)
         for i, (big, small) in enumerate(D['chips']):
             chip(slide, th, 3.47 + i*2.25, 4.12, 1.95, big, small)
         add_rect(slide, 4.87, 5.62, 3.6, 0.52, fill=th['accent'], radius=0.26)
         add_text(slide, 4.87, 5.74, 3.6, 0.3, D['github'], size=11.5, bold=True,
                  font=th['f_mono'], color='FFFFFF', align=PP_ALIGN.CENTER)
         add_text(slide, 4.17, 6.90, 5.0, 0.26, D['footer_tag'], size=9.5,
-                 font=th['f_mono'], color=th['muted'], align=PP_ALIGN.CENTER)
+                 font=th['f_mono'], color=c_soft, align=PP_ALIGN.CENTER)
     else:
-        add_rect(slide, 0.62, 1.30, 0.05, 2.2, fill=th['accent'])
-        add_text(slide, 0.92, 1.30, 6.5, 0.3, D['kicker'], size=10.5, bold=True,
-                 font=th['f_mono'], color=th['kicker_accent'], spacing=160)
-        add_text(slide, 0.88, 1.66, 6.2, 1.15, D['title'], size=54, bold=True,
-                 font=th['f_title'], color=th['accent'])
-        add_text(slide, 0.92, 2.86, 5.9, 0.7, D['subtitle'], size=15,
-                 font=th['f_body'], color=th['text'])
+        add_rect(slide, 0.62, 1.30, 0.05, 2.2, fill=c_accent)
+        if th.get('show_kicker', True):
+            add_text(slide, 0.92, 1.30, 6.5, 0.3, D['kicker'], size=10.5, bold=True,
+                     font=th['f_mono'], color=c_accent, spacing=160)
+        # Длинный заголовок («Vector Marketing») занимает две строки: подзаголовок
+        # и блок чисел опускаются, иначе текст наезжает на нижнюю строку заголовка.
+        two_line = len(D['title']) > 14
+        add_text(slide, 0.88, 1.66, 6.2, 1.5, D['title'], size=54, bold=True,
+                 font=th['f_title'], color=c_title)
+        add_text(slide, 0.92, 3.55 if two_line else 2.86, 5.9, 0.7, D['subtitle'], size=15,
+                 font=th['f_body'], color=c_text)
         for i, (big, small) in enumerate(D['chips']):
             x = 0.92 + i*1.95
-            add_text(slide, x, 3.85, 1.8, 0.5, big, size=26, bold=True,
-                     font=th['f_title'], color=th['accent'])
-            add_text(slide, x, 4.36, 1.8, 0.3, small, size=9.5, font=th['f_mono'],
-                     color=th['muted'], spacing=100)
-        add_text(slide, 0.92, 5.15, 6.0, 0.3, D['github'], size=12.5, bold=True,
-                 font=th['f_mono'], color=th['accent'])
-        add_text(slide, 0.92, 6.0, 6.0, 0.26, D['footer_tag'], size=9.5,
-                 font=th['f_mono'], color=th['muted'])
+            add_text(slide, x, 4.55 if two_line else 3.85, 1.8, 0.5, big, size=26, bold=True,
+                     font=th['f_title'], color=c_accent)
+            add_text(slide, x, 5.06 if two_line else 4.36, 1.8, 0.3, small, size=9.5,
+                     font=th['f_mono'], color=c_soft, spacing=100)
+        add_text(slide, 0.92, 5.85 if two_line else 5.15, 6.0, 0.3, D['github'], size=12.5,
+                 bold=True, font=th['f_mono'], color=c_accent)
+        add_text(slide, 0.92, 6.50 if two_line else 6.0, 6.0, 0.26, D['footer_tag'], size=9.5,
+                 font=th['f_mono'], color=c_soft)
     slide.shapes.add_picture(f'{ASSETS}/vector_ray_t.png',
                              Inches(12.20), Inches(0.30), width=Inches(0.9))
 

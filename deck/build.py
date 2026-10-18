@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Сборка деки Vector Marketing (тема 01-obsidian-neon).
+"""Сборка деки Vector Marketing: печатная print-bordo и экранная 01-obsidian-neon.
 
 Запуск:
     bash deck/build.sh                    # собрать + положить pptx и ассеты рядом
@@ -21,7 +21,11 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent
 DECKS = Path.home() / "projects/vector-legal-decks15"
 ASSETS = Path("/tmp/vl_assets")
-THEME = "01-obsidian-neon"
+
+# Основной дизайн — печатный print-bordo (белые слайды, бордовая обложка, Cambria).
+# Тёмная 01-obsidian-neon остаётся для экрана: на бумаге она не читается.
+THEMES = ["print-bordo", "01-obsidian-neon"]
+PRINT_THEME = "print-bordo"
 
 # Арт и эмблема этой деки (лежат в deck/ и копируются в рабочий каталог ассетов).
 ART = ("full", "hero-marketing.png")
@@ -70,9 +74,9 @@ def main() -> int:
     sys.modules["deck"] = deck
     spec.loader.exec_module(deck)
 
-    themes = [t for t in eng.THEMES if t["name"] == THEME]
+    themes = [t for t in eng.THEMES if t["name"] in THEMES]
     if not themes:
-        sys.exit(f"тема {THEME} не найдена в engine.py")
+        sys.exit(f"темы {THEMES} не найдены в engine.py")
 
     # Число слайдов и бренд — через движок, как это делает deck_builder.py:
     # engine.footer читает модульный FOOTER, а не поле темы, поэтому поля
@@ -83,8 +87,14 @@ def main() -> int:
 
     for th in themes:
         th = dict(th)                       # не мутируем каталог тем движка
-        th["art"] = ART
-        th["emblem"] = EMBLEM
+        if th["name"] == PRINT_THEME:
+            # Печатный дизайн — без hero-арта и эмблемы: в образце их нет,
+            # а чужие весы/луч на белом листе только мешают.
+            th["art"] = None
+            th["emblem"] = None
+        else:
+            th["art"] = ART
+            th["emblem"] = EMBLEM
         prs = eng.Presentation()
         prs.slide_width, prs.slide_height = eng.SW, eng.SH
         blank = prs.slide_layouts[6]
