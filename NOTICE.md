@@ -16,6 +16,10 @@
 | [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) | MIT (© 2025 Alireza Rezvani) | `claude-skills/` — 7 скиллов (LinkedIn-набор + local-seo-manager) | тексты без изменений, сверху `### Attribution`; скиллы с `references/` и `scripts/` |
 | [searchfit/searchfit-seo](https://github.com/searchfit/searchfit-seo) | MIT | `searchfit-seo/` — 11 скиллов | тексты без изменений, сверху `### Attribution`; во frontmatter добавлено только поле `name` |
 | [charlie947/social-media-skills](https://github.com/charlie947/social-media-skills) | MIT (© 2026 Charlie Hills) | `social-media-skills/` — 17 скиллов | тексты без изменений, сверху `### Attribution`; два скилла с `references/` |
+| [marcosmodly/marketing-skill](https://github.com/marcosmodly/marketing-skill) | MIT (© 2026 marcosmodly) | `content-calendar/` — 1 скилл | русская редакция: датированные черновики, дедуп тем по `topic_key`, файл `state/calendar.json`, очередь на апрув без отправки |
+| [marcosmodly/marketing-skill](https://github.com/marcosmodly/marketing-skill) | MIT (© 2026 marcosmodly) | `community-post-generator/` — 1 скилл | русская редакция: разбор правил конкретного сообщества, Go/No-Go до текста, раскрытие авторства; добавлены Telegram и VK |
+| [marcosmodly/marketing-skill](https://github.com/marcosmodly/marketing-skill) | MIT (© 2026 marcosmodly) | `publish-pipeline/` — 1 скилл | русская редакция + `scripts/publish_webhook.py`: показ payload, явное «да», коды выхода 0/1/2/3 |
+| [marcosmodly/marketing-skill](https://github.com/marcosmodly/marketing-skill) | MIT (© 2026 marcosmodly) | `content-repurposer/` — 1 скилл | русская редакция: что сохраняется и что меняется при переупаковке, таблица площадок с Дзеном и Хабром |
 
 Новые скиллы добавляются скриптом, а не вручную:
 

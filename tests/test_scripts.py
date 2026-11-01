@@ -572,7 +572,7 @@ class ValidateAgentsTest(unittest.TestCase):
             self.assertIn("@pr", r.stdout)
 
     def test_число_наборов_в_деке_ловится(self) -> None:
-        """«161 навык в 8 наборах» жило в деке молча: число наборов не проверялось.
+        """«165 навыков в 8 наборах» жило в деке молча: число наборов не проверялось.
 
         Дек — клиентский материал, и это было единственное число в репозитории,
         расходившееся с деревом (наборов 14).
@@ -581,14 +581,14 @@ class ValidateAgentsTest(unittest.TestCase):
             for rel in ("deck/deck-marketing.py", "deck/README.md"):
                 path = repo / rel
                 body = path.read_text(encoding="utf-8")
-                self.assertIn("161 навык в 14 наборах", body, rel)
+                self.assertIn("165 навыков в 18 наборах", body, rel)
                 _rewrite(
                     path,
-                    body.replace("161 навык в 14 наборах", "161 навык в 8 наборах", 1),
+                    body.replace("165 навыков в 18 наборах", "165 навыков в 8 наборах", 1),
                 )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
-            self.assertIn("наборов в skills/ — 14", r.stdout)
+            self.assertIn("наборов в skills/ — 18", r.stdout)
 
     def test_готовые_профили_в_install_сверяются(self) -> None:
         """«Готовых к работе — 17 профилей из 19»: число выводимо из логики сборки."""
@@ -760,7 +760,7 @@ class ValidateAgentsTest(unittest.TestCase):
             self.assertIn("pm-skills", r.stdout)
 
     def test_число_вложений_в_профили_ловится(self) -> None:
-        """«146 вложений» и примеры по агентам сверяются с логикой сборки.
+        """«151 вложений» и примеры по агентам сверяются с логикой сборки.
 
         Именно это число разошлось молча: README говорил «`smm-telegram` — 25»,
         а сборка вкладывала 26, и CI проходил.
@@ -770,7 +770,7 @@ class ValidateAgentsTest(unittest.TestCase):
             _rewrite(
                 readme,
                 readme.read_text(encoding="utf-8").replace(
-                    "всего 146 вложений", "всего 145 вложений"
+                    "всего 151 вложений", "всего 150 вложений"
                 ),
             )
             r = run_script("validate_agents", repo)
