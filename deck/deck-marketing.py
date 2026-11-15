@@ -9,7 +9,7 @@ DATA = dict(
     title='Vector Marketing',
     subtitle='19 профильных агентов под управлением Osmosy (CMO-оркестратор) — '
              'стратегия, привлечение, упаковка, удержание, операции',
-    chips=[('19', 'агентов'), ('165', 'навыков'), ('40', 'PM-методик')],
+    chips=[('19', 'агентов'), ('180', 'навыков'), ('40', 'PM-методик')],
     github='github.com/Osmosy/vector-marketing',
     footer_tag='Osmosy · Hermes Agent · 2026',
     intro_lead='Маркетинговое агентство на базе Hermes Agent: клиент ставит бизнес-задачу, '
@@ -49,7 +49,7 @@ DATA = dict(
     # 04 · Три слоя
     layers_items=[
         ('Context — что модель видит', 'company-brain/: brand-voice, anti-slop-rules, ICP, офферы, данные о бизнесе. Без контекста — генерик-выпуск; с контекстом — агент говорит голосом бренда клиента'),
-        ('Harness — что позволяет действовать', 'agents/*.md (19 ролей) + Hermes profile + 165 навыков в 18 наборах + MCP-инструменты: Яндекс Метрика/Директ API, MPSTATS, ДaData, Wordstat, карты'),
+        ('Harness — что позволяет действовать', 'agents/*.md (19 ролей) + Hermes profile + 180 навыков в 19 наборах + MCP-инструменты: Яндекс Метрика/Директ API, MPSTATS, ДaData, Wordstat, карты'),
         ('Loop — как обеспечивается качество', 'draft → check → retry: anti-slop чеклист, взаимная проверка агентов, handoff-протокол, cron-ритм. Red-team стратегии обязателен перед выдачей клиенту'),
     ],
 

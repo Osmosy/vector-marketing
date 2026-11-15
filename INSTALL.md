@@ -142,6 +142,7 @@ hermes -p orchestrator --skills vector-work "Клиент: интернет-ма
 | `yandex-direct`, `yandex-marketing-apis-ru` | yandex-direct, analytics, performance, vk-ads | поставить навыки Яндекс-стека из хаба (`hermes skills search yandex`) |
 | `WORDSTAT_API_KEY`, `WORDSTAT_FOLDER_ID` | seo, content, yandex-direct, avito, market-research | семантика уже в репозитории (`skills/yandex-wordstat`), нужен ключ сервисного аккаунта Yandex Cloud с ролью `search-api.webSearchUser` — см. `skills/yandex-wordstat/references/api-contract.md` |
 | `avito-api`, `ozon-seller-api`, `wildberries-api`, `MPSTATS` | avito, marketplaces, analytics, market-research | навыки API маркетплейсов и аналитики из хаба; нужны ключи продавца |
+| `ru-marketplace-mcp` (MCP) | marketplaces, market-research, avito | публичные цены и карточки с 12 площадок + сравнение цен; ключи продавца не нужны. Авито и Ozon с датацентрового IP требуют Chrome оператора по CDP — см. `skills/ru-marketplace-mcp/avito-connector` |
 | `social-media-research` | vk-ads, smm-telegram, market-research | навык из хаба либо свой |
 | `ru-text`, `document-deliverables`, `evidence-based-seo`, `humanizer`, `youtube-content`, `marketing-director-ru` | content, presentation, reputation, support, landing-cro, smm-telegram, performance | навыки из хаба либо свои |
 | `powerpoint`, `google-workspace`, `maps`, `html` | presentation, analytics, ops, reputation, creative, landing-cro | встроенные навыки Hermes: `hermes skills install official/productivity/powerpoint` и т.п. |

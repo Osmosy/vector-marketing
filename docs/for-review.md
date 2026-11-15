@@ -6,10 +6,10 @@
 
 | Файл | Байт | sha256 |
 |---|---|---|
-| `README.md` | 30257 | `8ea63f58c6937f9e…` |
-| `NOTICE.md` | 5549 | `9c3fa33994e8e9b2…` |
-| `INSTALL.md` | 20936 | `0d284fd1bfead3a0…` |
-| `agent-description.md` | 2001 | `e542339142b40642…` |
+| `README.md` | 30533 | `102848b40d08fa25…` |
+| `NOTICE.md` | 5845 | `896cf2ca572664f6…` |
+| `INSTALL.md` | 21311 | `6a5972372edbdd22…` |
+| `agent-description.md` | 2001 | `c745f75ac4e13d2a…` |
 | `CONTRIBUTING.md` | 10351 | `f7c0e43c076a0cd7…` |
 | `SECURITY.md` | 6167 | `94802b00787afbac…` |
 | `FUNDAMENTALS.md` | 6128 | `08b01dd184674590…` |
@@ -17,17 +17,17 @@
 | `scripts/validate_agents.py` | 60663 | `7b1a911dd302094a…` |
 | `scripts/build_profiles.py` | 10769 | `f4047bd381824c8e…` |
 | `scripts/check_dist.py` | 8032 | `76d836c895bb3efc…` |
-| `tests/test_scripts.py` | 84088 | `0c94f55ad6d03d8e…` |
+| `tests/test_scripts.py` | 84088 | `fc8508662b1e238a…` |
 | `.github/workflows/validate.yml` | 2362 | `cba6b7735907f648…` |
 | `profiles/README.md` | 7232 | `c8edaf24371bcb67…` |
 
 ## Ключевые числа
 
 - агентов **19** (`agents/*.md`)
-- навыков **165** (`skills/**/SKILL.md`) в 18 наборах
+- навыков **180** (`skills/**/SKILL.md`) в 19 наборах
 - PM-методик 40 (`skills/pm-skills/*/SKILL.md`)
 - файлов Company Brain 8 (`company-brain/*.md`)
-- в собранных дистрибутивах: профилей 19, навыков 151 (analytics, avito, content, creative…)
+- в собранных дистрибутивах: профилей 19, навыков 166 (analytics, avito, content, creative…)
 - тестов: 95 (`python3 tests/test_scripts.py`)
 
 ## Навыки по наборам
@@ -46,6 +46,7 @@
 | `open-seo` | 1 |
 | `pm-skills` | 40 |
 | `publish-pipeline` | 1 |
+| `ru-marketplace-mcp` | 15 |
 | `searchfit-seo` | 11 |
 | `social-media-skills` | 17 |
 | `timesfm-marketing` | 1 |
@@ -55,8 +56,8 @@
 
 ## Что сверить отдельно
 
-- Арифметика README: сторонних навыков 158 + собственных 7 = 165 (в README заявлено 165)
-- Сторонних наборов: 11 (по NOTICE), собственных навыков: 7 — в таблице README собственные названы поимённо, и валидатор требует, чтобы каждый каталог `skills/` был назван хотя бы в одном из двух списков.
+- Арифметика README: сторонних навыков 173 + собственных 7 = 180 (в README заявлено 180)
+- Сторонних наборов: 12 (по NOTICE), собственных навыков: 7 — в таблице README собственные названы поимённо, и валидатор требует, чтобы каждый каталог `skills/` был назван хотя бы в одном из двух списков.
 - Разбивка по наборам выше сверяется валидатором построчно (таблица README → дерево), а не только по сумме: перестановка между наборами валит CI.
 
 ## Как проверить, не запуская репозиторий

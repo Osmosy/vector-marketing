@@ -581,14 +581,14 @@ class ValidateAgentsTest(unittest.TestCase):
             for rel in ("deck/deck-marketing.py", "deck/README.md"):
                 path = repo / rel
                 body = path.read_text(encoding="utf-8")
-                self.assertIn("165 навыков в 18 наборах", body, rel)
+                self.assertIn("180 навыков в 19 наборах", body, rel)
                 _rewrite(
                     path,
-                    body.replace("165 навыков в 18 наборах", "165 навыков в 8 наборах", 1),
+                    body.replace("180 навыков в 19 наборах", "180 навыков в 8 наборах", 1),
                 )
             r = run_script("validate_agents", repo)
             self.assertEqual(r.returncode, 1)
-            self.assertIn("наборов в skills/ — 18", r.stdout)
+            self.assertIn("наборов в skills/ — 19", r.stdout)
 
     def test_готовые_профили_в_install_сверяются(self) -> None:
         """«Готовых к работе — 17 профилей из 19»: число выводимо из логики сборки."""
@@ -760,7 +760,7 @@ class ValidateAgentsTest(unittest.TestCase):
             self.assertIn("pm-skills", r.stdout)
 
     def test_число_вложений_в_профили_ловится(self) -> None:
-        """«151 вложений» и примеры по агентам сверяются с логикой сборки.
+        """«166 вложений» и примеры по агентам сверяются с логикой сборки.
 
         Именно это число разошлось молча: README говорил «`smm-telegram` — 25»,
         а сборка вкладывала 26, и CI проходил.
@@ -770,7 +770,7 @@ class ValidateAgentsTest(unittest.TestCase):
             _rewrite(
                 readme,
                 readme.read_text(encoding="utf-8").replace(
-                    "всего 151 вложений", "всего 150 вложений"
+                    "всего 166 вложений", "всего 150 вложений"
                 ),
             )
             r = run_script("validate_agents", repo)

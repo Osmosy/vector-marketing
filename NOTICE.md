@@ -20,6 +20,7 @@
 | [marcosmodly/marketing-skill](https://github.com/marcosmodly/marketing-skill) | MIT (© 2026 marcosmodly) | `community-post-generator/` — 1 скилл | русская редакция: разбор правил конкретного сообщества, Go/No-Go до текста, раскрытие авторства; добавлены Telegram и VK |
 | [marcosmodly/marketing-skill](https://github.com/marcosmodly/marketing-skill) | MIT (© 2026 marcosmodly) | `publish-pipeline/` — 1 скилл | русская редакция + `scripts/publish_webhook.py`: показ payload, явное «да», коды выхода 0/1/2/3 |
 | [marcosmodly/marketing-skill](https://github.com/marcosmodly/marketing-skill) | MIT (© 2026 marcosmodly) | `content-repurposer/` — 1 скилл | русская редакция: что сохраняется и что меняется при переупаковке, таблица площадок с Дзеном и Хабром |
+| [Vladimir-Human/ru-marketplace-mcp](https://github.com/Vladimir-Human/ru-marketplace-mcp) | MIT (© 2026 Vladimir-Human) | `ru-marketplace-mcp/` — 15 скиллов | тексты без изменений, сверху `### Attribution`; подключение через MCP-сервер |
 
 Новые скиллы добавляются скриптом, а не вручную:
 
